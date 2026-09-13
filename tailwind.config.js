@@ -1,0 +1,103 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        ivory: {
+          50: '#FDFBF7',
+          100: '#FAF8F5',
+          200: '#F4EFEB',
+          300: '#EAE1D7',
+          400: '#D8C9BB',
+          500: '#C7B19F',
+        },
+        champagne: {
+          50: 'rgb(var(--color-champagne-50, 251 248 243) / <alpha-value>)',
+          100: 'rgb(var(--color-champagne-100, 245 239 235) / <alpha-value>)',
+          200: 'rgb(var(--color-champagne-200, 235 221 207) / <alpha-value>)',
+          300: 'rgb(var(--color-champagne-300, 223 200 178) / <alpha-value>)',
+          400: 'rgb(var(--color-champagne-400, 210 178 148) / <alpha-value>)',
+          500: 'rgb(var(--color-champagne-500, 197 168 128) / <alpha-value>)',
+          600: 'rgb(var(--color-champagne-600, 168 136 96) / <alpha-value>)',
+          700: 'rgb(var(--color-champagne-700, 137 108 72) / <alpha-value>)',
+          800: 'rgb(var(--color-champagne-800, 106 82 53) / <alpha-value>)',
+          900: 'rgb(var(--color-champagne-900, 78 58 36) / <alpha-value>)',
+        },
+        gold: {
+          50: 'rgb(var(--color-gold-50, 253 249 238) / <alpha-value>)',
+          100: 'rgb(var(--color-gold-100, 251 240 211) / <alpha-value>)',
+          200: 'rgb(var(--color-gold-200, 245 222 159) / <alpha-value>)',
+          300: 'rgb(var(--color-gold-300, 236 200 103) / <alpha-value>)',
+          400: 'rgb(var(--color-gold-400, 226 177 52) / <alpha-value>)',
+          500: 'rgb(var(--color-gold-500, 212 175 55) / <alpha-value>)',
+          600: 'rgb(var(--color-gold-600, 184 151 38) / <alpha-value>)',
+          700: 'rgb(var(--color-gold-700, 148 117 28) / <alpha-value>)',
+          800: 'rgb(var(--color-gold-800, 117 90 27) / <alpha-value>)',
+          900: 'rgb(var(--color-gold-900, 95 71 25) / <alpha-value>)',
+          950: 'rgb(var(--color-gold-950, 50 37 13) / <alpha-value>)',
+        },
+        sage: {
+          50: '#F3F6F3',
+          100: '#E3EAE3',
+          200: '#C8D5C8',
+          300: '#A6BCA7',
+          400: '#869F88',
+          500: '#69846C',
+          600: '#526955',
+          700: '#435445',
+          800: '#38443A',
+          900: '#2E3830',
+        },
+        obsidian: {
+          50: '#F6F6F6',
+          100: '#E7E7E7',
+          200: '#D1D1D1',
+          300: '#B0B0B0',
+          400: '#888888',
+          500: '#6D6D6D',
+          600: '#4B4B4B',
+          700: '#333333',
+          800: '#222222',
+          900: '#141414',
+          950: '#0A0A0A',
+        },
+      },
+      fontFamily: {
+        serif: ['var(--font-cormorant)', 'Playfair Display', 'Georgia', 'serif'],
+        sans: ['var(--font-outfit)', 'Plus Jakarta Sans', 'Inter', 'sans-serif'],
+      },
+      animation: {
+        'float-slow': 'float 8s ease-in-out infinite',
+        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+        'shimmer': 'shimmer 2.5s linear infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-12px)' },
+        },
+        pulseGlow: {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.9' },
+        },
+        progress: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
+      },
+      boxShadow: {
+        'luxury': '0 20px 40px -15px rgb(var(--color-champagne-500) / 0.15)',
+        'luxury-lg': '0 30px 60px -20px rgba(20, 20, 20, 0.12), 0 10px 20px -5px rgb(var(--color-gold-500) / 0.08)',
+        'luxury-card': '0 10px 30px -10px rgba(0, 0, 0, 0.05)',
+        'glow-gold': '0 0 25px rgb(var(--color-gold-500) / 0.35)',
+      },
+    },
+  },
+  plugins: [],
+}

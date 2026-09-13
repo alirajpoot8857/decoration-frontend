@@ -1,0 +1,631 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --bg-primary: #FAF8F5;
+  --bg-secondary: #F5EFEB;
+  --text-primary: #141414;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #FAF8F5;
+  color: #141414;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+body {
+  font-family: var(--font-outfit), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: #FAF8F5;
+  color: #141414;
+  overflow-x: hidden;
+}
+
+/* ========================================================================= */
+/* 15 CURATED LUXURY THEMES (DARK LUXURY & LIGHT ELEGANCE)                   */
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* 1. ROYAL GOLD & OBSIDIAN (DEFAULT)                                        */
+/* ------------------------------------------------------------------------- */
+:root, .theme-royalGold {
+  --color-gold-50: 253 249 238;
+  --color-gold-100: 251 240 211;
+  --color-gold-200: 245 222 159;
+  --color-gold-300: 236 200 103;
+  --color-gold-400: 226 177 52;
+  --color-gold-500: 212 175 55;
+  --color-gold-600: 184 151 38;
+  --color-gold-700: 148 117 28;
+  --color-gold-800: 117 90 27;
+  --color-gold-900: 95 71 25;
+  --color-gold-950: 50 37 13;
+
+  --color-champagne-50: 251 248 243;
+  --color-champagne-100: 245 239 235;
+  --color-champagne-200: 235 221 207;
+  --color-champagne-300: 223 200 178;
+  --color-champagne-400: 210 178 148;
+  --color-champagne-500: 197 168 128;
+  --color-champagne-600: 168 136 96;
+  --color-champagne-700: 137 108 72;
+  --color-champagne-800: 106 82 53;
+  --color-champagne-900: 78 58 36;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(212,175,55,0.22) 0%, rgba(180,130,70,0.08) 45%, rgba(8,7,6,0.98) 75%);
+  --theme-glow-aura: rgba(212, 175, 55, 0.4);
+  --theme-glow-drop: rgba(212, 175, 55, 0.45);
+  --theme-stroke-color: #FFF8DC;
+  --theme-progress-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 2. EMERALD OPULENCE & IVORY                                               */
+/* ------------------------------------------------------------------------- */
+.theme-emeraldLuxury {
+  --color-gold-50: 240 253 244;
+  --color-gold-100: 220 252 231;
+  --color-gold-200: 187 247 208;
+  --color-gold-300: 134 239 172;
+  --color-gold-400: 52 211 153;
+  --color-gold-500: 16 185 129;
+  --color-gold-600: 5 150 105;
+  --color-gold-700: 4 120 87;
+  --color-gold-800: 6 95 70;
+  --color-gold-900: 6 78 59;
+  --color-gold-950: 2 44 34;
+
+  --color-champagne-50: 242 250 245;
+  --color-champagne-100: 230 245 236;
+  --color-champagne-200: 200 235 215;
+  --color-champagne-300: 167 220 190;
+  --color-champagne-400: 110 195 150;
+  --color-champagne-500: 52 211 153;
+  --color-champagne-600: 16 185 129;
+  --color-champagne-700: 5 150 105;
+  --color-champagne-800: 4 120 87;
+  --color-champagne-900: 6 78 59;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(5,150,105,0.26) 0%, rgba(6,78,59,0.12) 45%, rgba(4,10,7,0.98) 75%);
+  --theme-glow-aura: rgba(5, 150, 105, 0.45);
+  --theme-glow-drop: rgba(16, 185, 129, 0.55);
+  --theme-stroke-color: #D1FAE5;
+  --theme-progress-shadow: 0 0 12px rgba(5, 150, 105, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 3. MIDNIGHT ROSE & VELVET                                                 */
+/* ------------------------------------------------------------------------- */
+.theme-midnightRose {
+  --color-gold-50: 255 241 242;
+  --color-gold-100: 255 228 230;
+  --color-gold-200: 254 205 211;
+  --color-gold-300: 253 164 175;
+  --color-gold-400: 251 113 133;
+  --color-gold-500: 244 63 94;
+  --color-gold-600: 225 29 72;
+  --color-gold-700: 190 18 60;
+  --color-gold-800: 159 18 57;
+  --color-gold-900: 136 19 55;
+  --color-gold-950: 76 5 25;
+
+  --color-champagne-50: 255 245 246;
+  --color-champagne-100: 255 235 238;
+  --color-champagne-200: 254 210 218;
+  --color-champagne-300: 250 175 190;
+  --color-champagne-400: 244 130 152;
+  --color-champagne-500: 235 85 115;
+  --color-champagne-600: 225 29 72;
+  --color-champagne-700: 190 18 60;
+  --color-champagne-800: 159 18 57;
+  --color-champagne-900: 136 19 55;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(225,29,72,0.26) 0%, rgba(136,19,55,0.12) 45%, rgba(12,4,7,0.98) 75%);
+  --theme-glow-aura: rgba(225, 29, 72, 0.45);
+  --theme-glow-drop: rgba(244, 63, 94, 0.55);
+  --theme-stroke-color: #FFE4E6;
+  --theme-progress-shadow: 0 0 12px rgba(225, 29, 72, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 4. SAPPHIRE PRESTIGE & NAVY                                               */
+/* ------------------------------------------------------------------------- */
+.theme-sapphirePrestige {
+  --color-gold-50: 239 246 255;
+  --color-gold-100: 219 234 254;
+  --color-gold-200: 191 219 254;
+  --color-gold-300: 147 197 253;
+  --color-gold-400: 96 165 250;
+  --color-gold-500: 59 130 246;
+  --color-gold-600: 37 99 235;
+  --color-gold-700: 29 78 216;
+  --color-gold-800: 30 64 175;
+  --color-gold-900: 30 58 138;
+  --color-gold-950: 15 23 42;
+
+  --color-champagne-50: 244 248 255;
+  --color-champagne-100: 230 240 255;
+  --color-champagne-200: 205 225 255;
+  --color-champagne-300: 170 205 255;
+  --color-champagne-400: 125 175 250;
+  --color-champagne-500: 59 130 246;
+  --color-champagne-600: 37 99 235;
+  --color-champagne-700: 29 78 216;
+  --color-champagne-800: 30 64 175;
+  --color-champagne-900: 30 58 138;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(37,99,235,0.26) 0%, rgba(30,58,138,0.12) 45%, rgba(4,8,18,0.98) 75%);
+  --theme-glow-aura: rgba(37, 99, 235, 0.45);
+  --theme-glow-drop: rgba(59, 130, 246, 0.55);
+  --theme-stroke-color: #DBEAFE;
+  --theme-progress-shadow: 0 0 12px rgba(37, 99, 235, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 5. AMETHYST ROYAL & PURPLE                                                */
+/* ------------------------------------------------------------------------- */
+.theme-amethystRoyal {
+  --color-gold-50: 245 243 255;
+  --color-gold-100: 237 233 254;
+  --color-gold-200: 221 214 254;
+  --color-gold-300: 196 181 253;
+  --color-gold-400: 167 139 250;
+  --color-gold-500: 139 92 246;
+  --color-gold-600: 124 58 237;
+  --color-gold-700: 109 40 217;
+  --color-gold-800: 91 33 182;
+  --color-gold-900: 76 29 149;
+  --color-gold-950: 46 16 101;
+
+  --color-champagne-50: 248 245 255;
+  --color-champagne-100: 238 232 255;
+  --color-champagne-200: 220 210 255;
+  --color-champagne-300: 195 178 255;
+  --color-champagne-400: 165 140 250;
+  --color-champagne-500: 139 92 246;
+  --color-champagne-600: 124 58 237;
+  --color-champagne-700: 109 40 217;
+  --color-champagne-800: 91 33 182;
+  --color-champagne-900: 76 29 149;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(124,58,237,0.26) 0%, rgba(76,29,149,0.12) 45%, rgba(10,4,18,0.98) 75%);
+  --theme-glow-aura: rgba(124, 58, 237, 0.45);
+  --theme-glow-drop: rgba(139, 92, 246, 0.55);
+  --theme-stroke-color: #EDE9FE;
+  --theme-progress-shadow: 0 0 12px rgba(124, 58, 237, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 6. RUBY PRESTIGE & WINE VELVET                                            */
+/* ------------------------------------------------------------------------- */
+.theme-rubyPrestige {
+  --color-gold-50: 254 242 242;
+  --color-gold-100: 254 226 226;
+  --color-gold-200: 254 202 202;
+  --color-gold-300: 252 165 165;
+  --color-gold-400: 248 113 113;
+  --color-gold-500: 239 68 68;
+  --color-gold-600: 220 38 38;
+  --color-gold-700: 185 28 28;
+  --color-gold-800: 153 27 27;
+  --color-gold-900: 127 29 29;
+  --color-gold-950: 69 10 10;
+
+  --color-champagne-50: 255 245 245;
+  --color-champagne-100: 254 235 235;
+  --color-champagne-200: 254 215 215;
+  --color-champagne-300: 250 185 185;
+  --color-champagne-400: 245 135 135;
+  --color-champagne-500: 239 68 68;
+  --color-champagne-600: 220 38 38;
+  --color-champagne-700: 185 28 28;
+  --color-champagne-800: 153 27 27;
+  --color-champagne-900: 127 29 29;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(220,38,38,0.26) 0%, rgba(127,29,29,0.12) 45%, rgba(15,3,3,0.98) 75%);
+  --theme-glow-aura: rgba(220, 38, 38, 0.45);
+  --theme-glow-drop: rgba(239, 68, 68, 0.55);
+  --theme-stroke-color: #FEE2E2;
+  --theme-progress-shadow: 0 0 12px rgba(220, 38, 38, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 7. TEAL OPULENCE & GILDED AQUA                                            */
+/* ------------------------------------------------------------------------- */
+.theme-tealOpulence {
+  --color-gold-50: 240 253 250;
+  --color-gold-100: 204 251 241;
+  --color-gold-200: 153 246 228;
+  --color-gold-300: 94 234 212;
+  --color-gold-400: 45 212 191;
+  --color-gold-500: 20 184 166;
+  --color-gold-600: 13 148 136;
+  --color-gold-700: 15 118 110;
+  --color-gold-800: 17 94 89;
+  --color-gold-900: 19 78 74;
+  --color-gold-950: 4 47 46;
+
+  --color-champagne-50: 242 252 250;
+  --color-champagne-100: 220 248 244;
+  --color-champagne-200: 180 240 230;
+  --color-champagne-300: 130 225 210;
+  --color-champagne-400: 70 205 185;
+  --color-champagne-500: 20 184 166;
+  --color-champagne-600: 13 148 136;
+  --color-champagne-700: 15 118 110;
+  --color-champagne-800: 17 94 89;
+  --color-champagne-900: 19 78 74;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(13,148,136,0.26) 0%, rgba(19,78,74,0.12) 45%, rgba(3,20,19,0.98) 75%);
+  --theme-glow-aura: rgba(13, 148, 136, 0.45);
+  --theme-glow-drop: rgba(20, 184, 166, 0.55);
+  --theme-stroke-color: #CCFBF1;
+  --theme-progress-shadow: 0 0 12px rgba(13, 148, 136, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 8. IMPERIAL BRONZE & ANTIQUE AMBER                                        */
+/* ------------------------------------------------------------------------- */
+.theme-bronzeImperial {
+  --color-gold-50: 255 251 235;
+  --color-gold-100: 254 243 199;
+  --color-gold-200: 253 230 138;
+  --color-gold-300: 252 211 77;
+  --color-gold-400: 251 191 36;
+  --color-gold-500: 245 158 11;
+  --color-gold-600: 217 119 6;
+  --color-gold-700: 180 83 9;
+  --color-gold-800: 146 64 14;
+  --color-gold-900: 120 53 15;
+  --color-gold-950: 69 26 3;
+
+  --color-champagne-50: 255 250 240;
+  --color-champagne-100: 253 240 220;
+  --color-champagne-200: 250 225 190;
+  --color-champagne-300: 245 200 150;
+  --color-champagne-400: 235 170 100;
+  --color-champagne-500: 217 119 6;
+  --color-champagne-600: 180 83 9;
+  --color-champagne-700: 146 64 14;
+  --color-champagne-800: 120 53 15;
+  --color-champagne-900: 69 26 3;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(217,119,6,0.26) 0%, rgba(120,53,15,0.12) 45%, rgba(18,8,2,0.98) 75%);
+  --theme-glow-aura: rgba(217, 119, 6, 0.45);
+  --theme-glow-drop: rgba(245, 158, 11, 0.55);
+  --theme-stroke-color: #FEF3C7;
+  --theme-progress-shadow: 0 0 12px rgba(217, 119, 6, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 9. MIDNIGHT ONYX & ELECTRIC GOLD                                          */
+/* ------------------------------------------------------------------------- */
+.theme-midnightOnyx {
+  --color-gold-50: 254 252 232;
+  --color-gold-100: 254 249 195;
+  --color-gold-200: 254 240 138;
+  --color-gold-300: 253 224 71;
+  --color-gold-400: 250 204 21;
+  --color-gold-500: 234 179 8;
+  --color-gold-600: 202 138 4;
+  --color-gold-700: 161 98 7;
+  --color-gold-800: 133 77 14;
+  --color-gold-900: 113 63 18;
+  --color-gold-950: 10 10 10;
+
+  --color-champagne-50: 254 252 235;
+  --color-champagne-100: 253 248 210;
+  --color-champagne-200: 250 238 160;
+  --color-champagne-300: 245 220 100;
+  --color-champagne-400: 234 179 8;
+  --color-champagne-500: 202 138 4;
+  --color-champagne-600: 161 98 7;
+  --color-champagne-700: 133 77 14;
+  --color-champagne-800: 113 63 18;
+  --color-champagne-900: 50 30 8;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(234,179,8,0.26) 0%, rgba(161,98,7,0.12) 45%, rgba(6,6,6,0.99) 75%);
+  --theme-glow-aura: rgba(234, 179, 8, 0.45);
+  --theme-glow-drop: rgba(250, 204, 21, 0.55);
+  --theme-stroke-color: #FEF08A;
+  --theme-progress-shadow: 0 0 12px rgba(234, 179, 8, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 10. OBSIDIAN NOIR & PLATINUM CHROME                                       */
+/* ------------------------------------------------------------------------- */
+.theme-obsidianNoir {
+  --color-gold-50: 250 250 250;
+  --color-gold-100: 244 244 245;
+  --color-gold-200: 228 228 231;
+  --color-gold-300: 212 212 216;
+  --color-gold-400: 161 161 170;
+  --color-gold-500: 113 113 122;
+  --color-gold-600: 82 82 91;
+  --color-gold-700: 63 63 70;
+  --color-gold-800: 39 39 42;
+  --color-gold-900: 24 24 27;
+  --color-gold-950: 9 9 11;
+
+  --color-champagne-50: 250 250 250;
+  --color-champagne-100: 244 244 245;
+  --color-champagne-200: 228 228 231;
+  --color-champagne-300: 212 212 216;
+  --color-champagne-400: 161 161 170;
+  --color-champagne-500: 113 113 122;
+  --color-champagne-600: 82 82 91;
+  --color-champagne-700: 63 63 70;
+  --color-champagne-800: 39 39 42;
+  --color-champagne-900: 24 24 27;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(161,161,170,0.2) 0%, rgba(63,63,70,0.12) 45%, rgba(6,6,8,0.99) 75%);
+  --theme-glow-aura: rgba(161, 161, 170, 0.4);
+  --theme-glow-drop: rgba(212, 212, 216, 0.5);
+  --theme-stroke-color: #E4E4E7;
+  --theme-progress-shadow: 0 0 12px rgba(161, 161, 170, 0.4);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 11. PEARL IVORY & WARM CHAMPAGNE                                          */
+/* ------------------------------------------------------------------------- */
+.theme-pearlChampagne {
+  --color-gold-50: 253 251 247;
+  --color-gold-100: 250 245 238;
+  --color-gold-200: 244 235 220;
+  --color-gold-300: 235 220 198;
+  --color-gold-400: 218 195 165;
+  --color-gold-500: 197 168 128;
+  --color-gold-600: 168 136 96;
+  --color-gold-700: 137 108 72;
+  --color-gold-800: 106 82 53;
+  --color-gold-900: 78 58 36;
+  --color-gold-950: 44 34 24;
+
+  --color-champagne-50: 253 251 247;
+  --color-champagne-100: 250 245 238;
+  --color-champagne-200: 244 235 220;
+  --color-champagne-300: 235 220 198;
+  --color-champagne-400: 218 195 165;
+  --color-champagne-500: 197 168 128;
+  --color-champagne-600: 168 136 96;
+  --color-champagne-700: 137 108 72;
+  --color-champagne-800: 106 82 53;
+  --color-champagne-900: 78 58 36;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(197,168,128,0.28) 0%, rgba(137,108,72,0.12) 45%, rgba(15,12,9,0.98) 75%);
+  --theme-glow-aura: rgba(197, 168, 128, 0.45);
+  --theme-glow-drop: rgba(218, 195, 165, 0.55);
+  --theme-stroke-color: #EBDDCF;
+  --theme-progress-shadow: 0 0 12px rgba(197, 168, 128, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 12. ROSE GOLD COUTURE & SILK BLUSH                                        */
+/* ------------------------------------------------------------------------- */
+.theme-roseGoldDeluxe {
+  --color-gold-50: 255 241 242;
+  --color-gold-100: 255 228 230;
+  --color-gold-200: 254 205 211;
+  --color-gold-300: 253 164 175;
+  --color-gold-400: 251 113 133;
+  --color-gold-500: 244 63 94;
+  --color-gold-600: 225 29 72;
+  --color-gold-700: 190 18 60;
+  --color-gold-800: 159 18 57;
+  --color-gold-900: 136 19 55;
+  --color-gold-950: 76 5 25;
+
+  --color-champagne-50: 255 245 246;
+  --color-champagne-100: 255 235 238;
+  --color-champagne-200: 254 210 218;
+  --color-champagne-300: 250 175 190;
+  --color-champagne-400: 244 130 152;
+  --color-champagne-500: 235 85 115;
+  --color-champagne-600: 225 29 72;
+  --color-champagne-700: 190 18 60;
+  --color-champagne-800: 159 18 57;
+  --color-champagne-900: 136 19 55;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(251,113,133,0.28) 0%, rgba(190,18,60,0.12) 45%, rgba(20,7,10,0.98) 75%);
+  --theme-glow-aura: rgba(251, 113, 133, 0.45);
+  --theme-glow-drop: rgba(253, 164, 175, 0.55);
+  --theme-stroke-color: #FECDD3;
+  --theme-progress-shadow: 0 0 12px rgba(251, 113, 133, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 13. PLATINUM FROST & DIAMOND ICE                                          */
+/* ------------------------------------------------------------------------- */
+.theme-platinumElegance {
+  --color-gold-50: 240 249 255;
+  --color-gold-100: 224 242 254;
+  --color-gold-200: 186 230 253;
+  --color-gold-300: 125 211 252;
+  --color-gold-400: 56 189 248;
+  --color-gold-500: 14 165 233;
+  --color-gold-600: 2 132 199;
+  --color-gold-700: 3 105 161;
+  --color-gold-800: 7 89 133;
+  --color-gold-900: 12 74 110;
+  --color-gold-950: 8 47 73;
+
+  --color-champagne-50: 242 250 255;
+  --color-champagne-100: 225 243 254;
+  --color-champagne-200: 190 232 253;
+  --color-champagne-300: 135 215 252;
+  --color-champagne-400: 65 192 248;
+  --color-champagne-500: 14 165 233;
+  --color-champagne-600: 2 132 199;
+  --color-champagne-700: 3 105 161;
+  --color-champagne-800: 7 89 133;
+  --color-champagne-900: 12 74 110;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(2,132,199,0.26) 0%, rgba(12,74,110,0.12) 45%, rgba(3,15,24,0.98) 75%);
+  --theme-glow-aura: rgba(2, 132, 199, 0.45);
+  --theme-glow-drop: rgba(56, 189, 248, 0.55);
+  --theme-stroke-color: #BAE6FD;
+  --theme-progress-shadow: 0 0 12px rgba(2, 132, 199, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 14. LAVENDER MIST & CASHMERE WHITE                                        */
+/* ------------------------------------------------------------------------- */
+.theme-lavenderBliss {
+  --color-gold-50: 250 245 255;
+  --color-gold-100: 243 232 255;
+  --color-gold-200: 233 213 255;
+  --color-gold-300: 216 180 254;
+  --color-gold-400: 192 132 252;
+  --color-gold-500: 168 85 247;
+  --color-gold-600: 147 51 234;
+  --color-gold-700: 126 34 206;
+  --color-gold-800: 107 33 168;
+  --color-gold-900: 88 28 135;
+  --color-gold-950: 59 7 100;
+
+  --color-champagne-50: 250 245 255;
+  --color-champagne-100: 243 232 255;
+  --color-champagne-200: 233 213 255;
+  --color-champagne-300: 216 180 254;
+  --color-champagne-400: 192 132 252;
+  --color-champagne-500: 168 85 247;
+  --color-champagne-600: 147 51 234;
+  --color-champagne-700: 126 34 206;
+  --color-champagne-800: 107 33 168;
+  --color-champagne-900: 88 28 135;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(147,51,234,0.26) 0%, rgba(88,28,135,0.12) 45%, rgba(15,5,22,0.98) 75%);
+  --theme-glow-aura: rgba(147, 51, 234, 0.45);
+  --theme-glow-drop: rgba(192, 132, 252, 0.55);
+  --theme-stroke-color: #F3E8FF;
+  --theme-progress-shadow: 0 0 12px rgba(147, 51, 234, 0.45);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 15. SAGE BOTANICAL & FRENCH LINEN                                         */
+/* ------------------------------------------------------------------------- */
+.theme-sageBotanical {
+  --color-gold-50: 240 253 244;
+  --color-gold-100: 220 252 231;
+  --color-gold-200: 187 247 208;
+  --color-gold-300: 134 239 172;
+  --color-gold-400: 74 222 128;
+  --color-gold-500: 34 197 94;
+  --color-gold-600: 22 163 74;
+  --color-gold-700: 21 128 61;
+  --color-gold-800: 22 101 52;
+  --color-gold-900: 20 83 45;
+  --color-gold-950: 5 46 22;
+
+  --color-champagne-50: 242 251 245;
+  --color-champagne-100: 225 248 232;
+  --color-champagne-200: 195 240 210;
+  --color-champagne-300: 150 230 175;
+  --color-champagne-400: 90 215 135;
+  --color-champagne-500: 34 197 94;
+  --color-champagne-600: 22 163 74;
+  --color-champagne-700: 21 128 61;
+  --color-champagne-800: 22 101 52;
+  --color-champagne-900: 20 83 45;
+
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(22,163,74,0.26) 0%, rgba(20,83,45,0.12) 45%, rgba(5,18,10,0.98) 75%);
+  --theme-glow-aura: rgba(22, 163, 74, 0.45);
+  --theme-glow-drop: rgba(74, 222, 128, 0.55);
+  --theme-stroke-color: #BBF7D0;
+  --theme-progress-shadow: 0 0 12px rgba(22, 163, 74, 0.45);
+}
+
+/* ========================================================================= */
+/* UNIVERSAL THEME STYLES (SELECTIONS, SCROLLBARS, GRADIENTS & SHADOWS)      */
+/* ========================================================================= */
+
+::selection {
+  background: rgb(var(--color-gold-500));
+  color: #FFFFFF;
+}
+
+/* Custom Luxury Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F4EFEB;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-gold-500) / 0.8);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-gold-600));
+}
+
+/* Glassmorphism Classes */
+.glass-luxury {
+  background: rgba(253, 251, 247, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgb(var(--color-champagne-500) / 0.25);
+}
+
+.glass-dark {
+  background: rgba(20, 20, 20, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgb(var(--color-gold-500) / 0.2);
+}
+
+/* Dynamic Gradient Text */
+.text-gold-gradient {
+  background: linear-gradient(135deg, rgb(var(--color-gold-500)) 0%, rgb(var(--color-gold-300)) 50%, rgb(var(--color-gold-700)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-shimmer {
+  background: linear-gradient(90deg, rgb(var(--color-gold-700)) 0%, rgb(var(--color-gold-300)) 50%, rgb(var(--color-gold-700)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Editorial Title Helpers */
+h1, h2, h3, .font-editorial {
+  font-family: var(--font-cormorant), 'Playfair Display', Georgia, serif;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
+
+.shadow-glow-gold {
+  box-shadow: 0 0 25px rgb(var(--color-gold-500) / 0.35) !important;
+}
+
+/* Universal Scrollbar Hidden Utilities */
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.scrollbar-none {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Floating Navbar Luxury Glass Shadow */
+.shadow-floating-navbar {
+  box-shadow: 0 16px 45px -10px rgba(0, 0, 0, 0.75), 0 0 25px rgba(212, 175, 55, 0.15);
+}
