@@ -77,31 +77,34 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ivory-100 flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-7 bg-ivory-50 border border-champagne-300 p-8 sm:p-10 rounded-3xl shadow-luxury-lg relative overflow-hidden">
+    <div className="min-h-screen bg-[#070709] text-ivory-50 flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Radiant Background Glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(229,168,59,0.08),transparent_70%)] pointer-events-none" />
+
+      <div className="max-w-md w-full space-y-6 sm:space-y-7 bg-[#0C0C12] border border-gold-500/30 p-6 sm:p-10 rounded-3xl shadow-2xl relative overflow-hidden">
         {/* Decorative corner */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/10 rounded-bl-full pointer-events-none" />
 
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-xs uppercase tracking-[0.25em] font-semibold">
+          <div className="inline-flex items-center space-x-2 text-gold-400 text-xs uppercase tracking-[0.25em] font-semibold bg-gold-500/10 px-3.5 py-1 rounded-full border border-gold-500/30">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Join Lumière</span>
           </div>
-          <h2 className="font-serif text-3xl text-obsidian-950 font-light">
+          <h2 className="font-serif text-2xl sm:text-3xl text-ivory-50 font-light">
             Create Client Account
           </h2>
-          <p className="text-xs text-obsidian-500 font-light">
+          <p className="text-xs text-ivory-400 font-light">
             Register to request custom bookings and track your rental orders.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+            <label className="block text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
               Full Name *
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <User className="w-4 h-4 text-gold-400/70 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={formData.name}
@@ -109,16 +112,16 @@ export default function RegisterPage() {
                   setFormData({ ...formData, name: e.target.value });
                   if (errors.name) setErrors({ ...errors, name: null });
                 }}
-                placeholder="e.g. Sophia Montgomery"
-                className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-white text-xs focus:outline-none transition-colors ${
+                placeholder="e.g. Marcus Sterling"
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-[#14141C] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none transition-colors ${
                   errors.name
-                    ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                    : 'border-champagne-300 focus:border-gold-500'
+                    ? 'border-red-400 focus:border-red-500 ring-1 ring-red-400/30'
+                    : 'border-gold-500/30 focus:border-gold-400'
                 }`}
               />
             </div>
             {errors.name && (
-              <p className="text-[10px] text-red-600 mt-1 flex items-center">
+              <p className="text-[10px] text-red-400 mt-1 flex items-center">
                 <AlertCircle className="w-3 h-3 mr-1" />
                 {errors.name}
               </p>
@@ -126,11 +129,11 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+            <label className="block text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
               Email Address *
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-gold-400/70 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="email"
                 value={formData.email}
@@ -139,15 +142,15 @@ export default function RegisterPage() {
                   if (errors.email) setErrors({ ...errors, email: null });
                 }}
                 placeholder="you@example.com"
-                className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-white text-xs focus:outline-none transition-colors ${
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-[#14141C] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none transition-colors ${
                   errors.email
-                    ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                    : 'border-champagne-300 focus:border-gold-500'
+                    ? 'border-red-400 focus:border-red-500 ring-1 ring-red-400/30'
+                    : 'border-gold-500/30 focus:border-gold-400'
                 }`}
               />
             </div>
             {errors.email && (
-              <p className="text-[10px] text-red-600 mt-1 flex items-center">
+              <p className="text-[10px] text-red-400 mt-1 flex items-center">
                 <AlertCircle className="w-3 h-3 mr-1" />
                 {errors.email}
               </p>
@@ -155,11 +158,11 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+            <label className="block text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
               Phone Number (Pakistan 🇵🇰 - Optional)
             </label>
             <div className="relative">
-              <Phone className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Phone className="w-4 h-4 text-gold-400/70 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="tel"
                 value={formData.phone}
@@ -168,15 +171,15 @@ export default function RegisterPage() {
                   if (errors.phone) setErrors({ ...errors, phone: null });
                 }}
                 placeholder="03140660985 or +923140660985"
-                className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-white text-xs focus:outline-none transition-colors ${
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-[#14141C] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none transition-colors ${
                   errors.phone
-                    ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                    : 'border-champagne-300 focus:border-gold-500'
+                    ? 'border-red-400 focus:border-red-500 ring-1 ring-red-400/30'
+                    : 'border-gold-500/30 focus:border-gold-400'
                 }`}
               />
             </div>
             {errors.phone && (
-              <p className="text-[10px] text-red-600 mt-1 flex items-center">
+              <p className="text-[10px] text-red-400 mt-1 flex items-center">
                 <AlertCircle className="w-3 h-3 mr-1" />
                 {errors.phone}
               </p>
@@ -184,11 +187,11 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+            <label className="block text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
               Password (min 6 characters) *
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-gold-400/70 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="password"
                 value={formData.password}
@@ -197,15 +200,15 @@ export default function RegisterPage() {
                   if (errors.password) setErrors({ ...errors, password: null });
                 }}
                 placeholder="••••••••"
-                className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-white text-xs focus:outline-none transition-colors ${
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-[#14141C] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none transition-colors ${
                   errors.password
-                    ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                    : 'border-champagne-300 focus:border-gold-500'
+                    ? 'border-red-400 focus:border-red-500 ring-1 ring-red-400/30'
+                    : 'border-gold-500/30 focus:border-gold-400'
                 }`}
               />
             </div>
             {errors.password && (
-              <p className="text-[10px] text-red-600 mt-1 flex items-center">
+              <p className="text-[10px] text-red-400 mt-1 flex items-center">
                 <AlertCircle className="w-3 h-3 mr-1" />
                 {errors.password}
               </p>
@@ -213,11 +216,11 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+            <label className="block text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
               Confirm Password *
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-gold-400/70 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="password"
                 value={formData.confirmPassword}
@@ -226,15 +229,15 @@ export default function RegisterPage() {
                   if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: null });
                 }}
                 placeholder="••••••••"
-                className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-white text-xs focus:outline-none transition-colors ${
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-[#14141C] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none transition-colors ${
                   errors.confirmPassword
-                    ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                    : 'border-champagne-300 focus:border-gold-500'
+                    ? 'border-red-400 focus:border-red-500 ring-1 ring-red-400/30'
+                    : 'border-gold-500/30 focus:border-gold-400'
                 }`}
               />
             </div>
             {errors.confirmPassword && (
-              <p className="text-[10px] text-red-600 mt-1 flex items-center">
+              <p className="text-[10px] text-red-400 mt-1 flex items-center">
                 <AlertCircle className="w-3 h-3 mr-1" />
                 {errors.confirmPassword}
               </p>
@@ -244,7 +247,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-champagne-500 text-obsidian-950 font-semibold text-xs uppercase tracking-[0.2em] shadow-md hover:shadow-glow-gold transition-all flex items-center justify-center"
+            className="w-full py-3.5 rounded-full bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:brightness-110 shadow-glow-pill transition-all flex items-center justify-center"
           >
             {loading ? (
               <>
@@ -257,11 +260,21 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        <div className="pt-2 text-center text-xs text-obsidian-500">
+        <div className="pt-2 text-center text-xs text-ivory-400 space-y-2 border-t border-gold-500/20">
           <p>
-            Already have an account?{' '}
-            <Link href="/login" className="text-gold-700 font-semibold hover:underline">
-              Sign In
+            Already have a Client account?{' '}
+            <Link href="/login?role=customer" className="text-gold-400 font-semibold hover:underline">
+              Sign In to Client Portal
+            </Link>
+          </p>
+          <p className="text-[11px] text-champagne-400/80">
+            Studio team member?{' '}
+            <Link href="/login?role=staff" className="text-emerald-400 font-semibold hover:underline">
+              Staff Terminal
+            </Link>{' '}
+            or{' '}
+            <Link href="/login?role=admin" className="text-gold-400 font-semibold hover:underline">
+              Admin Suite
             </Link>
           </p>
         </div>

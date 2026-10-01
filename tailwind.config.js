@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -69,8 +70,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        serif: ['var(--font-cormorant)', 'Playfair Display', 'Georgia', 'serif'],
-        sans: ['var(--font-outfit)', 'Plus Jakarta Sans', 'Inter', 'sans-serif'],
+        serif: ['var(--font-playfair)', 'var(--font-cormorant)', 'Playfair Display', 'Cormorant Garamond', 'Georgia', 'serif'],
+        sans: ['var(--font-jakarta)', 'var(--font-outfit)', 'Plus Jakarta Sans', 'Outfit', 'Inter', 'system-ui', 'sans-serif'],
+        editorial: ['var(--font-playfair)', 'Playfair Display', 'Georgia', 'serif'],
       },
       animation: {
         'float-slow': 'float 8s ease-in-out infinite',
@@ -92,10 +94,11 @@ module.exports = {
         },
       },
       boxShadow: {
-        'luxury': '0 20px 40px -15px rgb(var(--color-champagne-500) / 0.15)',
-        'luxury-lg': '0 30px 60px -20px rgba(20, 20, 20, 0.12), 0 10px 20px -5px rgb(var(--color-gold-500) / 0.08)',
-        'luxury-card': '0 10px 30px -10px rgba(0, 0, 0, 0.05)',
-        'glow-gold': '0 0 25px rgb(var(--color-gold-500) / 0.35)',
+        'luxury': '0 20px 40px -15px rgba(0, 0, 0, 0.08), 0 0 20px -5px rgb(var(--color-gold-500) / 0.12)',
+        'luxury-lg': '0 30px 60px -20px rgba(0, 0, 0, 0.2), 0 10px 25px -5px rgb(var(--color-gold-500) / 0.15)',
+        'luxury-card': '0 10px 30px -10px rgba(0, 0, 0, 0.06)',
+        'glow-gold': '0 0 30px rgb(var(--color-gold-500) / 0.45)',
+        'glow-pill': '0 4px 20px rgba(229, 168, 59, 0.35)',
       },
     },
   },

@@ -55,14 +55,49 @@ export const RentalCartProvider = ({ children }) => {
     }
   }, [cartItems, eventDate, returnDate, rentalMode, rentalHours]);
 
+  const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
+
+  const isDateRangeValid = useMemo(() => {
+    if (!eventDate || !returnDate) return false;
+    if (eventDate < todayStr) return false;
+    if (returnDate < eventDate) return false;
+    return true;
+  }, [eventDate, returnDate, todayStr]);
+
+  const dateError = useMemo(() => {
+    if (!eventDate) return 'Please select event start date';
+    if (!returnDate) return 'Please select return date';
+    if (eventDate < todayStr) return 'Event start date cannot be in the past';
+    if (returnDate < eventDate) return 'Return date cannot be earlier than event start date';
+    return null;
+  }, [eventDate, returnDate, todayStr]);
+
   const daysCount = useMemo(() => {
     if (!eventDate || !returnDate) return 1;
-    const start = new Date(eventDate);
-    const end = new Date(returnDate);
-    const diffTime = Math.abs(end - start);
+    if (returnDate < eventDate) return 1;
+    const start = new Date(eventDate + 'T00:00:00');
+    const end = new Date(returnDate + 'T00:00:00');
+    if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) return 1;
+    const diffTime = end.getTime() - start.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return Math.max(1, diffDays);
   }, [eventDate, returnDate]);
+
+  const handleSetEventDate = (date) => {
+    setEventDate(date);
+    if (date && returnDate && returnDate < date) {
+      setReturnDate(date);
+    }
+  };
+
+  const handleSetReturnDate = (date) => {
+    if (date && eventDate && date < eventDate) {
+      showToast('Return date cannot be earlier than event start date', 'error');
+      setReturnDate(eventDate);
+      return;
+    }
+    setReturnDate(date);
+  };
 
   // Calculate unit rate for an item depending on DAILY vs HOURLY mode
   const calculateItemUnitRate = (item) => {
@@ -223,6 +258,16 @@ export const RentalCartProvider = ({ children }) => {
       return;
     }
 
+    if (eventDate < todayStr) {
+      showToast('Event start date cannot be in the past', 'error');
+      return;
+    }
+
+    if (returnDate < eventDate) {
+      showToast('Return date cannot be earlier than event start date', 'error');
+      return;
+    }
+
     setSubmitting(true);
     try {
       const payload = {
@@ -271,9 +316,11 @@ export const RentalCartProvider = ({ children }) => {
       value={{
         cartItems,
         eventDate,
-        setEventDate,
+        setEventDate: handleSetEventDate,
         returnDate,
-        setReturnDate,
+        setReturnDate: handleSetReturnDate,
+        isDateRangeValid,
+        dateError,
         rentalMode,
         setRentalMode,
         rentalHours,

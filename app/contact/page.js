@@ -99,6 +99,7 @@ export default function ContactPage() {
         name: '',
         email: '',
         phone: '',
+        location: '',
         eventType: 'Wedding',
         eventDate: '',
         message: '',
@@ -115,123 +116,136 @@ export default function ContactPage() {
   const todayStr = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="bg-ivory-100 text-obsidian-900 pt-28 pb-20">
+    <div className="bg-[#070709] text-ivory-50 pt-24 sm:pt-28 pb-16 sm:pb-20 w-full overflow-hidden min-h-screen">
       {/* Header */}
-      <section className="py-16 bg-champagne-50 border-b border-champagne-300/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-xs uppercase tracking-[0.3em] font-semibold">
-            <Sparkles className="w-4 h-4" />
+      <section className="py-12 sm:py-16 bg-gradient-to-b from-[#0D0D14] via-[#09090D] to-[#070709] border-b border-gold-500/20 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(229,168,59,0.08),transparent_70%)] pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4 relative z-10">
+          <div className="inline-flex items-center space-x-2 text-gold-400 text-[11px] sm:text-xs uppercase tracking-[0.3em] font-semibold bg-gold-500/10 px-4 py-1.5 rounded-full border border-gold-500/30">
+            <Sparkles className="w-4 h-4 text-gold-400" />
             <span>Private Concierge</span>
           </div>
-          <h1 className="font-serif text-4xl sm:text-6xl text-obsidian-950 font-light">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-ivory-50 font-light tracking-tight">
             Contact Lumière Decor
           </h1>
-          <p className="text-sm sm:text-base text-obsidian-600 max-w-2xl mx-auto font-light leading-relaxed">
-            Begin your journey toward an extraordinary celebration. Reach out to our design atelier for commissions and consultations.
+          <p className="text-xs sm:text-sm md:text-base text-ivory-300 max-w-2xl mx-auto font-light leading-relaxed">
+            Begin your journey toward an extraordinary celebration in Pakistan. Reach out to our design atelier for commissions and consultations.
           </p>
         </div>
       </section>
 
       {/* Main Grid */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+      <section className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Left Column: Contact Information Cards */}
-          <div className="lg:col-span-5 space-y-8">
-            <div className="space-y-3">
-              <span className="text-xs uppercase tracking-[0.25em] text-gold-700 font-semibold">
+          <div className="lg:col-span-5 space-y-6">
+            <div className="space-y-2">
+              <span className="text-xs uppercase tracking-[0.25em] text-gold-400 font-semibold">
                 Studio Headquarters
               </span>
-              <h2 className="font-serif text-3xl text-obsidian-950 font-light">
+              <h2 className="font-serif text-2xl sm:text-3xl text-ivory-50 font-light">
                 Our Flagship Atelier
               </h2>
-              <p className="text-xs text-obsidian-600 font-light leading-relaxed">
-                By appointment only. We welcome couples, wedding planners, and corporate producers to our Beverly Hills design studio.
+              <p className="text-xs text-ivory-300 font-light leading-relaxed">
+                By appointment only. We welcome couples, wedding planners, and corporate hosts to our design studios across Pakistan.
               </p>
             </div>
 
-            <div className="space-y-4">
-              <div className="p-5 bg-ivory-50 border border-champagne-300 rounded-2xl flex items-start space-x-4 shadow-sm">
-                <div className="p-3 bg-gold-500/10 text-gold-600 rounded-xl">
+            <div className="space-y-3.5">
+              <div className="p-4 sm:p-5 bg-[#0D0D14] border border-gold-500/30 rounded-2xl flex items-start space-x-4 shadow-md hover:border-gold-400 transition-colors">
+                <div className="p-3 bg-gold-500/15 border border-gold-500/30 text-gold-400 rounded-xl flex-shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="font-serif text-sm font-semibold text-obsidian-900">Address</h4>
-                  <p className="text-xs text-obsidian-600 font-light leading-relaxed">
-                    9450 Wilshire Blvd, Suite 800<br />
-                    Beverly Hills, CA 90212
+                  <h4 className="font-serif text-sm font-semibold text-ivory-50">Headquarters</h4>
+                  <p className="text-xs text-ivory-300 font-light leading-relaxed">
+                    Gulberg III / DHA Phase 5, Lahore, Pakistan<br />
+                    Serving Islamabad, Karachi, Rawalpindi & Nationwide
                   </p>
                 </div>
               </div>
 
-              <div className="p-5 bg-ivory-50 border border-champagne-300 rounded-2xl flex items-start space-x-4 shadow-sm">
-                <div className="p-3 bg-gold-500/10 text-gold-600 rounded-xl">
+              <div className="p-4 sm:p-5 bg-[#0D0D14] border border-gold-500/30 rounded-2xl flex items-start space-x-4 shadow-md hover:border-gold-400 transition-colors">
+                <div className="p-3 bg-gold-500/15 border border-gold-500/30 text-gold-400 rounded-xl flex-shrink-0">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="font-serif text-sm font-semibold text-obsidian-900">Direct Concierge</h4>
-                  <p className="text-xs text-obsidian-600 font-light">+92 (314) 0660985</p>
-                  <p className="text-[10px] text-gold-700 font-medium">WhatsApp: 03140660985</p>
+                  <h4 className="font-serif text-sm font-semibold text-ivory-50">Direct Concierge</h4>
+                  <p className="text-xs text-ivory-300 font-light">+92 (314) 0660985</p>
+                  <p className="text-[10px] text-gold-400 font-medium">WhatsApp: 03140660985</p>
                 </div>
               </div>
 
-              <div className="p-5 bg-ivory-50 border border-champagne-300 rounded-2xl flex items-start space-x-4 shadow-sm">
-                <div className="p-3 bg-gold-500/10 text-gold-600 rounded-xl">
+              <div className="p-4 sm:p-5 bg-[#0D0D14] border border-gold-500/30 rounded-2xl flex items-start space-x-4 shadow-md hover:border-gold-400 transition-colors">
+                <div className="p-3 bg-gold-500/15 border border-gold-500/30 text-gold-400 rounded-xl flex-shrink-0">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="font-serif text-sm font-semibold text-obsidian-900">Inquiries Email</h4>
-                  <p className="text-xs text-obsidian-600 font-light">umerIjaz960@gmail.com</p>
-                  <p className="text-[10px] text-obsidian-400">Response within 24 business hours</p>
+                  <h4 className="font-serif text-sm font-semibold text-ivory-50">Inquiries Email</h4>
+                  <p className="text-xs text-ivory-300 font-light">alirajpoot8857@gmail.com</p>
+                  <p className="text-[10px] text-ivory-400">Response within 24 business hours</p>
                 </div>
               </div>
 
-              <div className="p-5 bg-ivory-50 border border-champagne-300 rounded-2xl flex items-start space-x-4 shadow-sm">
-                <div className="p-3 bg-gold-500/10 text-gold-600 rounded-xl">
+              <div className="p-4 sm:p-5 bg-[#0D0D14] border border-gold-500/30 rounded-2xl flex items-start space-x-4 shadow-md hover:border-gold-400 transition-colors">
+                <div className="p-3 bg-gold-500/15 border border-gold-500/30 text-gold-400 rounded-xl flex-shrink-0">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="font-serif text-sm font-semibold text-obsidian-900">Studio Hours</h4>
-                  <p className="text-xs text-obsidian-600 font-light">Monday – Friday: 9:00 AM – 6:00 PM</p>
-                  <p className="text-xs text-obsidian-600 font-light">Saturday: 10:00 AM – 4:00 PM (By Appt)</p>
+                  <h4 className="font-serif text-sm font-semibold text-ivory-50">Studio Hours</h4>
+                  <p className="text-xs text-ivory-300 font-light">Monday – Friday: 9:00 AM – 8:00 PM</p>
+                  <p className="text-xs text-ivory-300 font-light">Saturday – Sunday: 10:00 AM – 6:00 PM</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Right Column: Contact Inquiry Form */}
-          <div className="lg:col-span-7 bg-ivory-50 border border-champagne-300 rounded-3xl p-8 sm:p-10 shadow-luxury">
+          <div className="lg:col-span-7 bg-[#0C0C12] border border-gold-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl">
             {submitted ? (
               <div className="text-center py-12 space-y-4">
-                <div className="w-16 h-16 mx-auto bg-gold-500/10 text-gold-600 rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 mx-auto bg-emerald-950/80 border border-emerald-500/50 text-emerald-400 rounded-full flex items-center justify-center">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="font-serif text-2xl text-obsidian-950 font-light">
+                <h3 className="font-serif text-2xl text-ivory-50 font-light">
                   Inquiry Received
                 </h3>
-                <p className="text-xs text-obsidian-600 max-w-md mx-auto leading-relaxed">
-                  Thank you for reaching out to Lumière Decor. One of our event designers will review your vision and connect with you shortly.
+                <p className="text-xs text-ivory-300 max-w-md mx-auto leading-relaxed">
+                  Thank you for reaching out to Lumière Decor. One of our lead scenographers will review your vision and connect with you shortly.
                 </p>
                 <button
-                  onClick={() => setSubmitted(false)}
-                  className="px-6 py-2.5 bg-obsidian-900 text-ivory-50 rounded-full text-xs uppercase tracking-widest hover:bg-gold-600 transition-colors shadow-md"
+                  onClick={() => {
+                    setSubmitted(false);
+                    setFormData({
+                      name: '',
+                      email: '',
+                      phone: '',
+                      location: '',
+                      eventType: 'Wedding',
+                      eventDate: '',
+                      message: '',
+                    });
+                    setErrors({});
+                  }}
+                  className="px-6 py-2.5 bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 rounded-full text-xs uppercase tracking-widest font-bold hover:brightness-110 transition-colors shadow-md"
                 >
                   Send Another Inquiry
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="space-y-1 mb-6">
-                  <h3 className="font-serif text-2xl text-obsidian-950 font-light">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+                <div className="space-y-1 mb-4">
+                  <h3 className="font-serif text-2xl text-ivory-50 font-light">
                     Send an Inquiry
                   </h3>
-                  <p className="text-xs text-obsidian-500 font-light">
+                  <p className="text-xs text-ivory-400 font-light">
                     Please provide your event date and design requirements.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                    <label className="block text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
                       Your Full Name *
                     </label>
                     <input
@@ -241,23 +255,23 @@ export default function ContactPage() {
                         setFormData({ ...formData, name: e.target.value });
                         if (errors.name) setErrors({ ...errors, name: null });
                       }}
-                      placeholder="e.g. Lady Victoria Spencer"
-                      className={`w-full text-xs p-3 rounded-xl border bg-white focus:outline-none transition-colors ${
+                      placeholder="e.g. Marcus Sterling"
+                      className={`w-full text-xs p-3 rounded-xl border bg-[#14141C] text-ivory-50 placeholder:text-ivory-600 focus:outline-none transition-colors ${
                         errors.name
-                          ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                          : 'border-champagne-300 focus:border-gold-500'
+                          ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5'
+                          : 'border-gold-500/30 focus:border-gold-400'
                       }`}
                     />
                     {errors.name && (
-                      <p className="text-[10px] text-red-600 mt-1 flex items-center">
-                        <AlertCircle className="w-3 h-3 mr-1" />
+                      <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
                         {errors.name}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                    <label className="block text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
                       Email Address *
                     </label>
                     <input
@@ -268,15 +282,15 @@ export default function ContactPage() {
                         if (errors.email) setErrors({ ...errors, email: null });
                       }}
                       placeholder="you@example.com"
-                      className={`w-full text-xs p-3 rounded-xl border bg-white focus:outline-none transition-colors ${
+                      className={`w-full text-xs p-3 rounded-xl border bg-[#14141C] text-ivory-50 placeholder:text-ivory-600 focus:outline-none transition-colors ${
                         errors.email
-                          ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                          : 'border-champagne-300 focus:border-gold-500'
+                          ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5'
+                          : 'border-gold-500/30 focus:border-gold-400'
                       }`}
                     />
                     {errors.email && (
-                      <p className="text-[10px] text-red-600 mt-1 flex items-center">
-                        <AlertCircle className="w-3 h-3 mr-1" />
+                      <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
                         {errors.email}
                       </p>
                     )}
@@ -285,7 +299,7 @@ export default function ContactPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                    <label className="block text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
                       Phone Number (Pakistan 🇵🇰)
                     </label>
                     <input
@@ -296,15 +310,15 @@ export default function ContactPage() {
                         if (errors.phone) setErrors({ ...errors, phone: null });
                       }}
                       placeholder="03140660985 or +923140660985"
-                      className={`w-full text-xs p-3 rounded-xl border bg-white focus:outline-none transition-colors ${
+                      className={`w-full text-xs p-3 rounded-xl border bg-[#14141C] text-ivory-50 placeholder:text-ivory-600 focus:outline-none transition-colors ${
                         errors.phone
-                          ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                          : 'border-champagne-300 focus:border-gold-500'
+                          ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5'
+                          : 'border-gold-500/30 focus:border-gold-400'
                       }`}
                     />
                     {errors.phone && (
-                      <p className="text-[10px] text-red-600 mt-1 flex items-center">
-                        <AlertCircle className="w-3 h-3 mr-1" />
+                      <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
                         {errors.phone}
                       </p>
                     )}
@@ -329,6 +343,7 @@ export default function ContactPage() {
                         if (errors.eventDate) setErrors({ ...errors, eventDate: null });
                       }}
                       error={errors.eventDate}
+                      align="right"
                     />
                   </div>
                 </div>
@@ -343,7 +358,7 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                  <label className="block text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
                     Your Message / Design Requirements *
                   </label>
                   <textarea
@@ -354,15 +369,15 @@ export default function ContactPage() {
                       if (errors.message) setErrors({ ...errors, message: null });
                     }}
                     placeholder="Tell us about the venue, guest count, theme inspirations, or preferred floral arrangements..."
-                    className={`w-full text-xs p-3 rounded-xl border bg-white focus:outline-none transition-colors ${
+                    className={`w-full text-xs p-3 rounded-xl border bg-[#14141C] text-ivory-50 placeholder:text-ivory-600 focus:outline-none transition-colors ${
                       errors.message
-                        ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                        : 'border-champagne-300 focus:border-gold-500'
+                        ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5'
+                        : 'border-gold-500/30 focus:border-gold-400'
                     }`}
                   />
                   {errors.message && (
-                    <p className="text-[10px] text-red-600 mt-1 flex items-center">
-                      <AlertCircle className="w-3 h-3 mr-1" />
+                    <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
                       {errors.message}
                     </p>
                   )}
@@ -371,7 +386,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-4 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-champagne-500 text-obsidian-950 font-semibold text-xs uppercase tracking-[0.2em] shadow-md hover:shadow-glow-gold hover:scale-[1.01] transition-all flex items-center justify-center"
+                  className="w-full py-4 rounded-full bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:brightness-110 shadow-glow-pill transition-all flex items-center justify-center"
                 >
                   {submitting ? (
                     <>

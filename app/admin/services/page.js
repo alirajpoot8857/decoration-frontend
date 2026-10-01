@@ -6,7 +6,8 @@ import api from '../../../src/lib/api';
 import { useToast } from '../../../src/context/ToastContext';
 import { useConfirmModal } from '../../../src/context/ConfirmModalContext';
 import LuxurySpinner from '../../../src/components/ui/LuxurySpinner';
-import { Layers, Plus, Edit, Trash2, CheckCircle2 } from 'lucide-react';
+import useBodyScrollLock from '../../../src/hooks/useBodyScrollLock';
+import { Layers, Plus, Edit, Trash2, CheckCircle2, X } from 'lucide-react';
 
 export default function AdminServicesPage() {
   const { showToast } = useToast();
@@ -16,6 +17,8 @@ export default function AdminServicesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingService, setEditingService] = useState(null);
   const [saving, setSaving] = useState(false);
+
+  useBodyScrollLock(modalOpen);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -140,18 +143,21 @@ export default function AdminServicesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-[10px] uppercase tracking-[0.25em] font-semibold">
+          <div className="inline-flex items-center space-x-2 text-gold-400 text-[10px] uppercase tracking-[0.25em] font-semibold">
             <Layers className="w-3.5 h-3.5" />
             <span>Service Disciplines</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-obsidian-950 font-light">
+          <h1 className="font-serif text-3xl sm:text-4xl text-ivory-50 font-light mt-1">
             Décor Service Offerings
           </h1>
+          <p className="text-xs text-ivory-400 font-light mt-1">
+            Manage your signature décor disciplines, starting prices, and spatial inclusions.
+          </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center space-x-2 px-6 py-2.5 bg-obsidian-950 text-ivory-50 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-gold-600 transition-colors shadow-sm"
+          className="inline-flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 rounded-full text-xs uppercase tracking-widest font-bold hover:brightness-110 transition-all duration-300 shadow-md active:scale-95"
         >
           <Plus className="w-4 h-4" />
           <span>Add Service Offering</span>
@@ -160,7 +166,7 @@ export default function AdminServicesPage() {
 
       {/* Services Grid */}
       {loading ? (
-        <div className="py-20">
+        <div className="py-24">
           <LuxurySpinner size="lg" text="Loading atelier services..." />
         </div>
       ) : (
@@ -175,27 +181,27 @@ export default function AdminServicesPage() {
             return (
               <div
                 key={s.id}
-                className="bg-white rounded-3xl p-6 border border-champagne-300 shadow-sm flex flex-col justify-between space-y-4"
+                className="bg-[#0D0D12] rounded-3xl p-6 border border-gold-500/20 hover:border-gold-500/40 shadow-xl flex flex-col justify-between space-y-4 transition-all duration-300 hover:scale-[1.01]"
               >
                 <div className="space-y-3">
-                  <div className="relative h-48 rounded-2xl overflow-hidden bg-champagne-100">
+                  <div className="relative h-48 rounded-2xl overflow-hidden bg-[#14141E] border border-white/5">
                     <Image src={s.imageUrl} alt={s.title} fill className="object-cover" />
-                    <span className="absolute bottom-3 left-3 bg-obsidian-950/80 backdrop-blur-md text-ivory-50 text-[10px] uppercase tracking-wider px-3 py-1 rounded-full font-semibold">
+                    <span className="absolute bottom-3 left-3 bg-[#08080C]/85 backdrop-blur-md text-gold-300 border border-gold-500/30 text-[10px] uppercase tracking-wider px-3 py-1 rounded-full font-semibold shadow-sm">
                       Starting PKR {Number(s.priceStartingAt).toLocaleString()}
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-xl text-obsidian-950 font-medium">{s.title}</h3>
-                  <p className="text-xs text-obsidian-600 font-light leading-relaxed">{s.description}</p>
+                  <h3 className="font-serif text-xl text-ivory-50 font-medium">{s.title}</h3>
+                  <p className="text-xs text-ivory-400 font-light leading-relaxed">{s.description}</p>
 
-                  <div className="space-y-1 pt-2">
-                    <p className="text-[10px] uppercase tracking-widest text-obsidian-400 font-semibold">
+                  <div className="space-y-1.5 pt-2">
+                    <p className="text-[10px] uppercase tracking-widest text-gold-400/80 font-semibold">
                       Inclusions:
                     </p>
-                    <ul className="grid grid-cols-2 gap-1 text-xs text-obsidian-700 font-light">
+                    <ul className="grid grid-cols-2 gap-1.5 text-xs text-ivory-300 font-light">
                       {feats.map((f, i) => (
-                        <li key={i} className="flex items-center space-x-1">
-                          <CheckCircle2 className="w-3 h-3 text-gold-600 flex-shrink-0" />
+                        <li key={i} className="flex items-center space-x-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-gold-400 flex-shrink-0" />
                           <span className="truncate">{f}</span>
                         </li>
                       ))}
@@ -203,16 +209,18 @@ export default function AdminServicesPage() {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-champagne-200 flex justify-end space-x-2">
+                <div className="pt-3 border-t border-white/10 flex justify-end space-x-2">
                   <button
                     onClick={() => openEditModal(s)}
-                    className="p-1.5 text-obsidian-700 hover:bg-champagne-100 rounded-lg transition-colors"
+                    className="p-2 text-ivory-300 hover:text-gold-300 bg-[#14141E] hover:bg-gold-500/10 border border-gold-500/30 rounded-xl transition-all"
+                    title="Edit Service"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(s.id, s.title)}
-                    className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-2 text-red-400 hover:text-red-200 bg-red-950/30 hover:bg-red-900/50 border border-red-500/20 rounded-xl transition-all"
+                    title="Delete Service"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -225,29 +233,29 @@ export default function AdminServicesPage() {
 
       {/* Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-obsidian-950/80 backdrop-blur-sm">
-          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-xl w-full border border-champagne-300 p-6 sm:p-8 space-y-6">
-            <div className="flex justify-between items-start">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-3 sm:p-4 md:p-6 bg-obsidian-950/85 backdrop-blur-md animate-fadeIn">
+          <div className="relative bg-[#0D0D12] text-ivory-50 rounded-3xl overflow-hidden shadow-2xl max-w-xl w-full max-h-[92dvh] sm:max-h-[90dvh] flex flex-col border border-gold-500/30 p-5 sm:p-8 space-y-5 overflow-y-auto overscroll-contain">
+            <div className="flex justify-between items-start border-b border-white/10 pb-4">
               <div>
-                <span className="text-[10px] uppercase tracking-[0.2em] text-gold-700 font-bold">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-gold-400 font-bold">
                   {editingService ? 'Edit Discipline' : 'New Discipline'}
                 </span>
-                <h3 className="font-serif text-2xl text-obsidian-950 font-light mt-1">
+                <h3 className="font-serif text-2xl text-ivory-50 font-light mt-1">
                   {editingService ? editingService.title : 'Create Service'}
                 </h3>
               </div>
               <button
                 onClick={() => setModalOpen(false)}
-                className="p-2 rounded-full hover:bg-champagne-200 transition-colors text-obsidian-500"
+                className="p-2 rounded-full hover:bg-white/10 transition-colors text-ivory-400 hover:text-ivory-50"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                  <label className="block text-[11px] uppercase tracking-wider text-ivory-300 font-semibold mb-1">
                     Service Title *
                   </label>
                   <input
@@ -256,12 +264,12 @@ export default function AdminServicesPage() {
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     placeholder="e.g. Wedding Décor & Scénographie"
-                    className="w-full text-xs p-2.5 rounded-xl border border-champagne-300 bg-white"
+                    className="w-full text-xs p-2.5 rounded-xl border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 focus:border-gold-400 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                  <label className="block text-[11px] uppercase tracking-wider text-ivory-300 font-semibold mb-1">
                     Starting Price (PKR) *
                   </label>
                   <input
@@ -270,13 +278,13 @@ export default function AdminServicesPage() {
                     value={formData.priceStartingAt}
                     onChange={(e) => setFormData({ ...formData, priceStartingAt: e.target.value })}
                     placeholder="3500"
-                    className="w-full text-xs p-2.5 rounded-xl border border-champagne-300 bg-white"
+                    className="w-full text-xs p-2.5 rounded-xl border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 focus:border-gold-400 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                <label className="block text-[11px] uppercase tracking-wider text-ivory-300 font-semibold mb-1">
                   Image URL *
                 </label>
                 <input
@@ -284,46 +292,46 @@ export default function AdminServicesPage() {
                   required
                   value={formData.imageUrl}
                   onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                  className="w-full text-xs p-2.5 rounded-xl border border-champagne-300 bg-white"
+                  className="w-full text-xs p-2.5 rounded-xl border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 focus:border-gold-400 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                <label className="block text-[11px] uppercase tracking-wider text-ivory-300 font-semibold mb-1">
                   Description
                 </label>
                 <textarea
                   rows={2}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full text-xs p-2.5 rounded-xl border border-champagne-300 bg-white"
+                  className="w-full text-xs p-2.5 rounded-xl border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 focus:border-gold-400 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                <label className="block text-[11px] uppercase tracking-wider text-ivory-300 font-semibold mb-1">
                   Features & Scope (One per line)
                 </label>
                 <textarea
                   rows={3}
                   value={formData.featuresText}
                   onChange={(e) => setFormData({ ...formData, featuresText: e.target.value })}
-                  className="w-full text-xs p-2.5 rounded-xl border border-champagne-300 bg-white font-mono"
+                  className="w-full text-xs p-2.5 rounded-xl border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 focus:border-gold-400 focus:outline-none font-mono"
                 />
               </div>
 
-              <div className="flex justify-end space-x-3 pt-4 border-t border-champagne-200">
+              <div className="flex justify-end space-x-3 pt-4 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-5 py-2.5 rounded-full border border-champagne-300 text-xs uppercase tracking-wider text-obsidian-600 hover:bg-champagne-100"
+                  className="px-5 py-2.5 rounded-full border border-white/20 text-xs uppercase tracking-wider text-ivory-300 hover:bg-white/10 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-2.5 bg-obsidian-900 text-ivory-50 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-gold-600 transition-colors shadow-md"
+                  className="px-6 py-2.5 bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 rounded-full text-xs uppercase tracking-widest font-bold hover:brightness-110 transition-all shadow-md"
                 >
                   {saving ? 'Saving...' : 'Save Service'}
                 </button>

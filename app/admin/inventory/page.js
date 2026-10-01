@@ -6,6 +6,7 @@ import { useToast } from '../../../src/context/ToastContext';
 import { useConfirmModal } from '../../../src/context/ConfirmModalContext';
 import LuxurySpinner from '../../../src/components/ui/LuxurySpinner';
 import AdminInfiniteTableFooter, { useInfiniteTable } from '../../../src/components/ui/AdminInfiniteTable';
+import useBodyScrollLock from '../../../src/hooks/useBodyScrollLock';
 import {
   Package,
   Plus,
@@ -30,14 +31,13 @@ import {
 
 const CATEGORIES = [
   'All',
-  'Chairs',
-  'Tables',
-  'Arches',
-  'Lighting',
-  'Centerpieces',
-  'Candles',
+  'Flower Bouquets',
+  'Cakes & Chocolates',
+  'Gifts',
   'Stage décor',
   'Backdrops',
+  'Arches',
+  'Lighting',
   'Decorative props',
 ];
 
@@ -65,6 +65,8 @@ export default function AdminInventoryPage() {
   const [adjustingItem, setAdjustingItem] = useState(null);
   const [adjustDelta, setAdjustDelta] = useState(10);
   const [adjustReason, setAdjustReason] = useState('Restock shipment');
+
+  useBodyScrollLock(Boolean(modalOpen || (adjustModalOpen && adjustingItem)));
 
   const [formData, setFormData] = useState({
     sku: '',
@@ -257,23 +259,23 @@ export default function AdminInventoryPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-[10px] uppercase tracking-[0.25em] font-semibold">
+          <div className="inline-flex items-center space-x-2 text-gold-400 text-[10px] uppercase tracking-[0.25em] font-semibold">
             <Package className="w-3.5 h-3.5" />
             <span>Stock & Warehouse Operations</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-obsidian-950 font-light mt-1">
+          <h1 className="font-serif text-3xl sm:text-4xl text-ivory-50 font-light mt-1">
             Inventory & Asset Management
           </h1>
-          <p className="text-xs text-obsidian-500 font-light mt-1">
+          <p className="text-xs text-ivory-400 font-light mt-1">
             Monitor real-time warehouse stock, rental reservations, pricing rates, and inventory thresholds.
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center space-x-2 px-6 py-2.5 bg-obsidian-950 text-ivory-50 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-gold-600 hover:text-obsidian-950 transition-all shadow-md active:scale-95"
+          className="inline-flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 rounded-full text-xs uppercase tracking-widest font-bold hover:brightness-110 transition-all shadow-md active:scale-95"
         >
-          <Plus className="w-4 h-4 text-gold-400" />
+          <Plus className="w-4 h-4" />
           <span>Add Inventory Item</span>
         </button>
       </div>
@@ -281,25 +283,25 @@ export default function AdminInventoryPage() {
       {/* Summary Stats Row */}
       {summary && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-obsidian-400">Total Asset SKUs</span>
-            <h4 className="font-serif text-2xl font-bold text-obsidian-950 mt-1">{summary.totalItems}</h4>
-            <span className="text-[10px] text-obsidian-400">Active catalog lines</span>
+          <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all group">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-ivory-400">Total Asset SKUs</span>
+            <h4 className="font-serif text-2xl font-bold text-ivory-50 group-hover:text-gold-300 transition-colors mt-1">{summary.totalItems}</h4>
+            <span className="text-[10px] text-ivory-500">Active catalog lines</span>
           </div>
-          <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-obsidian-400">Current Available Stock</span>
-            <h4 className="font-serif text-2xl font-bold text-sage-700 mt-1">{summary.totalAvailable} units</h4>
-            <span className="text-[10px] text-sage-600 font-medium">Ready for instant dispatch</span>
+          <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all group">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-400">Current Available Stock</span>
+            <h4 className="font-serif text-2xl font-bold text-emerald-400 mt-1">{summary.totalAvailable} units</h4>
+            <span className="text-[10px] text-emerald-400/80 font-medium">Ready for instant dispatch</span>
           </div>
-          <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-obsidian-400">Low Stock Alert</span>
-            <h4 className="font-serif text-2xl font-bold text-amber-700 mt-1">{summary.lowStockCount}</h4>
-            <span className="text-[10px] text-amber-600">At or below threshold</span>
+          <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all group">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-amber-400">Low Stock Alert</span>
+            <h4 className="font-serif text-2xl font-bold text-amber-300 mt-1">{summary.lowStockCount}</h4>
+            <span className="text-[10px] text-amber-400/80">At or below threshold</span>
           </div>
-          <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-obsidian-400">Out of Stock</span>
-            <h4 className="font-serif text-2xl font-bold text-red-700 mt-1">{summary.outOfStockCount}</h4>
-            <span className="text-[10px] text-red-600">Requires procurement</span>
+          <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all group">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-rose-400">Out of Stock</span>
+            <h4 className="font-serif text-2xl font-bold text-rose-400 mt-1">{summary.outOfStockCount}</h4>
+            <span className="text-[10px] text-rose-400/80">Requires procurement</span>
           </div>
         </div>
       )}
@@ -307,13 +309,13 @@ export default function AdminInventoryPage() {
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-gold-400/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by SKU, product name, location bay..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-full border border-champagne-300 bg-white text-xs focus:outline-none focus:border-gold-500 shadow-sm"
+            className="w-full pl-10 pr-4 py-2.5 rounded-full border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none focus:border-gold-400 shadow-sm"
           />
         </div>
 
@@ -322,8 +324,8 @@ export default function AdminInventoryPage() {
             onClick={() => setLowStockOnly(!lowStockOnly)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-wider font-semibold transition-all flex items-center space-x-1.5 ${
               lowStockOnly
-                ? 'bg-amber-600 text-ivory-50 shadow-sm'
-                : 'bg-white text-obsidian-700 border border-champagne-300 hover:bg-champagne-100'
+                ? 'bg-amber-500 text-obsidian-950 font-bold shadow-sm'
+                : 'bg-[#14141E] text-ivory-300 border border-gold-500/20 hover:border-gold-400 hover:text-ivory-50'
             }`}
           >
             <AlertTriangle className="w-3.5 h-3.5" />
@@ -333,22 +335,22 @@ export default function AdminInventoryPage() {
       </div>
 
       {/* Inventory Table */}
-      <div className="bg-white border border-champagne-300/80 rounded-3xl overflow-hidden shadow-sm">
+      <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl overflow-hidden shadow-xl">
         {loading ? (
           <div className="py-20">
             <LuxurySpinner size="lg" text="Loading inventory catalog..." />
           </div>
         ) : inventory.length === 0 ? (
           <div className="p-12 text-center space-y-2">
-            <p className="font-serif text-lg text-obsidian-800">No inventory records found.</p>
+            <p className="font-serif text-lg text-ivory-200">No inventory records found.</p>
           </div>
         ) : (
           <div
             onScroll={handleScroll}
             className="overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gold-500/20"
           >
-            <table className="w-full text-left text-xs text-obsidian-700">
-              <thead className="bg-champagne-100/95 border-b border-champagne-200 text-[10px] uppercase font-bold tracking-wider text-obsidian-600 sticky top-0 z-10 backdrop-blur-md shadow-sm">
+            <table className="w-full text-left text-xs text-ivory-200">
+              <thead className="bg-[#14141E]/95 border-b border-gold-500/20 text-[10px] uppercase font-bold tracking-wider text-gold-400 sticky top-0 z-10 backdrop-blur-md shadow-sm">
                 <tr>
                   <th className="p-4 pl-6">SKU</th>
                   <th className="p-4">Item Name</th>
@@ -360,45 +362,49 @@ export default function AdminInventoryPage() {
                   <th className="p-4 pr-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-champagne-200">
+              <tbody className="divide-y divide-white/5">
                 {infiniteInventory.map((item) => {
                   const isLow = item.availableQuantity <= item.minThreshold && item.availableQuantity > 0;
                   const isOut = item.availableQuantity <= 0;
 
                   return (
-                    <tr key={item.id} className="hover:bg-champagne-50/50 transition-colors">
-                      <td className="p-4 pl-6 font-mono font-bold text-gold-700">{item.sku}</td>
-                      <td className="p-4 font-semibold text-obsidian-900">{item.name}</td>
-                      <td className="p-4">{item.category}</td>
+                    <tr key={item.id} className="hover:bg-gold-500/5 transition-colors">
+                      <td className="p-4 pl-6 font-mono font-bold text-gold-400">{item.sku}</td>
+                      <td className="p-4 font-semibold text-ivory-50">{item.name}</td>
+                      <td className="p-4">
+                        <span className="px-2.5 py-0.5 rounded-full bg-[#181826] border border-gold-500/20 text-gold-300 text-[10px] font-semibold">
+                          {item.category}
+                        </span>
+                      </td>
                       <td className="p-4">
                         <div className="flex items-center space-x-2">
-                          <span className="font-bold text-obsidian-950 text-sm bg-champagne-100 px-2 py-0.5 rounded-md font-mono">
+                          <span className="font-bold text-emerald-400 text-sm bg-[#161622] border border-emerald-500/30 px-2 py-0.5 rounded-md font-mono">
                             {item.availableQuantity}
                           </span>
-                          <span className="text-obsidian-400">/ {item.quantity} total</span>
+                          <span className="text-ivory-400">/ {item.quantity} total</span>
                         </div>
-                        <span className="text-[10px] text-obsidian-400">Min Alert: {item.minThreshold}</span>
+                        <span className="text-[10px] text-ivory-500">Min Alert: {item.minThreshold}</span>
                       </td>
                       <td className="p-4">
-                        <p className="font-semibold text-obsidian-900">PKR {item.rentalPrice.toFixed(2)}/day</p>
-                        <p className="text-[10px] text-obsidian-500">PKR {(item.hourlyRate || item.rentalPrice * 0.2).toFixed(2)}/hr</p>
+                        <p className="font-semibold text-ivory-50 font-mono">PKR {item.rentalPrice.toFixed(2)}/day</p>
+                        <p className="text-[10px] text-gold-400/80 font-mono">PKR {(item.hourlyRate || item.rentalPrice * 0.2).toFixed(2)}/hr</p>
                       </td>
-                      <td className="p-4">{item.location || 'Warehouse Main'}</td>
+                      <td className="p-4 text-ivory-300">{item.location || 'Warehouse Main'}</td>
                       <td className="p-4">
                         <span
                           className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
                             isOut
-                              ? 'bg-red-100 text-red-800 border-red-300'
+                              ? 'bg-rose-950/70 text-rose-300 border-rose-500/30'
                               : isLow
-                              ? 'bg-amber-100 text-amber-800 border-amber-300'
-                              : 'bg-sage-100 text-sage-800 border-sage-300'
+                              ? 'bg-amber-950/70 text-amber-300 border-amber-500/30'
+                              : 'bg-emerald-950/70 text-emerald-300 border-emerald-500/30'
                           }`}
                         >
                           {isOut ? 'Out of Stock' : isLow ? 'Low Stock' : 'In Stock'}
                         </span>
                       </td>
                       <td className="p-4 pr-6 text-right">
-                        <div className="flex items-center justify-end space-x-1">
+                        <div className="flex items-center justify-end space-x-1.5">
                           <button
                             onClick={() => {
                               setAdjustingItem(item);
@@ -406,7 +412,7 @@ export default function AdminInventoryPage() {
                               setAdjustReason('Restock replenishment');
                               setAdjustModalOpen(true);
                             }}
-                            className="p-1.5 bg-champagne-100 hover:bg-champagne-200 text-gold-800 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 transition-colors"
+                            className="p-1.5 bg-[#1A1A26] hover:bg-gold-500 text-gold-300 hover:text-obsidian-950 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 border border-gold-500/30 transition-colors"
                             title="Restock / Adjust Quantity"
                           >
                             <RefreshCw className="w-3 h-3" />
@@ -414,14 +420,14 @@ export default function AdminInventoryPage() {
                           </button>
                           <button
                             onClick={() => openEditModal(item)}
-                            className="p-1.5 text-obsidian-700 hover:bg-champagne-100 rounded-lg transition-colors"
+                            className="p-1.5 text-ivory-300 hover:text-gold-400 hover:bg-white/5 rounded-lg transition-colors border border-white/10"
                             title="Edit Asset & Stock Levels"
                           >
                             <Edit className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(item.id, item.name)}
-                            className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            className="p-1.5 text-rose-400 hover:bg-rose-950/50 rounded-lg transition-colors border border-rose-500/20"
                             title="Delete Asset"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -449,8 +455,8 @@ export default function AdminInventoryPage() {
       {/* LUXURY EDIT & ADD INVENTORY ASSET MODAL                                   */}
       {/* ========================================================================= */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-obsidian-950/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full border border-champagne-300/80 p-6 sm:p-8 space-y-6">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-3 sm:p-4 md:p-6 bg-obsidian-950/85 backdrop-blur-md animate-fadeIn">
+          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full max-h-[92dvh] sm:max-h-[90dvh] flex flex-col border border-champagne-300/80 p-5 sm:p-8 space-y-5 overflow-y-auto overscroll-contain">
             {/* Modal Header */}
             <div className="flex justify-between items-start border-b border-champagne-200 pb-4">
               <div className="space-y-1">
@@ -747,8 +753,8 @@ export default function AdminInventoryPage() {
 
       {/* Adjust / Restock Modal */}
       {adjustModalOpen && adjustingItem && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-obsidian-950/80 backdrop-blur-sm">
-          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-md w-full border border-champagne-300 p-6 sm:p-8 space-y-5">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-3 sm:p-4 bg-obsidian-950/80 backdrop-blur-sm animate-fadeIn">
+          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-md w-full max-h-[92dvh] flex flex-col border border-champagne-300 p-5 sm:p-8 space-y-4 overflow-y-auto overscroll-contain">
             <div>
               <span className="text-[10px] uppercase tracking-[0.2em] text-gold-700 font-bold">
                 Stock Adjustment

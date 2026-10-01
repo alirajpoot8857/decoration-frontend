@@ -3,225 +3,226 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 
-const LUXURY_PHRASES = [
+const LUXURY_PHRASES_PUBLIC = [
   'Illuminating the Grand Ballroom...',
   'Arranging Imported Fresh Botanicals...',
   'Sculpting Bespoke Stage Architecture...',
-  'Curating Gilded Banquets & Chandeliers...',
-  'Orchestrating Unforgettable Scénographie...',
+  'Harmonizing Gilded Banquets & Chandeliers...',
 ];
 
-export default function LuxuryPreloader() {
+const LUXURY_PHRASES_ADMIN = [
+  'Synchronizing Production Ledgers...',
+  'Authorizing High-Security Dossier Access...',
+  'Aggregating Stage & Inventory Schedules...',
+  'Loading Haute Scénographie Atelier...',
+];
+
+export default function LuxuryPreloader({ isDashboard = false, forceShow = false }) {
   const { siteName, tagline } = useTheme();
   const [mounted, setMounted] = useState(true);
   const [fading, setFading] = useState(false);
   const [phraseIdx, setPhraseIdx] = useState(0);
 
-  useEffect(() => {
-    // Poetic phrase cycle
-    const phraseInterval = setInterval(() => {
-      setPhraseIdx((prev) => (prev + 1) % LUXURY_PHRASES.length);
-    }, 600);
+  const phrases = isDashboard ? LUXURY_PHRASES_ADMIN : LUXURY_PHRASES_PUBLIC;
 
-    // Trigger smooth fade
+  useEffect(() => {
+    // Check session storage if not forceShow
+    if (!forceShow) {
+      try {
+        const storageKey = isDashboard ? 'lumiere_admin_preloader_seen' : 'lumiere_site_preloader_seen';
+        const seen = sessionStorage.getItem(storageKey);
+        if (seen === 'true') {
+          setMounted(false);
+          return;
+        }
+        sessionStorage.setItem(storageKey, 'true');
+      } catch (e) {
+        // Fallback if sessionStorage is not accessible
+      }
+    }
+
+    // Phrase cycling interval
+    const phraseInterval = setInterval(() => {
+      setPhraseIdx((prev) => (prev + 1) % phrases.length);
+    }, 450);
+
+    // Trigger smooth fade out at 850ms
     const fadeTimer = setTimeout(() => {
       setFading(true);
-    }, 1600);
+    }, 850);
 
-    // Unmount
+    // Complete unmount at 1200ms
     const unmountTimer = setTimeout(() => {
       setMounted(false);
-    }, 2200);
+    }, 1200);
 
     return () => {
       clearInterval(phraseInterval);
       clearTimeout(fadeTimer);
       clearTimeout(unmountTimer);
     };
-  }, []);
+  }, [isDashboard, forceShow, phrases.length]);
 
   if (!mounted) return null;
 
   return (
     <div
-      className={`fixed inset-0 z-[999999] flex flex-col items-center justify-center bg-[#080706] text-ivory-50 transition-all duration-700 ease-out select-none ${
-        fading ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
+      onClick={() => setMounted(false)}
+      className={`fixed inset-0 z-[999999] flex flex-col items-center justify-center bg-[#070709] text-ivory-50 transition-all duration-500 ease-out cursor-pointer select-none ${
+        fading ? 'opacity-0 pointer-events-none scale-105' : 'opacity-100 scale-100 pointer-events-auto'
       }`}
       aria-hidden={fading}
+      title="Click to enter immediately"
     >
-      {/* 1. Ambient Theme Warmth & Radial Glow Background (Pure CSS - Instant 0ms Paint) */}
+      {/* Ambient Theme Warmth & Radial Glow Background */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'var(--theme-ambient-radial, radial-gradient(ellipse at center, rgba(212,175,55,0.22) 0%, rgba(180,130,70,0.08) 45%, rgba(8,7,6,0.98) 75%))',
+          background: 'radial-gradient(ellipse at center, rgba(229,168,59,0.24) 0%, rgba(14,12,10,0.7) 45%, rgba(7,7,9,0.98) 75%)',
         }}
       />
 
-      {/* 2. Floating Dynamic Theme Stardust Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="absolute top-[20%] left-[22%] w-1.5 h-1.5 rounded-full animate-ping opacity-60"
-          style={{ backgroundColor: 'rgb(var(--color-gold-300))', animationDuration: '3.2s' }}
-        />
-        <div
-          className="absolute top-[28%] right-[24%] w-1 h-1 rounded-full animate-pulse opacity-80"
-          style={{ backgroundColor: 'rgb(var(--color-gold-200))', animationDuration: '2.4s' }}
-        />
-        <div
-          className="absolute bottom-[28%] left-[26%] w-1.5 h-1.5 rounded-full animate-pulse opacity-60"
-          style={{ backgroundColor: 'rgb(var(--color-gold-400))', animationDuration: '3.8s' }}
-        />
-        <div
-          className="absolute bottom-[22%] right-[22%] w-1 h-1 rounded-full animate-ping opacity-50"
-          style={{ backgroundColor: 'rgb(var(--color-gold-200))', animationDuration: '2.8s' }}
-        />
-        <div
-          className="absolute top-[48%] left-[12%] w-1 h-1 rounded-full animate-pulse opacity-40"
-          style={{ backgroundColor: 'rgb(var(--color-gold-300))', animationDuration: '4.5s' }}
-        />
-        <div
-          className="absolute top-[45%] right-[14%] w-1 h-1 rounded-full animate-pulse opacity-40"
-          style={{ backgroundColor: 'rgb(var(--color-champagne-300))', animationDuration: '4s' }}
-        />
+      {/* Floating Gold Sparkle Stars in Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
+        <div className="absolute top-1/4 left-1/4 w-1.5 h-1.5 rounded-full bg-gold-400 animate-ping" style={{ animationDuration: '3s' }} />
+        <div className="absolute top-1/3 right-1/4 w-2 h-2 rounded-full bg-gold-300 animate-pulse" style={{ animationDuration: '2s' }} />
+        <div className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" style={{ animationDuration: '2.5s' }} />
+        <div className="absolute bottom-1/4 right-1/3 w-2 h-2 rounded-full bg-amber-400 animate-ping" style={{ animationDuration: '4s' }} />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center text-center px-4 space-y-4 sm:space-y-6 w-full max-w-lg">
-        {/* ========================================================================= */}
-        {/* LUXURY DYNAMIC VECTOR BLOOMING MANDALA & CHANDELIER ORNAMENT             */}
-        {/* ========================================================================= */}
-        <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 flex items-center justify-center shrink-0">
-          {/* Ambient Theme Glow Aura Behind SVG */}
+      <div className="relative z-10 flex flex-col items-center text-center px-4 space-y-4 w-full max-w-lg">
+        {/* Vector Blooming Royal Mandala Ornament */}
+        <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center shrink-0">
           <div
             className="absolute inset-0 rounded-full blur-xl animate-pulse"
             style={{
-              backgroundColor: 'var(--theme-glow-aura, rgba(212,175,55,0.4))',
-              animationDuration: '2s',
+              backgroundColor: 'rgba(229,168,59,0.35)',
+              animationDuration: '1.8s',
             }}
           />
 
-          {/* SVG Animated Luxury Chandelier Lotus Mandala (Driven by 100% Theme CSS Variables) */}
           <svg
             viewBox="0 0 200 200"
             className="w-full h-full"
-            style={{
-              filter: 'drop-shadow(0 0 22px rgb(var(--color-gold-500) / 0.5))',
-            }}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
-              <linearGradient id="themePreloaderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgb(var(--color-gold-100))" />
-                <stop offset="35%" stopColor="rgb(var(--color-gold-300))" />
-                <stop offset="70%" stopColor="rgb(var(--color-gold-500))" />
-                <stop offset="100%" stopColor="rgb(var(--color-gold-700))" />
+              <linearGradient id="themePreloaderGradientFast" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFFFFF" />
+                <stop offset="45%" stopColor="#F59E0B" />
+                <stop offset="75%" stopColor="#E5A83B" />
+                <stop offset="100%" stopColor="#9A6916" />
               </linearGradient>
 
-              <radialGradient id="themePreloaderCenter" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="rgb(var(--color-gold-100))" />
-                <stop offset="50%" stopColor="rgb(var(--color-gold-500))" />
-                <stop offset="100%" stopColor="rgb(var(--color-gold-900))" />
+              <radialGradient id="themePreloaderCenterGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#FFFFFF" />
+                <stop offset="50%" stopColor="#E5A83B" />
+                <stop offset="100%" stopColor="#3D2405" />
               </radialGradient>
             </defs>
 
-            {/* 1. Outer Filigree Orbit Ring (Slow Clockwise Rotation) */}
-            <g className="origin-center animate-spin" style={{ animationDuration: '12s' }}>
-              <circle cx="100" cy="100" r="92" stroke="url(#themePreloaderGradient)" strokeWidth="1" strokeOpacity="0.3" strokeDasharray="3 6" />
-              <circle cx="100" cy="100" r="84" stroke="url(#themePreloaderGradient)" strokeWidth="1.5" strokeOpacity="0.5" />
-              {/* Beaded Accents */}
-              <circle cx="100" cy="8" r="2.5" fill="url(#themePreloaderGradient)" />
-              <circle cx="100" cy="192" r="2.5" fill="url(#themePreloaderGradient)" />
-              <circle cx="8" cy="100" r="2.5" fill="url(#themePreloaderGradient)" />
-              <circle cx="192" cy="100" r="2.5" fill="url(#themePreloaderGradient)" />
-            </g>
+            {/* Outer Constellation Orbit Ring */}
+            <circle
+              cx="100"
+              cy="100"
+              r="86"
+              stroke="url(#themePreloaderGradientFast)"
+              strokeWidth="1.5"
+              strokeOpacity="0.45"
+              strokeDasharray="4 6"
+              className="origin-center animate-spin"
+              style={{ animationDuration: '8s' }}
+            />
 
-            {/* 2. Middle Counter-Rotating Chandelier Crystal Ring */}
-            <g className="origin-center animate-spin" style={{ animationDuration: '8s', animationDirection: 'reverse' }}>
-              <circle cx="100" cy="100" r="70" stroke="url(#themePreloaderGradient)" strokeWidth="1.2" strokeOpacity="0.4" strokeDasharray="6 4" />
-              {/* 8 Faceted Crystal Points */}
-              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
-                <g key={i} transform={`rotate(${angle} 100 100)`}>
-                  <path d="M 100 30 L 102 36 L 100 42 L 98 36 Z" fill="url(#themePreloaderGradient)" opacity="0.85" />
-                </g>
-              ))}
-            </g>
+            {/* 8 Constellation Diamond Stars on Orbit */}
+            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, i) => (
+              <circle
+                key={i}
+                cx={100 + 86 * Math.cos((deg * Math.PI) / 180)}
+                cy={100 + 86 * Math.sin((deg * Math.PI) / 180)}
+                r={i % 2 === 0 ? 2.8 : 1.8}
+                fill="url(#themePreloaderGradientFast)"
+              />
+            ))}
 
-            {/* 3. The Blooming Botanical 8-Petal Luxury Flower & Leaves */}
-            <g className="origin-center animate-spin" style={{ animationDuration: '20s' }}>
-              {/* 4 Cardinal Grand Petals / Floral Leaves */}
-              <g>
-                <path d="M 100 100 C 90 75 80 50 100 32 C 120 50 110 75 100 100 Z" fill="url(#themePreloaderGradient)" opacity="0.9" />
-                <path d="M 100 100 C 90 125 80 150 100 168 C 120 150 110 125 100 100 Z" fill="url(#themePreloaderGradient)" opacity="0.9" />
-                <path d="M 100 100 C 75 90 50 80 32 100 C 50 120 75 110 100 100 Z" fill="url(#themePreloaderGradient)" opacity="0.9" />
-                <path d="M 100 100 C 125 90 150 80 168 100 C 150 120 125 110 100 100 Z" fill="url(#themePreloaderGradient)" opacity="0.9" />
+            {/* Middle Counter-Rotating Chandelier Ring */}
+            <circle
+              cx="100"
+              cy="100"
+              r="68"
+              stroke="url(#themePreloaderGradientFast)"
+              strokeWidth="1.2"
+              strokeOpacity="0.65"
+              strokeDasharray="6 4"
+              className="origin-center animate-spin"
+              style={{ animationDuration: '6s', animationDirection: 'reverse' }}
+            />
+
+            {/* 8 Blooming Royal Petals / Stage Botanicals */}
+            {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
+              <g key={i} transform={`rotate(${angle} 100 100)`}>
+                <path
+                  d="M 100 100 C 90 70 82 45 100 28 C 118 45 110 70 100 100 Z"
+                  fill="url(#themePreloaderGradientFast)"
+                  opacity={i % 2 === 0 ? 0.95 : 0.65}
+                />
               </g>
+            ))}
 
-              {/* 4 Diagonal Inner Petals & Secondary Leaves */}
-              <g transform="rotate(45 100 100)">
-                <path d="M 100 100 C 92 80 85 60 100 44 C 115 60 108 80 100 100 Z" fill="url(#themePreloaderGradient)" opacity="0.75" />
-                <path d="M 100 100 C 92 120 85 140 100 156 C 115 140 108 120 100 100 Z" fill="url(#themePreloaderGradient)" opacity="0.75" />
-                <path d="M 100 100 C 80 92 60 85 44 100 C 60 115 80 108 100 100 Z" fill="url(#themePreloaderGradient)" opacity="0.75" />
-                <path d="M 100 100 C 120 92 140 85 156 100 C 140 115 120 108 100 100 Z" fill="url(#themePreloaderGradient)" opacity="0.75" />
-              </g>
-            </g>
+            {/* Center Gilded Medallion */}
+            <circle
+              cx="100"
+              cy="100"
+              r="22"
+              fill="url(#themePreloaderCenterGlow)"
+              stroke="#FFF"
+              strokeWidth="1.5"
+            />
+            <circle cx="100" cy="100" r="16" fill="#0A0A0E" />
 
-            {/* 4. Center Glowing Diadem Medallion */}
-            <circle cx="100" cy="100" r="24" fill="url(#themePreloaderCenter)" stroke="rgb(var(--color-gold-200))" strokeWidth="1.5" />
-            <circle cx="100" cy="100" r="18" fill="#080706" />
-
-            {/* 5. Center Diamond Starburst Sparkle (✦) */}
+            {/* Center Diamond Sparkle (✦) */}
             <g transform="translate(100, 100)">
               <path
-                d="M 0 -13 Q 0 0 -13 0 Q 0 0 0 13 Q 0 0 13 0 Q 0 0 0 -13 Z"
-                fill="url(#themePreloaderGradient)"
+                d="M 0 -11 Q 0 0 -11 0 Q 0 0 0 11 Q 0 0 11 0 Q 0 0 0 -11 Z"
+                fill="url(#themePreloaderGradientFast)"
                 className="animate-pulse"
               />
-              <circle cx="0" cy="0" r="2.5" fill="rgb(var(--color-gold-100))" />
+              <circle cx="0" cy="0" r="2.2" fill="#FFFFFF" />
             </g>
           </svg>
         </div>
 
-        {/* ========================================================================= */}
-        {/* BRAND IDENTITY & REFINED TYPOGRAPHY                                      */}
-        {/* ========================================================================= */}
-        <div className="space-y-1.5 sm:space-y-2 w-full px-2">
-          <div className="inline-flex items-center space-x-1.5 sm:space-x-2 text-[9px] sm:text-[11px] font-sans uppercase tracking-[0.25em] sm:tracking-[0.4em] text-gold-400 font-semibold">
-            <span className="h-px w-3 sm:w-5 bg-gold-400/50" />
-            <span>Maison de Scénographie</span>
-            <span className="h-px w-3 sm:w-5 bg-gold-400/50" />
+        {/* Brand Scénographie Title */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-center space-x-2 text-[10px] uppercase tracking-[0.4em] text-gold-400 font-sans font-semibold">
+            <span className="w-8 h-[1px] bg-gradient-to-r from-transparent to-gold-400/80" />
+            <span>{isDashboard ? 'ATELIER DÉCOR COMMAND CENTER' : 'MAISON DE SCÉNOGRAPHIE • ATELIER ÉLÉGANCE'}</span>
+            <span className="w-8 h-[1px] bg-gradient-to-l from-transparent to-gold-400/80" />
           </div>
 
-          <h1 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-light tracking-[0.15em] sm:tracking-[0.25em] text-ivory-50 uppercase max-w-full truncate">
+          <h1 className="font-serif text-2xl sm:text-4xl tracking-[0.22em] text-ivory-50 uppercase font-light drop-shadow-md truncate max-w-md">
             {siteName || 'USMAN DÉCOR'}
           </h1>
 
-          <p className="text-[9px] sm:text-xs font-sans uppercase tracking-[0.18em] sm:tracking-[0.3em] text-champagne-300/80 font-light max-w-full truncate px-2">
-            {tagline || 'Haute Couture Event Décor & Staging Atelier'}
+          <p className="text-[10px] sm:text-xs text-champagne-200/80 tracking-[0.25em] uppercase font-light font-sans truncate max-w-sm mx-auto">
+            {isDashboard ? 'ADMINISTRATION & PRODUCTION DOSSIER' : (tagline || 'Haute Scénographie & Luxury Event Decoration')}
           </p>
         </div>
 
-        {/* ========================================================================= */}
-        {/* POETIC STATUS SHIMMER & THEMED PROGRESS BAR                              */}
-        {/* ========================================================================= */}
-        <div className="w-full max-w-[240px] sm:max-w-[320px] space-y-2.5 sm:space-y-3 pt-1">
-          {/* Dynamic Theme Shimmer Line */}
-          <div
-            className="h-[2px] w-full bg-obsidian-800 rounded-full overflow-hidden relative"
-            style={{
-              boxShadow: '0 0 12px rgb(var(--color-gold-500) / 0.5)',
-            }}
-          >
+        {/* Dynamic Loading Progress Bar & Status Text */}
+        <div className="w-52 sm:w-60 space-y-2 pt-2">
+          <div className="h-[2.5px] w-full bg-white/10 rounded-full overflow-hidden shadow-inner">
             <div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-gold-400 to-transparent"
+              className="h-full bg-gradient-to-r from-gold-500 via-amber-300 to-gold-600 rounded-full shadow-[0_0_12px_rgba(229,168,59,0.7)]"
               style={{
-                animation: 'shimmer 1.8s infinite linear',
+                animation: 'progress 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards',
               }}
             />
           </div>
 
-          {/* Poetic Cross-fading Phrase */}
-          <p className="text-[10px] sm:text-xs font-serif italic text-champagne-200 tracking-wider h-5 transition-opacity duration-300 px-2 truncate">
-            {LUXURY_PHRASES[phraseIdx]}
+          <p className="font-serif italic text-xs text-gold-300/95 font-light tracking-wide h-4 transition-all duration-300">
+            {phrases[phraseIdx]}
           </p>
         </div>
       </div>

@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../lib/api';
-import { useToast } from './ToastContext';
 import {
   THEMES_MAP,
   ALL_THEMES_LIST,
@@ -16,12 +15,16 @@ const ThemeContext = createContext({
   siteName: 'LUMIÈRE DECOR',
   tagline: 'Haute Scénographie & Luxury Event Decoration',
   colorTheme: 'royalGold',
+  mode: 'dark', // 'dark' | 'light'
+  isDarkMode: true,
   themesList: ALL_THEMES_LIST,
   categoriesList: THEME_CATEGORIES,
   activeThemeConfig: THEMES_MAP.royalGold,
   setSiteName: () => {},
   setTagline: () => {},
   setColorTheme: () => {},
+  setMode: () => {},
+  toggleMode: () => {},
   updateBrandAndTheme: async () => {},
 });
 
@@ -29,12 +32,32 @@ export const ThemeProvider = ({ children }) => {
   const [siteName, setSiteNameState] = useState('LUMIÈRE DECOR');
   const [tagline, setTaglineState] = useState('Haute Scénographie & Luxury Event Decoration');
   const [colorTheme, setColorThemeState] = useState('royalGold');
+  const [mode, setModeState] = useState('dark'); // 'dark' | 'light'
   const [loading, setLoading] = useState(true);
 
-  // Apply CSS variables and theme classes dynamically to document root
-  const applyThemeToDOM = (themeKey, name) => {
+  // Apply CSS variables, mode, and theme classes dynamically to document root
+  const applyThemeToDOM = (themeKey, name, currentMode) => {
     if (typeof window === 'undefined') return;
     applyThemeVariablesToDOM(themeKey);
+
+    const activeMode = currentMode || mode;
+    const root = document.documentElement;
+    const body = document.body;
+
+    if (activeMode === 'light') {
+      root.classList.remove('dark');
+      root.classList.add('light', 'theme-mode-light');
+      root.classList.remove('theme-mode-dark');
+      root.setAttribute('data-theme-mode', 'light');
+      body.classList.remove('theme-mode-dark');
+      body.classList.add('theme-mode-light');
+    } else {
+      root.classList.remove('light', 'theme-mode-light');
+      root.classList.add('dark', 'theme-mode-dark');
+      root.setAttribute('data-theme-mode', 'dark');
+      body.classList.remove('theme-mode-light');
+      body.classList.add('theme-mode-dark');
+    }
 
     // Update document title if siteName provided
     if (name) {
@@ -50,14 +73,15 @@ export const ThemeProvider = ({ children }) => {
         const cachedName = localStorage.getItem('lumiere_site_name');
         const cachedTheme = localStorage.getItem('lumiere_color_theme');
         const cachedTagline = localStorage.getItem('lumiere_tagline');
+        const cachedMode = localStorage.getItem('lumiere_theme_mode') || 'dark';
 
         if (cachedName) setSiteNameState(cachedName);
         if (cachedTheme && THEMES_MAP[cachedTheme]) setColorThemeState(cachedTheme);
         if (cachedTagline) setTaglineState(cachedTagline);
+        if (cachedMode === 'light' || cachedMode === 'dark') setModeState(cachedMode);
 
-        if (cachedTheme && THEMES_MAP[cachedTheme]) {
-          applyThemeToDOM(cachedTheme, cachedName);
-        }
+        const effectiveTheme = (cachedTheme && THEMES_MAP[cachedTheme]) ? cachedTheme : 'royalGold';
+        applyThemeToDOM(effectiveTheme, cachedName, cachedMode);
 
         const res = await api.getSettings();
         if (res && res.settings) {
@@ -75,7 +99,7 @@ export const ThemeProvider = ({ children }) => {
           localStorage.setItem('lumiere_color_theme', sTheme);
           localStorage.setItem('lumiere_tagline', sTagline);
 
-          applyThemeToDOM(sTheme, sName);
+          applyThemeToDOM(sTheme, sName, cachedMode);
         }
       } catch (e) {
         console.warn('Could not load site theme settings', e);
@@ -101,8 +125,20 @@ export const ThemeProvider = ({ children }) => {
     if (THEMES_MAP[newTheme]) {
       setColorThemeState(newTheme);
       localStorage.setItem('lumiere_color_theme', newTheme);
-      applyThemeToDOM(newTheme, siteName);
+      applyThemeToDOM(newTheme, siteName, mode);
     }
+  };
+
+  const setMode = (newMode) => {
+    const val = newMode === 'light' ? 'light' : 'dark';
+    setModeState(val);
+    localStorage.setItem('lumiere_theme_mode', val);
+    applyThemeToDOM(colorTheme, siteName, val);
+  };
+
+  const toggleMode = () => {
+    const nextMode = mode === 'dark' ? 'light' : 'dark';
+    setMode(nextMode);
   };
 
   const updateBrandAndTheme = async (newName, newTheme, newTagline) => {
@@ -118,7 +154,7 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem('lumiere_color_theme', updatedTheme);
     localStorage.setItem('lumiere_tagline', updatedTagline);
 
-    applyThemeToDOM(updatedTheme, updatedName);
+    applyThemeToDOM(updatedTheme, updatedName, mode);
 
     // Save to backend database
     await api.bulkUpdateSettings({
@@ -138,12 +174,16 @@ export const ThemeProvider = ({ children }) => {
         siteName,
         tagline,
         colorTheme,
+        mode,
+        isDarkMode: mode === 'dark',
         themesList: ALL_THEMES_LIST,
         categoriesList: THEME_CATEGORIES,
         activeThemeConfig,
         setSiteName,
         setTagline,
         setColorTheme,
+        setMode,
+        toggleMode,
         updateBrandAndTheme,
       }}
     >

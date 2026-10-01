@@ -35,19 +35,20 @@ export default function PackagesPage() {
   };
 
   return (
-    <div className="bg-ivory-100 text-obsidian-900 pt-24 sm:pt-28 pb-16 sm:pb-20 w-full overflow-hidden">
+    <div className="bg-[#070709] text-ivory-50 pt-24 sm:pt-28 pb-16 sm:pb-20 w-full overflow-hidden min-h-screen">
       {/* Header Banner */}
-      <section className="py-12 sm:py-16 bg-champagne-50 border-b border-champagne-300/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4">
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-[11px] sm:text-xs uppercase tracking-[0.3em] font-semibold">
-            <Crown className="w-4 h-4" />
+      <section className="py-12 sm:py-16 bg-gradient-to-b from-[#0D0D14] via-[#09090D] to-[#070709] border-b border-gold-500/20 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(229,168,59,0.08),transparent_70%)] pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4 relative z-10">
+          <div className="inline-flex items-center space-x-2 text-gold-400 text-[11px] sm:text-xs uppercase tracking-[0.3em] font-semibold bg-gold-500/10 px-4 py-1.5 rounded-full border border-gold-500/30">
+            <Crown className="w-4 h-4 text-gold-400" />
             <span>Investment & Collections</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-obsidian-950 font-light">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-ivory-50 font-light tracking-tight">
             Décor Collections & Pricing
           </h1>
-          <p className="text-xs sm:text-sm md:text-base text-obsidian-600 max-w-2xl mx-auto font-light leading-relaxed">
-            Transparent investment tiers crafted for intimate celebrations, complete luxury weddings, and royal galas.
+          <p className="text-xs sm:text-sm md:text-base text-ivory-300 max-w-2xl mx-auto font-light leading-relaxed">
+            Transparent investment tiers crafted for intimate celebrations, complete luxury Pakistani weddings, and royal galas.
           </p>
         </div>
       </section>
@@ -59,7 +60,7 @@ export default function PackagesPage() {
             <LuxurySpinner size="lg" text="Loading collections & investment tiers..." />
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
             {packages.map((pkg) => {
               const isRec = pkg.isRecommended;
               const features = Array.isArray(pkg.features)
@@ -74,52 +75,40 @@ export default function PackagesPage() {
               return (
                 <div
                   key={pkg.id}
-                  className={`relative rounded-3xl p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 ${
+                  className={`festivity-card-dark relative rounded-3xl p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 ${
                     isRec
-                      ? 'bg-obsidian-950 text-ivory-50 border-2 border-gold-500 shadow-luxury-lg hover:shadow-glow-gold'
-                      : 'bg-ivory-50 text-obsidian-900 border border-champagne-300 shadow-luxury hover:border-gold-400'
+                      ? 'bg-gradient-to-b from-[#14141E] to-[#0A0A0F] text-ivory-50 border-2 border-gold-500 shadow-glow-gold'
+                      : 'bg-[#0E0E14] text-ivory-50 border border-gold-500/30 hover:border-gold-400 hover:shadow-2xl'
                   }`}
                 >
                   {isRec && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-gold-600 to-champagne-500 text-obsidian-950 font-bold text-[10px] uppercase tracking-[0.25em] px-4 py-1.5 rounded-full shadow-md">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 font-bold text-[10px] uppercase tracking-[0.25em] px-4 py-1.5 rounded-full shadow-lg">
                       ★ Most Recommended
                     </div>
                   )}
 
                   <div>
                     <div className="space-y-2 mb-6">
-                      <span
-                        className={`text-[11px] uppercase tracking-[0.2em] font-semibold ${
-                          isRec ? 'text-gold-400' : 'text-gold-700'
-                        }`}
-                      >
+                      <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-gold-400">
                         {pkg.tier} TIER
                       </span>
-                      <h3 className="font-serif text-2xl sm:text-3xl font-light">{pkg.name}</h3>
-                      <p
-                        className={`text-xs font-light leading-relaxed ${
-                          isRec ? 'text-obsidian-300' : 'text-obsidian-600'
-                        }`}
-                      >
+                      <h3 className="font-serif text-2xl sm:text-3xl font-light text-ivory-50">{pkg.name}</h3>
+                      <p className="text-xs font-light leading-relaxed text-ivory-300">
                         {pkg.tagline || pkg.description}
                       </p>
                     </div>
 
-                    <div className="py-4 sm:py-5 border-y border-champagne-300/30 mb-6">
+                    <div className="py-4 sm:py-5 border-y border-gold-500/20 mb-6">
                       {hasDiscount ? (
                         <div className="space-y-1">
                           <div className="flex items-baseline space-x-2">
                             <span className="font-serif text-3xl sm:text-4xl font-bold text-gold-gradient">
                               PKR {discountedPrice.toLocaleString()}
                             </span>
-                            <span className="text-sm line-through opacity-60">
+                            <span className="text-sm line-through text-ivory-500">
                               PKR {Number(pkg.price).toLocaleString()}
                             </span>
-                            <span
-                              className={`text-xs ${
-                                isRec ? 'text-obsidian-400' : 'text-obsidian-500'
-                              }`}
-                            >
+                            <span className="text-xs text-ivory-400">
                               / complete setup
                             </span>
                           </div>
@@ -129,14 +118,10 @@ export default function PackagesPage() {
                         </div>
                       ) : (
                         <div className="flex items-baseline space-x-2">
-                          <span className="font-serif text-3xl sm:text-4xl font-bold">
+                          <span className="font-serif text-3xl sm:text-4xl font-bold text-gold-gradient">
                             PKR {Number(pkg.price).toLocaleString()}
                           </span>
-                          <span
-                            className={`text-xs ${
-                              isRec ? 'text-obsidian-400' : 'text-obsidian-500'
-                            }`}
-                          >
+                          <span className="text-xs text-ivory-400">
                             / complete setup
                           </span>
                         </div>
@@ -144,22 +129,14 @@ export default function PackagesPage() {
                     </div>
 
                     <div className="space-y-3 mb-8">
-                      <p
-                        className={`text-xs uppercase tracking-widest font-semibold ${
-                          isRec ? 'text-gold-400' : 'text-obsidian-800'
-                        }`}
-                      >
+                      <p className="text-xs uppercase tracking-widest font-semibold text-gold-400">
                         Package Scope & Inclusions:
                       </p>
                       <ul className="space-y-2 text-xs font-light">
                         {features.map((feat, i) => (
                           <li key={i} className="flex items-start space-x-2.5">
-                            <CheckCircle2
-                              className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
-                                isRec ? 'text-gold-400' : 'text-gold-600'
-                              }`}
-                            />
-                            <span className={isRec ? 'text-ivory-100' : 'text-obsidian-700'}>
+                            <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5 text-gold-400" />
+                            <span className="text-ivory-200">
                               {feat}
                             </span>
                           </li>
@@ -170,13 +147,13 @@ export default function PackagesPage() {
 
                   <button
                     onClick={() => handleBook(pkg.id)}
-                    className={`w-full py-3.5 sm:py-4 rounded-full font-semibold text-xs uppercase tracking-[0.2em] transition-all duration-300 shadow-md hover:scale-[1.02] active:scale-95 ${
+                    className={`w-full py-3.5 sm:py-4 rounded-full font-bold text-xs uppercase tracking-[0.2em] transition-all duration-300 shadow-md hover:scale-[1.02] active:scale-95 ${
                       isRec
-                        ? 'bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 hover:brightness-110 hover:shadow-glow-gold'
-                        : 'bg-obsidian-900 text-ivory-50 hover:bg-gold-600'
+                        ? 'bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 hover:brightness-110 shadow-glow-pill'
+                        : 'bg-[#181824] border border-gold-500/40 text-gold-300 hover:bg-gold-500 hover:text-obsidian-950'
                     }`}
                   >
-                    Reserve {pkg.name}
+                    Reserve {pkg.tier ? `${pkg.tier} Tier` : 'Package'}
                   </button>
                 </div>
               );

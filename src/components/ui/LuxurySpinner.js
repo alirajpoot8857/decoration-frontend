@@ -102,8 +102,8 @@ export default function LuxurySpinner({ size = 'md', text = '' }) {
 
       {/* Accompanying Editorial Status Text */}
       {text && (
-        <div className="flex flex-col items-center space-y-1 text-center">
-          <p className="font-serif tracking-[0.2em] uppercase text-obsidian-900 font-semibold text-xs animate-pulse">
+        <div className="flex flex-col items-center space-y-1.5 text-center">
+          <p className="font-serif tracking-[0.2em] uppercase text-gold-400 font-semibold text-xs animate-pulse">
             {text}
           </p>
           <span className="h-[1px] w-12 bg-gradient-to-r from-transparent via-gold-500 to-transparent" />

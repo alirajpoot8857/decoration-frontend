@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -25,6 +26,7 @@ export default function CustomDatePicker({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
+  const { isDarkMode } = useTheme();
 
   // Parse initial view date safely
   const initialDate = value ? new Date(value + 'T00:00:00') : new Date();
@@ -87,6 +89,7 @@ export default function CustomDatePicker({
 
   const handleDayClick = (day, e) => {
     e.stopPropagation();
+    if (isDayDisabled(day)) return;
     const dateStr = formatDateStr(viewYear, viewMonth, day);
     onChange(dateStr);
     setIsOpen(false);
@@ -98,7 +101,6 @@ export default function CustomDatePicker({
     try {
       const d = new Date(value + 'T00:00:00');
       return d.toLocaleDateString('en-US', {
-        weekday: 'short',
         month: 'short',
         day: 'numeric',
         year: 'numeric',
@@ -115,111 +117,135 @@ export default function CustomDatePicker({
     return false;
   };
 
+  const isSelected = (day) => {
+    if (!value) return false;
+    const dateStr = formatDateStr(viewYear, viewMonth, day);
+    return dateStr === value;
+  };
+
   const isToday = (day) => {
-    const now = new Date();
+    const today = new Date();
     return (
-      now.getFullYear() === viewYear &&
-      now.getMonth() === viewMonth &&
-      now.getDate() === day
+      today.getFullYear() === viewYear &&
+      today.getMonth() === viewMonth &&
+      today.getDate() === day
     );
   };
 
-  const isSelected = (day) => {
-    if (!value) return false;
-    return value === formatDateStr(viewYear, viewMonth, day);
-  };
-
-  // Positioning class based on align prop
-  const alignmentClass =
-    align === 'right'
-      ? 'right-0'
-      : align === 'left'
-      ? 'left-0'
-      : 'left-0 sm:left-0';
+  // Determine popover horizontal position
+  let popoverAlignClass = 'left-0';
+  if (align === 'right') {
+    popoverAlignClass = 'right-0';
+  } else if (align === 'auto') {
+    popoverAlignClass = 'left-0 sm:right-auto';
+  }
 
   return (
     <div className={`relative ${className}`} ref={containerRef}>
       {label && (
-        <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
-          {label} {required && <span className="text-gold-700">*</span>}
+        <label className={`block text-[11px] uppercase tracking-wider font-semibold mb-1 ${
+          isDarkMode ? 'text-gold-400' : 'text-gold-800'
+        }`}>
+          {label} {required && <span className="text-gold-500">*</span>}
         </label>
       )}
 
-      {/* Trigger Button - Styled in Website Ivory & Gold Luxury Theme */}
+      {/* Input Trigger Button */}
       <button
         type="button"
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full text-xs p-2.5 sm:p-3 rounded-xl border bg-ivory-50 text-left flex items-center justify-between transition-all duration-200 shadow-sm ${
+        className={`w-full text-xs p-3 rounded-xl border text-left flex items-center justify-between transition-all duration-200 shadow-sm ${
           disabled
-            ? 'opacity-50 cursor-not-allowed bg-champagne-100'
+            ? 'opacity-50 cursor-not-allowed'
             : error
             ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
             : isOpen
-            ? 'border-gold-500 ring-2 ring-gold-500/20 bg-champagne-50 shadow-glow-gold'
-            : 'border-champagne-300 hover:border-gold-400 hover:bg-champagne-50/70'
-        }`}
+            ? 'border-gold-500 ring-2 ring-gold-500/20 shadow-glow-gold'
+            : isDarkMode
+            ? 'bg-[#181822] border-white/15 hover:border-gold-500/50'
+            : 'bg-white border-champagne-300 hover:border-gold-400'
+        } ${isDarkMode ? 'bg-[#181822]' : 'bg-white'}`}
       >
-        <div className="flex items-center space-x-2.5 truncate">
-          <CalendarIcon className="w-4 h-4 text-gold-600 flex-shrink-0" />
-          <span className={`truncate ${value ? 'text-obsidian-950 font-medium' : 'text-obsidian-400 font-light'}`}>
-            {value ? getFormattedDisplay() : placeholder}
+        <div className="flex items-center space-x-2 truncate">
+          <CalendarIcon className="w-4 h-4 text-gold-500 flex-shrink-0" />
+          <span className={`truncate ${
+            value
+              ? isDarkMode ? 'text-ivory-50 font-medium' : 'text-obsidian-950 font-medium'
+              : isDarkMode ? 'text-champagne-400/60 font-light' : 'text-obsidian-400 font-light'
+          }`}>
+            {getFormattedDisplay() || placeholder}
           </span>
         </div>
-        <span className="text-[10px] uppercase font-bold text-gold-700 tracking-wider flex-shrink-0 ml-1">
-          {isOpen ? 'Close' : 'Pick'}
+        <span className="text-[10px] text-gold-500 uppercase tracking-widest font-semibold flex-shrink-0">
+          Pick
         </span>
       </button>
 
-      {/* Popover Calendar Matrix - Website Luxury Theme (No Stark White) */}
+      {/* Calendar Popover */}
       {isOpen && (
         <div
-          className={`absolute ${alignmentClass} top-full mt-2 z-[9999] bg-gradient-to-b from-ivory-50 via-champagne-50 to-ivory-100 border border-gold-500/50 rounded-2xl shadow-2xl p-3.5 sm:p-4 w-[280px] sm:w-[290px] max-w-[calc(100vw-2rem)] select-none backdrop-blur-md`}
-          style={{ boxShadow: '0 20px 40px -10px rgba(20,20,20,0.3), 0 0 20px rgba(212,175,55,0.25)' }}
+          className={`absolute ${popoverAlignClass} top-full mt-2 z-[9999] p-4 rounded-2xl shadow-2xl backdrop-blur-xl border w-72 sm:w-80 animate-fadeIn select-none ${
+            isDarkMode
+              ? 'bg-[#0E0E14] border-gold-500/40 text-ivory-50 shadow-[0_20px_50px_rgba(0,0,0,0.9)]'
+              : 'bg-[#FFFFFF] border-2 border-gold-500/40 text-stone-900 shadow-[0_20px_50px_rgba(0,0,0,0.2)]'
+          }`}
         >
-          {/* Calendar Header */}
-          <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-champagne-300/80 bg-champagne-100/50 rounded-xl px-2 py-1">
+          {/* Header Month / Year controls */}
+          <div className={`flex items-center justify-between mb-4 pb-2 border-b ${
+            isDarkMode ? 'border-gold-500/20' : 'border-gold-500/25'
+          }`}>
             <button
               type="button"
               onClick={handlePrevMonth}
-              className="p-1 rounded-full hover:bg-champagne-200 text-obsidian-700 transition-colors"
+              className={`p-1.5 rounded-full transition-colors ${
+                isDarkMode ? 'hover:bg-white/10 text-gold-400' : 'hover:bg-gold-50 text-gold-700'
+              }`}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="font-serif text-sm font-semibold text-obsidian-950 flex items-center space-x-1.5">
-              <span>{MONTH_NAMES[viewMonth]} {viewYear}</span>
+
+            <span className={`font-serif text-sm font-bold tracking-wide ${
+              isDarkMode ? 'text-gold-400' : 'text-gold-700'
+            }`}>
+              {MONTH_NAMES[viewMonth]} {viewYear}
             </span>
+
             <button
               type="button"
               onClick={handleNextMonth}
-              className="p-1 rounded-full hover:bg-champagne-200 text-obsidian-700 transition-colors"
+              className={`p-1.5 rounded-full transition-colors ${
+                isDarkMode ? 'hover:bg-white/10 text-gold-400' : 'hover:bg-gold-50 text-gold-700'
+              }`}
             >
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Days of Week Header */}
-          <div className="grid grid-cols-7 gap-1 text-center mb-1">
+          {/* Days of week header */}
+          <div className="grid grid-cols-7 gap-1 text-center mb-2">
             {DAYS_OF_WEEK.map((d) => (
-              <span key={d} className="text-[10px] uppercase font-bold tracking-wider text-gold-700">
+              <span key={d} className={`text-[10px] font-bold uppercase tracking-wider ${
+                isDarkMode ? 'text-gold-400/80' : 'text-stone-700 font-extrabold'
+              }`}>
                 {d}
               </span>
             ))}
           </div>
 
-          {/* Days Grid */}
-          <div className="grid grid-cols-7 gap-1 text-center">
-            {/* Empty slots for start of month */}
+          {/* Calendar grid */}
+          <div className="grid grid-cols-7 gap-1">
+            {/* Empty slots before day 1 */}
             {Array.from({ length: firstDayIndex }).map((_, idx) => (
-              <div key={`empty-${idx}`} className="h-7 w-7 sm:h-8 sm:w-8" />
+              <div key={`empty-${idx}`} className="h-8" />
             ))}
 
-            {/* Days in Month */}
+            {/* Days in month */}
             {Array.from({ length: daysInMonth }).map((_, idx) => {
               const day = idx + 1;
               const disabledDay = isDayDisabled(day);
-              const selectedDay = isSelected(day);
-              const todayDay = isToday(day);
+              const selected = isSelected(day);
+              const today = isToday(day);
 
               return (
                 <button
@@ -227,14 +253,18 @@ export default function CustomDatePicker({
                   type="button"
                   disabled={disabledDay}
                   onClick={(e) => handleDayClick(day, e)}
-                  className={`h-7 w-7 sm:h-8 sm:w-8 mx-auto rounded-full text-xs flex items-center justify-center transition-all duration-150 ${
-                    selectedDay
-                      ? 'bg-gradient-to-br from-gold-600 to-champagne-500 text-obsidian-950 font-bold shadow-md scale-105 ring-1 ring-gold-600'
-                      : disabledDay
-                      ? 'text-obsidian-300 opacity-25 cursor-not-allowed'
-                      : todayDay
-                      ? 'border border-gold-500 bg-gold-500/10 text-gold-800 font-bold hover:bg-gold-500/20'
-                      : 'text-obsidian-800 hover:bg-champagne-200 hover:text-obsidian-950'
+                  className={`h-8 w-8 mx-auto rounded-full text-xs flex items-center justify-center transition-all ${
+                    disabledDay
+                      ? isDarkMode ? 'text-zinc-600 cursor-not-allowed opacity-30' : 'text-stone-300 cursor-not-allowed opacity-35'
+                      : selected
+                      ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-md scale-105'
+                      : today
+                      ? isDarkMode
+                        ? 'border border-gold-500 text-gold-300 font-semibold hover:bg-gold-500/20'
+                        : 'border-2 border-gold-600 text-gold-800 font-bold hover:bg-gold-50 bg-gold-50/50'
+                      : isDarkMode
+                      ? 'text-ivory-100 hover:bg-white/10 hover:text-gold-300'
+                      : 'text-stone-900 font-semibold hover:bg-gold-50 hover:text-gold-800'
                   }`}
                 >
                   {day}
@@ -243,23 +273,26 @@ export default function CustomDatePicker({
             })}
           </div>
 
-          {/* Footer with Today / Clear shortcuts */}
-          <div className="mt-2.5 pt-2 border-t border-champagne-300/80 flex items-center justify-between text-[11px]">
+          {/* Quick Clear / Today Action Footer */}
+          <div className={`mt-4 pt-2 border-t flex items-center justify-between text-[11px] ${
+            isDarkMode ? 'border-gold-500/20' : 'border-gold-500/25'
+          }`}>
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                const now = new Date();
-                const nowStr = formatDateStr(now.getFullYear(), now.getMonth(), now.getDate());
-                onChange(nowStr);
+                const today = new Date();
+                let dateStr = formatDateStr(today.getFullYear(), today.getMonth(), today.getDate());
+                if (minDate && dateStr < minDate) {
+                  dateStr = minDate;
+                }
+                onChange(dateStr);
                 setIsOpen(false);
               }}
-              className="text-gold-700 font-bold hover:underline flex items-center space-x-1"
+              className="text-gold-600 dark:text-gold-400 hover:underline font-bold"
             >
-              <Sparkles className="w-3 h-3 text-gold-600" />
-              <span>Today</span>
+              Today
             </button>
-
             {value && (
               <button
                 type="button"
@@ -268,7 +301,7 @@ export default function CustomDatePicker({
                   onChange('');
                   setIsOpen(false);
                 }}
-                className="text-obsidian-500 hover:text-red-600 transition-colors font-medium text-[10px] uppercase tracking-wider"
+                className={`hover:underline font-medium ${isDarkMode ? 'text-champagne-400/70' : 'text-stone-600'}`}
               >
                 Clear
               </button>
@@ -277,7 +310,7 @@ export default function CustomDatePicker({
         </div>
       )}
 
-      {error && <p className="text-[10px] text-red-600 mt-1">{error}</p>}
+      {error && <p className="text-[11px] text-red-600 font-semibold mt-1">{error}</p>}
     </div>
   );
 }

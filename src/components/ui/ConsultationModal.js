@@ -4,10 +4,12 @@ import React, { useState, useEffect } from 'react';
 import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import { useTheme } from '../../context/ThemeContext';
 import CustomSelect from './CustomSelect';
 import CustomDatePicker from './CustomDatePicker';
 import LocationPicker from './LocationPicker';
 import { isValidPakistaniPhone } from '../../lib/validation';
+import useBodyScrollLock from '../../hooks/useBodyScrollLock';
 import {
   X,
   Crown,
@@ -32,6 +34,8 @@ const EVENT_TYPES = [
 export default function ConsultationModal({ isOpen, onClose, defaultPackageId = null }) {
   const { user } = useAuth();
   const { showToast } = useToast();
+  const { isDarkMode } = useTheme();
+  useBodyScrollLock(isOpen);
 
   const [packages, setPackages] = useState([]);
   const [loadingPackages, setLoadingPackages] = useState(true);
@@ -124,15 +128,29 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
     }
 
     if (!formData.venue.trim()) {
-      newErrors.venue = 'Please enter your venue, hotel, or city location.';
-    }
-
-    if (Number(formData.guestCount) <= 0) {
-      newErrors.guestCount = 'Guest count must be greater than 0.';
+      newErrors.venue = 'Please specify or select your event venue in Pakistan.';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleClose = () => {
+    setSuccessBooking(null);
+    setErrors({});
+    setFormData({
+      customerName: user?.name || '',
+      customerEmail: user?.email || '',
+      customerPhone: (user?.phone && isValidPakistaniPhone(user?.phone)) ? user.phone : '03140660985',
+      eventType: 'Wedding',
+      eventDate: '',
+      venue: '',
+      guestCount: 150,
+      budget: '',
+      packageId: defaultPackageId || '',
+      specialRequests: '',
+    });
+    onClose();
   };
 
   const handleSubmit = async (e) => {
@@ -155,6 +173,21 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
 
       setSuccessBooking(res.booking);
       showToast(`Consultation booking #${res.booking.bookingNumber} confirmed!`, 'success');
+
+      // Reset / empty all form inputs upon successful submission
+      setFormData({
+        customerName: user?.name || '',
+        customerEmail: user?.email || '',
+        customerPhone: (user?.phone && isValidPakistaniPhone(user?.phone)) ? user.phone : '03140660985',
+        eventType: 'Wedding',
+        eventDate: '',
+        venue: '',
+        guestCount: 150,
+        budget: '',
+        packageId: '',
+        specialRequests: '',
+      });
+      setErrors({});
     } catch (error) {
       const msg = error.data?.message || error.message || 'Failed to submit booking request';
       showToast(msg, 'error');
@@ -173,62 +206,89 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
     })),
   ];
 
+  const inputClass = `w-full text-xs p-3 rounded-xl border focus:outline-none transition-colors ${
+    isDarkMode
+      ? 'bg-[#181822] text-[#FAF8F5] border-white/15 focus:border-gold-500 placeholder-champagne-400/40'
+      : 'bg-white text-[#141210] border-champagne-300 focus:border-gold-500 placeholder-champagne-600/50'
+  }`;
+
+  const labelClass = `block text-[11px] uppercase tracking-wider font-semibold mb-1 ${
+    isDarkMode ? 'text-gold-400' : 'text-gold-800'
+  }`;
+
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-6 bg-obsidian-950/75 backdrop-blur-md">
-      <div className="relative bg-ivory-50 border border-gold-500/30 rounded-3xl shadow-luxury-lg max-w-2xl w-full p-6 sm:p-8 text-obsidian-900 overflow-visible">
+    <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-2.5 sm:p-4 md:p-6 bg-obsidian-950/80 backdrop-blur-md animate-fadeIn">
+      <div
+        className={`relative border rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden transition-colors duration-300 ${
+          isDarkMode
+            ? 'bg-[#0E0E14] border-gold-500/35 text-ivory-50'
+            : 'bg-white border-gold-500/30 text-[#141210]'
+        }`}
+      >
         {/* Subtle gilded corner decoration */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/10 rounded-bl-full pointer-events-none" />
 
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 p-2 text-obsidian-400 hover:text-obsidian-800 rounded-full hover:bg-champagne-200/50 transition-colors z-10"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {successBooking ? (
-          <div className="text-center py-10 space-y-5">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gold-500/10 text-gold-600 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-10 h-10" />
+        {/* Modal Header */}
+        <div className={`p-4 sm:p-6 pb-3 sm:pb-4 border-b flex items-start justify-between flex-shrink-0 relative z-10 ${
+          isDarkMode ? 'bg-[#0E0E14] border-gold-500/20' : 'bg-[#FAF7F2] border-champagne-200'
+        }`}>
+          <div className="space-y-1 pr-6">
+            <div className="flex items-center space-x-2 text-gold-500 text-xs uppercase tracking-[0.2em] font-semibold">
+              <Crown className="w-4 h-4 text-gold-500" />
+              <span>Bespoke Scénographie</span>
             </div>
-            <h3 className="font-serif text-2xl sm:text-3xl font-light text-obsidian-900">
-              Your Experience Begins
+            <h3 className="font-serif text-xl sm:text-2xl font-light">
+              Book Your Private Event Consultation
             </h3>
-            <div className="inline-block px-4 py-1.5 bg-champagne-200 text-gold-900 font-bold text-xs uppercase tracking-widest rounded-full">
-              Booking Reference: {successBooking.bookingNumber}
-            </div>
-            <p className="text-xs sm:text-sm text-obsidian-600 max-w-md mx-auto leading-relaxed">
-              Thank you, <strong className="text-obsidian-950">{successBooking.customerName}</strong>. Our senior creative director and event scenographer will review your vision and reach out within 24 hours to schedule your private design consultation.
+            <p className={`text-xs font-light ${isDarkMode ? 'text-champagne-200/80' : 'text-[#52473A]'}`}>
+              Tell us your vision. We transform extraordinary spaces into unforgettable memories.
             </p>
-            <div className="pt-4">
-              <button
-                onClick={onClose}
-                className="px-8 py-3 bg-obsidian-900 text-ivory-50 text-xs uppercase tracking-widest rounded-full hover:bg-gold-600 transition-colors shadow-md"
-              >
-                Close & Return
-              </button>
-            </div>
           </div>
-        ) : (
-          <div>
-            <div className="mb-5 space-y-1">
-              <div className="flex items-center space-x-2 text-gold-700 text-xs uppercase tracking-[0.2em] font-semibold">
-                <Crown className="w-4 h-4" />
-                <span>Bespoke Scénographie</span>
-              </div>
-              <h3 className="font-serif text-2xl sm:text-3xl text-obsidian-950">
-                Book Your Private Event Consultation
-              </h3>
-              <p className="text-xs text-obsidian-500 font-light">
-                Tell us your vision. We transform extraordinary spaces into unforgettable memories.
-              </p>
-            </div>
 
+          <button
+            onClick={handleClose}
+            className={`p-2 rounded-full transition-colors flex-shrink-0 ${
+              isDarkMode
+                ? 'text-champagne-300 hover:text-gold-400 hover:bg-white/10'
+                : 'text-obsidian-400 hover:text-obsidian-800 hover:bg-champagne-200/50'
+            }`}
+            aria-label="Close Modal"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Scrollable Content Body */}
+        <div className="overflow-y-auto flex-1 p-4 sm:p-6 space-y-4 text-xs overscroll-contain">
+          {successBooking ? (
+            <div className="text-center py-8 space-y-5">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gold-500/15 text-gold-500 rounded-full flex items-center justify-center shadow-glow-gold">
+                <CheckCircle2 className="w-10 h-10" />
+              </div>
+              <h3 className="font-serif text-2xl sm:text-3xl font-light">
+                Your Experience Begins
+              </h3>
+              <div className="inline-block px-4 py-1.5 bg-gold-500/20 text-gold-400 border border-gold-500/40 font-bold text-xs uppercase tracking-widest rounded-full">
+                Booking Reference: #{successBooking.bookingNumber}
+              </div>
+              <p className={`text-xs sm:text-sm max-w-md mx-auto leading-relaxed ${isDarkMode ? 'text-champagne-200/85' : 'text-[#3D352A]'}`}>
+                Thank you, <strong className={isDarkMode ? 'text-ivory-50' : 'text-[#141210]'}>{successBooking.customerName}</strong>. Our senior creative director and event scenographer will review your vision and reach out within 24 hours to schedule your private design consultation.
+              </p>
+              <div className="pt-4">
+                <button
+                  onClick={handleClose}
+                  className="btn-festivity-pill px-8 py-3 text-xs uppercase tracking-widest rounded-full transition-transform hover:scale-105"
+                >
+                  Close & Return
+                </button>
+              </div>
+            </div>
+          ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name and Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                  <label className={labelClass}>
                     Your Full Name *
                   </label>
                   <input
@@ -238,23 +298,21 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
                       setFormData({ ...formData, customerName: e.target.value });
                       if (errors.customerName) setErrors({ ...errors, customerName: null });
                     }}
-                    className={`w-full text-xs p-3 rounded-xl border bg-white focus:outline-none transition-colors ${
-                      errors.customerName
-                        ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                        : 'border-champagne-300 focus:border-gold-500'
+                    className={`${inputClass} ${
+                      errors.customerName ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5' : ''
                     }`}
                     placeholder="e.g. Eleanor Vance"
                   />
                   {errors.customerName && (
-                    <p className="text-[10px] text-red-600 mt-1 flex items-center">
-                      <AlertCircle className="w-3 h-3 mr-1" />
+                    <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
                       {errors.customerName}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                  <label className={labelClass}>
                     Email Address *
                   </label>
                   <input
@@ -264,16 +322,14 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
                       setFormData({ ...formData, customerEmail: e.target.value });
                       if (errors.customerEmail) setErrors({ ...errors, customerEmail: null });
                     }}
-                    className={`w-full text-xs p-3 rounded-xl border bg-white focus:outline-none transition-colors ${
-                      errors.customerEmail
-                        ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                        : 'border-champagne-300 focus:border-gold-500'
+                    className={`${inputClass} ${
+                      errors.customerEmail ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5' : ''
                     }`}
                     placeholder="you@example.com"
                   />
                   {errors.customerEmail && (
-                    <p className="text-[10px] text-red-600 mt-1 flex items-center">
-                      <AlertCircle className="w-3 h-3 mr-1" />
+                    <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
                       {errors.customerEmail}
                     </p>
                   )}
@@ -283,7 +339,7 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
               {/* Phone and Event Type (CustomSelect) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                  <label className={labelClass}>
                     Phone Number (Pakistan 🇵🇰) *
                   </label>
                   <input
@@ -293,16 +349,14 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
                       setFormData({ ...formData, customerPhone: e.target.value });
                       if (errors.customerPhone) setErrors({ ...errors, customerPhone: null });
                     }}
-                    className={`w-full text-xs p-3 rounded-xl border bg-white focus:outline-none transition-colors ${
-                      errors.customerPhone
-                        ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                        : 'border-champagne-300 focus:border-gold-500'
+                    className={`${inputClass} ${
+                      errors.customerPhone ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5' : ''
                     }`}
                     placeholder="03140660985 or +923140660985"
                   />
                   {errors.customerPhone && (
-                    <p className="text-[10px] text-red-600 mt-1 flex items-center">
-                      <AlertCircle className="w-3 h-3 mr-1" />
+                    <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
                       {errors.customerPhone}
                     </p>
                   )}
@@ -332,6 +386,7 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
                       if (errors.eventDate) setErrors({ ...errors, eventDate: null });
                     }}
                     error={errors.eventDate}
+                    align="left"
                   />
                 </div>
 
@@ -353,33 +408,35 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
               {/* Guest Count, Budget & Preferred Package (CustomSelect) */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                  <label className={labelClass}>
                     Guest Count
                   </label>
                   <div className="relative">
-                    <Users className="w-3.5 h-3.5 text-obsidian-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Users className={`w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 ${
+                      isDarkMode ? 'text-champagne-400/60' : 'text-obsidian-400'
+                    }`} />
                     <input
                       type="number"
                       min={10}
                       value={formData.guestCount}
                       onChange={(e) => setFormData({ ...formData, guestCount: e.target.value })}
-                      className="w-full text-xs pl-8 pr-3 py-3 rounded-xl border border-champagne-300 bg-white focus:outline-none focus:border-gold-500"
+                      className={`${inputClass} pl-8`}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                  <label className={labelClass}>
                     Budget Estimate (PKR)
                   </label>
                   <div className="relative">
-                    <span className="text-[10px] font-bold text-obsidian-400 absolute left-3 top-1/2 -translate-y-1/2 font-mono">PKR</span>
+                    <span className="text-[10px] font-bold text-gold-500 absolute left-3 top-1/2 -translate-y-1/2 font-mono">PKR</span>
                     <input
                       type="number"
                       value={formData.budget}
                       onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                      className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-champagne-300 bg-white focus:outline-none focus:border-gold-500"
-                      placeholder="e.g. 6500"
+                      className={`${inputClass} pl-10`}
+                      placeholder="e.g. 180000"
                     />
                   </div>
                 </div>
@@ -397,14 +454,14 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
 
               {/* Special Requests */}
               <div>
-                <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                <label className={labelClass}>
                   Design Vision & Special Notes (Optional)
                 </label>
                 <textarea
                   rows={2}
                   value={formData.specialRequests}
                   onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
-                  className="w-full text-xs p-3 rounded-xl border border-champagne-300 bg-white focus:outline-none focus:border-gold-500"
+                  className={inputClass}
                   placeholder="Floral palette preferences, structural staging requests, ceiling installations, lighting..."
                 />
               </div>
@@ -413,24 +470,24 @@ export default function ConsultationModal({ isOpen, onClose, defaultPackageId = 
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-3.5 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-champagne-500 text-obsidian-950 font-semibold text-xs uppercase tracking-[0.2em] shadow-luxury hover:shadow-glow-gold hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center"
+                  className="w-full py-4 rounded-full btn-festivity-pill text-xs uppercase tracking-[0.2em] font-bold shadow-glow-pill transition-all flex items-center justify-center space-x-2"
                 >
                   {submitting ? (
                     <>
                       <Sparkles className="w-4 h-4 mr-2 animate-spin text-obsidian-950" />
-                      Submitting Request...
+                      <span>Submitting Request...</span>
                     </>
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4 mr-2" />
-                      Submit Event Booking Request
+                      <span>Submit Event Booking Request</span>
                     </>
                   )}
                 </button>
               </div>
             </form>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

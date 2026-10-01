@@ -7,7 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useRentalCart } from '../../context/RentalCartContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useDiscount } from '../../context/DiscountContext';
-import { ShoppingBag, Menu, X, User as UserIcon, LogOut, LayoutDashboard, Calendar, Sparkles } from 'lucide-react';
+import { ShoppingBag, Menu, X, User as UserIcon, LogOut, LayoutDashboard, Calendar, Sparkles, Sun, Moon } from 'lucide-react';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/' },
@@ -27,7 +27,7 @@ export default function Navbar({ onOpenConsultation }) {
   const pathname = usePathname();
   const { user, logout, isStaffOrAdmin } = useAuth();
   const { totalItemsCount, setIsCartOpen } = useRentalCart();
-  const { siteName, tagline } = useTheme();
+  const { siteName, tagline, mode, isDarkMode, toggleMode } = useTheme();
   const { isDiscountActive, effectiveDiscount, isBannerDismissed } = useDiscount();
   const hasActiveBanner = isDiscountActive && effectiveDiscount > 0 && !isBannerDismissed;
 
@@ -53,51 +53,53 @@ export default function Navbar({ onOpenConsultation }) {
   if (isAdminRoute) return null;
 
   return (
-    <header className={`fixed left-0 right-0 z-50 px-2 sm:px-6 lg:px-8 pointer-events-none transition-all duration-300 ${
+    <header className={`fixed left-0 right-0 z-50 px-2 sm:px-6 lg:px-8 pointer-events-none transition-all duration-300 dark-preserve ${
       hasActiveBanner ? 'top-10 sm:top-12' : 'top-2 sm:top-4'
     }`}>
-      <div className="max-w-[1400px] mx-auto pointer-events-auto">
-        {/* Floating Luxury Island Pill - Smoked Translucent Frosted Glass with Gold Border */}
+      <div className="max-w-[1400px] mx-auto pointer-events-auto dark-preserve">
+        {/* Floating Luxury Island Pill - Smoked Translucent Frosted Glass with Gold Border (Matches Promo Bar) */}
         <div
           style={{
             backdropFilter: 'blur(24px) saturate(180%)',
             WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            backgroundColor: 'rgba(20, 17, 13, 0.68)',
-            boxShadow: '0 12px 36px -8px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.12)',
+            backgroundColor: 'rgba(20, 17, 13, 0.78)',
+            boxShadow: '0 12px 36px -8px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.12)',
           }}
-          className={`rounded-full border border-gold-500/35 flex items-center justify-between gap-1 sm:gap-2.5 lg:gap-3.5 pl-3 sm:pl-4.5 lg:pl-5 pr-1.5 sm:pr-2.5 lg:pr-3 py-1.5 sm:py-2 transition-all duration-300 ${
+          className={`rounded-full border border-gold-500/40 flex items-center justify-between gap-1.5 sm:gap-2.5 lg:gap-3 pl-3.5 sm:pl-4.5 lg:pl-5 pr-2.5 sm:pr-3.5 lg:pr-4 py-1.5 sm:py-2 transition-all duration-300 dark-preserve ${
             scrolled ? 'ring-1 ring-gold-400/30 shadow-[0_16px_45px_-10px_rgba(0,0,0,0.7),0_0_20px_rgba(212,175,55,0.25)] border-gold-400/45' : 'hover:border-gold-500/50'
           }`}
         >
           {/* Brand Logo - Responsive & Non-Wrapping */}
           <Link
             href="/"
-            className="group flex flex-col items-start focus:outline-none transition-transform duration-300 hover:scale-[1.01] shrink-0 min-w-0 mr-1 sm:mr-2"
+            className="group flex flex-col items-start focus:outline-none transition-transform duration-300 hover:scale-[1.01] shrink-0 min-w-0 mr-1 sm:mr-2 dark-preserve"
           >
             <span
-              className="font-serif text-sm sm:text-base lg:text-lg xl:text-xl font-light uppercase tracking-[0.14em] sm:tracking-[0.16em] xl:tracking-[0.18em] text-ivory-50 group-hover:text-gold-300 transition-colors whitespace-nowrap"
+              className="font-serif text-sm sm:text-base lg:text-lg xl:text-xl font-light uppercase tracking-[0.14em] sm:tracking-[0.16em] xl:tracking-[0.18em] text-[#FFFDF9] group-hover:text-gold-300 transition-colors whitespace-nowrap drop-shadow-sm"
             >
               {siteName}
             </span>
             <span
-              className="hidden md:block text-[6.5px] lg:text-[7px] uppercase tracking-[0.18em] font-sans -mt-0.5 font-medium text-champagne-300 truncate max-w-[160px] lg:max-w-none"
+              className="hidden md:block text-[6.5px] lg:text-[7px] uppercase tracking-[0.18em] font-sans -mt-0.5 font-semibold text-[#E5D0BA] truncate max-w-[160px] lg:max-w-none"
             >
               {tagline}
             </span>
           </Link>
 
           {/* Desktop Navigation Links - Haute Inner Pill Array */}
-          <nav className="hidden lg:flex items-center space-x-0.5 xl:space-x-1 bg-white/[0.06] p-1 rounded-full border border-white/10 shrink min-w-0">
+          <nav
+            className="hidden lg:flex items-center space-x-0.5 xl:space-x-1 p-1 rounded-full border shrink-0 transition-colors bg-white/[0.08] border-white/15 dark-preserve"
+          >
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`px-2.5 xl:px-3 py-1 rounded-full text-[10.5px] xl:text-[11.5px] uppercase tracking-[0.08em] xl:tracking-[0.12em] font-medium transition-all shrink-0 whitespace-nowrap ${
+                  className={`px-2 lg:px-2 xl:px-3 py-1 rounded-full text-[10px] lg:text-[10.5px] xl:text-[11.5px] uppercase tracking-[0.06em] xl:tracking-[0.1em] font-medium transition-all shrink-0 whitespace-nowrap ${
                     isActive
                       ? 'bg-gradient-to-r from-gold-600 to-champagne-500 text-obsidian-950 font-bold shadow-sm'
-                      : 'text-ivory-200 hover:text-gold-300 hover:bg-white/10'
+                      : 'text-[#F3EFEB] hover:text-[#FBBF24] hover:bg-white/15 font-semibold'
                   }`}
                 >
                   {link.name}
@@ -107,15 +109,29 @@ export default function Navbar({ onOpenConsultation }) {
           </nav>
 
           {/* Right Action Icons & Buttons - Fits Perfectly Inside the Pill Curve Without Overflow */}
-          <div className="flex items-center shrink-0 space-x-1 sm:space-x-2">
+          <div className="flex items-center shrink-0 space-x-1 sm:space-x-2 dark-preserve">
+            {/* ☀️ / 🌙 Light & Dark Theme Toggle Button */}
+            <button
+              onClick={toggleMode}
+              className="p-1.5 sm:p-2 rounded-full border border-gold-500/40 bg-gold-500/15 text-[#FBBF24] hover:bg-gold-500/25 hover:text-gold-200 transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
+              title={isDarkMode ? 'Switch to Light Elegance Mode' : 'Switch to Dark Luxury Mode'}
+              aria-label="Toggle Theme Mode"
+            >
+              {isDarkMode ? (
+                <Sun className="w-4 h-4 text-[#FBBF24] animate-fadeInUp" />
+              ) : (
+                <Moon className="w-4 h-4 text-[#FBBF24] animate-fadeInUp" />
+              )}
+            </button>
+
             {/* Rental Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-1.5 sm:p-2 rounded-full text-ivory-100 hover:bg-white/15 hover:text-gold-300 transition-all duration-300 hover:scale-105 active:scale-95"
+              className="relative p-1.5 sm:p-2 rounded-full text-[#FFFDF9] hover:bg-white/15 hover:text-gold-400 transition-all duration-300 hover:scale-105 active:scale-95"
               title="View Rental Cart"
               aria-label="Rental Cart"
             >
-              <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#FFFDF9]" />
               {totalItemsCount > 0 && (
                 <span className="absolute top-0 right-0 bg-gradient-to-r from-gold-500 to-champagne-400 text-obsidian-950 font-bold text-[9px] sm:text-[10px] w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-full flex items-center justify-center shadow-md">
                   {totalItemsCount}
@@ -125,14 +141,14 @@ export default function Navbar({ onOpenConsultation }) {
 
             {/* Auth Menu / User Profile */}
             {user ? (
-              <div className="relative">
+              <div className="relative dark-preserve">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center space-x-1 sm:space-x-1.5 text-xs uppercase tracking-wider p-1.5 sm:py-1.5 sm:px-3 rounded-full border border-gold-500/35 bg-gold-500/15 text-ivory-50 hover:bg-gold-500/25 hover:border-gold-400 transition-all duration-300 hover:scale-105 active:scale-95"
+                  className="flex items-center space-x-1 sm:space-x-1.5 text-xs uppercase tracking-wider p-1.5 sm:py-1.5 sm:px-3 rounded-full border border-gold-500/40 bg-gold-500/20 text-[#FFFDF9] hover:bg-gold-500/30 hover:border-gold-400 transition-all duration-300 hover:scale-105 active:scale-95"
                   title={user.name}
                 >
-                  <UserIcon className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-gold-400 shrink-0" />
-                  <span className="hidden sm:inline max-w-[70px] xl:max-w-[90px] truncate font-medium text-ivory-50">
+                  <UserIcon className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#FBBF24] shrink-0" />
+                  <span className="hidden sm:inline max-w-[70px] xl:max-w-[90px] truncate font-semibold text-[#FFFDF9]">
                     {user.name.split(' ')[0]}
                   </span>
                 </button>
@@ -144,35 +160,35 @@ export default function Navbar({ onOpenConsultation }) {
                       backdropFilter: 'blur(24px)',
                       WebkitBackdropFilter: 'blur(24px)',
                     }}
-                    className="absolute right-0 mt-3 w-56 bg-[#120f0c] border border-gold-500/35 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.85)] py-2 z-50 text-ivory-100"
+                    className="absolute right-0 mt-3 w-56 border border-gold-500/35 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.4)] py-2 z-50 text-ivory-100 dark-preserve"
                   >
-                    <div className="px-4 py-2.5 border-b border-white/10">
-                      <p className="text-xs font-semibold text-ivory-50 truncate">{user.name}</p>
-                      <p className="text-[10px] text-obsidian-400 truncate">{user.email}</p>
+                    <div className="px-4 py-2.5 border-b border-gold-500/20">
+                      <p className="text-xs font-semibold text-[#FFFDF9] truncate">{user.name}</p>
+                      <p className="text-[10px] text-champagne-300 truncate">{user.email}</p>
                       <span className="inline-block mt-1 px-2 py-0.5 bg-gold-500/20 text-gold-300 text-[9px] font-bold rounded-full uppercase tracking-wider">
                         {user.role}
                       </span>
                     </div>
 
-                    {isStaffOrAdmin && (
+                    {isStaffOrAdmin ? (
                       <Link
                         href="/admin"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center px-4 py-2.5 text-xs text-ivory-200 hover:bg-white/10 hover:text-gold-300 font-medium transition-colors"
+                        className="flex items-center px-4 py-2.5 text-xs text-[#F3EFEB] hover:bg-white/10 hover:text-gold-400 transition-colors"
                       >
-                        <LayoutDashboard className="w-4 h-4 mr-2.5 text-gold-400" />
-                        Admin Dashboard
+                        <LayoutDashboard className="w-4 h-4 mr-2.5 text-gold-500" />
+                        <span>{user.role === 'ADMIN' ? '👑 Admin Studio' : '🛠️ Staff Terminal'}</span>
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/portal"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center px-4 py-2.5 text-xs text-[#F3EFEB] hover:bg-white/10 hover:text-gold-400 transition-colors"
+                      >
+                        <Calendar className="w-4 h-4 mr-2.5 text-gold-400" />
+                        <span>💎 My Client Portal</span>
                       </Link>
                     )}
-
-                    <Link
-                      href="/portal"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center px-4 py-2.5 text-xs text-ivory-200 hover:bg-white/10 hover:text-gold-300 font-medium transition-colors"
-                    >
-                      <Calendar className="w-4 h-4 mr-2.5 text-gold-400" />
-                      My Bookings & Rentals
-                    </Link>
 
                     <button
                       onClick={() => {
@@ -190,7 +206,7 @@ export default function Navbar({ onOpenConsultation }) {
             ) : (
               <Link
                 href="/login"
-                className="hidden sm:inline-flex text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5 text-ivory-100 hover:bg-white/15 hover:text-gold-300 transition-all duration-300 hover:scale-105 active:scale-95"
+                className="hidden sm:inline-flex text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-white/25 bg-white/10 text-[#FFFDF9] hover:bg-white/20 hover:text-gold-300 transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 Sign In
               </Link>
@@ -219,14 +235,14 @@ export default function Navbar({ onOpenConsultation }) {
               className="lg:hidden p-1.5 sm:p-2 rounded-full text-ivory-100 hover:bg-white/10 transition-all duration-300 hover:scale-105 active:scale-95 shrink-0"
               aria-label="Toggle Menu"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6 text-gold-400" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6 text-gold-400" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-white" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Drawer Menu - Smooth Animated High-Contrast Luxury Glass Card */}
         <div
-          className={`lg:hidden w-full max-w-lg mx-auto overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`lg:hidden w-full max-w-lg mx-auto overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] dark-preserve ${
             mobileMenuOpen
               ? 'max-h-[640px] opacity-100 mt-2.5 sm:mt-3 scale-100 translate-y-0'
               : 'max-h-0 opacity-0 mt-0 scale-95 -translate-y-3 pointer-events-none'
@@ -239,7 +255,7 @@ export default function Navbar({ onOpenConsultation }) {
               WebkitBackdropFilter: 'blur(30px) saturate(180%)',
               boxShadow: '0 25px 60px -10px rgba(0,0,0,0.88), 0 0 0 1px rgba(212,175,55,0.3)',
             }}
-            className="border border-gold-500/40 rounded-3xl p-5 sm:p-7 space-y-4 text-ivory-50 transition-all duration-300"
+            className="border border-gold-500/40 rounded-3xl p-5 sm:p-7 space-y-4 text-ivory-50 transition-all duration-300 dark-preserve"
           >
             <div className="space-y-1.5">
               {NAV_LINKS.map((link) => {
@@ -251,8 +267,8 @@ export default function Navbar({ onOpenConsultation }) {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`block text-base sm:text-lg font-serif tracking-widest py-2.5 px-4 rounded-2xl transition-all ${
                       isActive
-                        ? 'bg-gradient-to-r from-gold-600/35 via-gold-500/20 to-transparent text-gold-300 font-bold border border-gold-500/50 shadow-sm'
-                        : 'text-ivory-100 hover:text-gold-300 hover:bg-white/10'
+                        ? 'bg-gradient-to-r from-gold-600/35 via-gold-500/20 to-transparent text-gold-500 font-bold border border-gold-500/50 shadow-sm'
+                        : 'text-ivory-100 hover:text-gold-300 hover:bg-white/10 font-medium'
                     }`}
                   >
                     {link.name}
@@ -262,6 +278,21 @@ export default function Navbar({ onOpenConsultation }) {
             </div>
 
             <div className="pt-3.5 space-y-2.5 border-t border-white/15">
+              {/* Theme Mode Toggle Button for Mobile */}
+              <button
+                type="button"
+                onClick={toggleMode}
+                className="w-full flex items-center justify-between px-4 py-2.5 rounded-2xl border border-gold-500/30 bg-gold-500/10 text-gold-300 font-semibold text-xs uppercase tracking-wider transition-all"
+              >
+                <span className="flex items-center space-x-2">
+                  {isDarkMode ? <Sun className="w-4 h-4 text-gold-400" /> : <Moon className="w-4 h-4 text-gold-400" />}
+                  <span>{isDarkMode ? 'Light Elegance Mode' : 'Dark Luxury Mode'}</span>
+                </span>
+                <span className="text-[10px] bg-gold-500/20 px-2 py-0.5 rounded-full font-mono font-bold">
+                  {isDarkMode ? 'SWITCH TO LIGHT' : 'SWITCH TO DARK'}
+                </span>
+              </button>
+
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);

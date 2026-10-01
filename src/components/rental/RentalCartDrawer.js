@@ -6,9 +6,11 @@ import { useRentalCart } from '../../context/RentalCartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useDiscount } from '../../context/DiscountContext';
 import { useToast } from '../../context/ToastContext';
+import { useTheme } from '../../context/ThemeContext';
 import CustomDatePicker from '../ui/CustomDatePicker';
 import LocationPicker from '../ui/LocationPicker';
 import { isValidPakistaniPhone } from '../../lib/validation';
+import useBodyScrollLock from '../../hooks/useBodyScrollLock';
 import {
   X,
   Trash2,
@@ -38,6 +40,8 @@ export default function RentalCartDrawer() {
     setEventDate,
     returnDate,
     setReturnDate,
+    isDateRangeValid,
+    dateError,
     rentalMode,
     setRentalMode,
     rentalHours,
@@ -56,6 +60,8 @@ export default function RentalCartDrawer() {
 
   const { user } = useAuth();
   const { showToast } = useToast();
+  const { isDarkMode } = useTheme();
+  useBodyScrollLock(isCartOpen);
   const { applyPromo, promoMessage, userPromoCode } = useDiscount();
 
   const [checkoutStep, setCheckoutStep] = useState('cart'); // 'cart' | 'checkout'
@@ -69,7 +75,7 @@ export default function RentalCartDrawer() {
   });
   const [checkoutErrors, setCheckoutErrors] = useState({});
 
-// Smoothly animated drawer component
+  const todayStr = new Date().toISOString().split('T')[0];
 
   const handleApplyPromoCode = (e) => {
     e.preventDefault();
@@ -81,6 +87,20 @@ export default function RentalCartDrawer() {
   const handleRemoveItem = (itemId, itemName) => {
     removeFromCart(itemId);
     showToast(`Removed "${itemName}" from rental cart.`, 'info');
+  };
+
+  const handleEventDateChange = (val) => {
+    setEventDate(val);
+    if (checkoutErrors.eventDate || checkoutErrors.returnDate) {
+      setCheckoutErrors((prev) => ({ ...prev, eventDate: null, returnDate: null }));
+    }
+  };
+
+  const handleReturnDateChange = (val) => {
+    setReturnDate(val);
+    if (checkoutErrors.returnDate) {
+      setCheckoutErrors((prev) => ({ ...prev, returnDate: null }));
+    }
   };
 
   const validateCheckout = () => {
@@ -106,28 +126,18 @@ export default function RentalCartDrawer() {
 
     if (!eventDate) {
       errors.eventDate = 'Event start date is required.';
+    } else if (eventDate < todayStr) {
+      errors.eventDate = 'Event start date cannot be in the past.';
     }
 
     if (!returnDate) {
       errors.returnDate = 'Return date is required.';
+    } else if (eventDate && returnDate < eventDate) {
+      errors.returnDate = 'Return date cannot be earlier than event start date.';
     }
 
     setCheckoutErrors(errors);
     return Object.keys(errors).length === 0;
-  };
-
-  const resetFormState = () => {
-    setFormData({
-      name: user?.name || '',
-      email: user?.email || '',
-      phone: user?.phone || '',
-      location: '',
-      notes: '',
-    });
-    setPromoInput('');
-    setPromoStatus(null);
-    setCheckoutErrors({});
-    setCheckoutStep('cart');
   };
 
   const handleSubmitCheckout = async (e) => {
@@ -138,13 +148,34 @@ export default function RentalCartDrawer() {
     }
     try {
       await submitRentalOrder(formData);
-      resetFormState();
+      showToast('Rental commission request submitted successfully!', 'success');
+      // Reset all checkout form inputs and drawer step
+      setFormData({
+        name: user?.name || '',
+        email: user?.email || '',
+        phone: (user?.phone && isValidPakistaniPhone(user?.phone)) ? user.phone : '03140660985',
+        location: '',
+        notes: '',
+      });
+      setPromoInput('');
+      setPromoStatus(null);
+      setCheckoutErrors({});
+      setCheckoutStep('cart');
+      setIsCartOpen(false);
     } catch (err) {
-      // Error handled by submitRentalOrder toast
+      showToast(err.message || 'Failed to submit rental order.', 'error');
     }
   };
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const inputClass = `w-full text-xs p-3 rounded-xl border focus:outline-none transition-colors ${
+    isDarkMode
+      ? 'bg-[#181822] text-[#FAF8F5] border-white/15 focus:border-gold-500 placeholder-champagne-400/40'
+      : 'bg-white text-[#141210] border-champagne-300 focus:border-gold-500 placeholder-champagne-600/50'
+  }`;
+
+  const labelClass = `block text-xs uppercase tracking-wider font-semibold mb-1 ${
+    isDarkMode ? 'text-gold-400' : 'text-gold-800'
+  }`;
 
   return (
     <div
@@ -154,7 +185,7 @@ export default function RentalCartDrawer() {
     >
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-obsidian-950/70 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
+        className={`absolute inset-0 bg-obsidian-950/75 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
           isCartOpen ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={() => setIsCartOpen(false)}
@@ -162,21 +193,31 @@ export default function RentalCartDrawer() {
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
         <div
-          className={`w-screen max-w-md sm:max-w-lg bg-ivory-50 text-obsidian-900 border-l border-champagne-300 shadow-2xl flex flex-col justify-between overflow-visible transform transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`w-screen max-w-md sm:max-w-lg shadow-2xl flex flex-col justify-between overflow-visible transform transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isCartOpen ? 'translate-x-0' : 'translate-x-full'
+          } ${
+            isDarkMode
+              ? 'bg-[#0E0E14] text-ivory-50 border-l border-gold-500/30'
+              : 'bg-white text-[#141210] border-l border-champagne-300'
           }`}
         >
           {/* Header */}
-          <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-champagne-200 flex items-center justify-between bg-champagne-100/70">
+          <div
+            className={`px-5 sm:px-6 py-4 sm:py-5 border-b flex items-center justify-between transition-colors ${
+              isDarkMode
+                ? 'bg-[#14141E] border-gold-500/20'
+                : 'bg-[#FAF7F2] border-champagne-200'
+            }`}
+          >
             <div className="flex items-center space-x-3">
-              <div className="p-2.5 bg-gold-500/10 text-gold-700 rounded-full">
+              <div className="p-2.5 bg-gold-500/15 text-gold-500 rounded-full shadow-glow-gold">
                 <ShoppingBag className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-serif text-lg tracking-wide text-obsidian-900">
+                <h3 className="font-serif text-lg tracking-wide">
                   {checkoutStep === 'cart' ? 'Rental Cart & Duration' : 'Confirm Rental Request'}
                 </h3>
-                <p className="text-xs text-obsidian-500 font-sans">
+                <p className={`text-xs font-sans ${isDarkMode ? 'text-champagne-300/70' : 'text-[#6B5E4D]'}`}>
                   {cartItems.length} item{cartItems.length !== 1 ? 's' : ''} • Mode: {rentalMode}
                 </p>
               </div>
@@ -184,26 +225,33 @@ export default function RentalCartDrawer() {
 
             <button
               onClick={() => setIsCartOpen(false)}
-              className="p-2 text-obsidian-400 hover:text-obsidian-800 rounded-full hover:bg-champagne-200/50 transition-colors"
+              className={`p-2 rounded-full transition-colors ${
+                isDarkMode
+                  ? 'text-champagne-300 hover:text-gold-400 hover:bg-white/10'
+                  : 'text-obsidian-400 hover:text-obsidian-800 hover:bg-champagne-200/50'
+              }`}
+              aria-label="Close Cart"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Body Content */}
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-5">
+          <div className="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6 py-4 space-y-5">
             {cartItems.length === 0 ? (
               <div className="text-center py-16 space-y-4">
-                <div className="w-16 h-16 mx-auto bg-champagne-100 rounded-full flex items-center justify-center text-champagne-600">
+                <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center ${
+                  isDarkMode ? 'bg-white/5 text-gold-400' : 'bg-champagne-100 text-gold-700'
+                }`}>
                   <ShoppingBag className="w-8 h-8" />
                 </div>
-                <h4 className="font-serif text-lg text-obsidian-800">Your rental cart is empty</h4>
-                <p className="text-xs text-obsidian-500 max-w-xs mx-auto">
-                  Browse our catalog of luxury chairs, floral arches, chandeliers, and banquet centerpieces.
+                <h4 className="font-serif text-lg">Your rental cart is empty</h4>
+                <p className={`text-xs max-w-xs mx-auto ${isDarkMode ? 'text-champagne-200/70' : 'text-[#52473A]'}`}>
+                  Browse our catalog of luxury Dior chairs, floral arches, chandeliers, and banquet centerpieces.
                 </p>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="mt-4 px-6 py-2.5 bg-obsidian-900 text-ivory-50 rounded-full text-xs uppercase tracking-widest hover:bg-gold-600 transition-colors shadow-md"
+                  className="mt-4 btn-festivity-pill px-6 py-2.5 text-xs uppercase tracking-widest transition-transform hover:scale-105 shadow-md"
                 >
                   Browse Catalog
                 </button>
@@ -211,46 +259,54 @@ export default function RentalCartDrawer() {
             ) : checkoutStep === 'cart' ? (
               <>
                 {/* 1. DURATION MODE SELECTOR (HOURLY VS DAILY) */}
-                <div className="p-4 bg-champagne-100/60 border border-champagne-300 rounded-2xl space-y-3">
+                <div className={`p-4 border rounded-2xl space-y-3 ${
+                  isDarkMode
+                    ? 'bg-[#14141E] border-gold-500/25'
+                    : 'bg-[#FAF7F2] border-champagne-300'
+                }`}>
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-gold-800 flex items-center">
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-gold-500 flex items-center">
                       <Clock className="w-3.5 h-3.5 mr-1.5" />
                       Rental Rate Calculation
                     </span>
-                    <span className="text-[10px] text-obsidian-500 font-medium">
+                    <span className={`text-[10px] font-medium ${isDarkMode ? 'text-champagne-300/70' : 'text-[#52473A]'}`}>
                       {rentalMode === 'HOURLY' ? `${rentalHours} Hours Tier` : `${daysCount} Day(s)`}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 bg-champagne-200/60 p-1 rounded-xl">
+                  <div className={`grid grid-cols-2 gap-2 p-1 rounded-xl ${
+                    isDarkMode ? 'bg-[#0E0E14]' : 'bg-champagne-200/60'
+                  }`}>
                     <button
                       type="button"
                       onClick={() => setRentalMode('DAILY')}
                       className={`py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all ${
                         rentalMode === 'DAILY'
-                          ? 'bg-obsidian-900 text-ivory-50 shadow-sm'
-                          : 'text-obsidian-700 hover:text-obsidian-950'
+                          ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-sm'
+                          : isDarkMode ? 'text-champagne-300 hover:text-ivory-50' : 'text-obsidian-700 hover:text-obsidian-950'
                       }`}
                     >
-                      Daily Rate ($/day)
+                      Daily Rate (PKR/day)
                     </button>
                     <button
                       type="button"
                       onClick={() => setRentalMode('HOURLY')}
                       className={`py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all ${
                         rentalMode === 'HOURLY'
-                          ? 'bg-obsidian-900 text-ivory-50 shadow-sm'
-                          : 'text-obsidian-700 hover:text-obsidian-950'
+                          ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-sm'
+                          : isDarkMode ? 'text-champagne-300 hover:text-ivory-50' : 'text-obsidian-700 hover:text-obsidian-950'
                       }`}
                     >
-                      Hourly Rate ($/hr)
+                      Hourly Rate (PKR/hr)
                     </button>
                   </div>
 
                   {/* Hourly selector buttons if hourly mode is active */}
                   {rentalMode === 'HOURLY' && (
-                    <div className="pt-2 border-t border-champagne-200 flex items-center justify-between gap-2">
-                      <span className="text-[11px] text-obsidian-600 font-medium">Select Hours:</span>
+                    <div className="pt-2 border-t border-gold-500/20 flex items-center justify-between gap-2">
+                      <span className={`text-[11px] font-medium ${isDarkMode ? 'text-champagne-300' : 'text-obsidian-700'}`}>
+                        Select Hours:
+                      </span>
                       <div className="flex items-center space-x-1.5">
                         {[2, 4, 6, 8, 12, 24].map((hrs) => (
                           <button
@@ -258,7 +314,9 @@ export default function RentalCartDrawer() {
                             onClick={() => setRentalHours(hrs)}
                             className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase transition-all ${
                               rentalHours === hrs
-                                ? 'bg-gold-500 text-obsidian-950 shadow-sm'
+                                ? 'bg-gold-500 text-obsidian-950 shadow-sm scale-105'
+                                : isDarkMode
+                                ? 'bg-white/10 text-champagne-200 hover:bg-white/20'
                                 : 'bg-white text-obsidian-700 border border-champagne-300 hover:bg-champagne-200'
                             }`}
                           >
@@ -271,60 +329,81 @@ export default function RentalCartDrawer() {
                 </div>
 
                 {/* 2. DATE SELECTION WITH CUSTOM DATEPICKERS */}
-                <div className="p-4 bg-champagne-50 border border-champagne-300/60 rounded-2xl space-y-3">
+                <div className={`p-4 border rounded-2xl space-y-3 ${
+                  isDarkMode
+                    ? 'bg-[#14141E] border-gold-500/20'
+                    : 'bg-[#FAF7F2] border-champagne-300/70'
+                }`}>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <CustomDatePicker
                       label="Event Start Date"
                       required
                       minDate={todayStr}
                       value={eventDate}
-                      onChange={setEventDate}
+                      onChange={handleEventDateChange}
                       align="left"
+                      error={checkoutErrors.eventDate}
                     />
                     <CustomDatePicker
                       label="Return Date"
                       required
                       minDate={eventDate || todayStr}
                       value={returnDate}
-                      onChange={setReturnDate}
+                      onChange={handleReturnDateChange}
                       align="right"
+                      error={checkoutErrors.returnDate}
                     />
                   </div>
+
+                  {returnDate && eventDate && returnDate < eventDate && (
+                    <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-500 text-xs flex items-center gap-2 animate-fadeIn">
+                      <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+                      <span>Return date cannot be earlier than event start date. Please select a valid return date.</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* 3. PROMO CODE INPUT BOX */}
-                <div className="p-3.5 bg-ivory-100 border border-gold-400/40 rounded-2xl space-y-2">
+                <div className={`p-3.5 border rounded-2xl space-y-2 ${
+                  isDarkMode
+                    ? 'bg-[#14141E] border-gold-500/30'
+                    : 'bg-[#FAF7F2] border-gold-400/40'
+                }`}>
                   <form onSubmit={handleApplyPromoCode} className="flex items-center space-x-2">
                     <div className="relative flex-1">
-                      <Tag className="w-3.5 h-3.5 text-gold-600 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Tag className="w-3.5 h-3.5 text-gold-500 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
                         value={promoInput}
                         onChange={(e) => setPromoInput(e.target.value)}
-                        placeholder="Enter Promo Code (e.g. LUMIERE15)"
-                        className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-champagne-300 bg-white uppercase tracking-wider font-mono font-medium focus:outline-none focus:border-gold-500"
+                        placeholder="Promo Code (e.g. LUMIERE15)"
+                        className={`w-full pl-8 pr-3 py-2 text-xs rounded-xl border uppercase tracking-wider font-mono font-medium focus:outline-none focus:border-gold-500 ${
+                          isDarkMode
+                            ? 'bg-[#181824] text-ivory-50 border-white/15 placeholder-champagne-400/40'
+                            : 'bg-white text-obsidian-950 border-champagne-300 placeholder-champagne-600/50'
+                        }`}
                       />
                     </div>
                     <button
                       type="submit"
-                      className="px-4 py-1.5 bg-obsidian-900 text-ivory-50 rounded-xl text-xs uppercase tracking-wider font-semibold hover:bg-gold-600 hover:text-obsidian-950 transition-colors shadow-sm"
+                      className="px-4 py-2 bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 rounded-xl text-xs uppercase tracking-wider font-bold hover:scale-105 transition-all shadow-sm"
                     >
                       Apply
                     </button>
                   </form>
 
                   {effectiveDiscount > 0 && (
-                    <div className="flex items-center justify-between text-[11px] text-gold-800 bg-gold-500/10 px-2.5 py-1 rounded-lg border border-gold-500/20">
+                    <div className="flex items-center justify-between text-[11px] text-gold-500 bg-gold-500/10 px-2.5 py-1.5 rounded-lg border border-gold-500/20">
                       <span className="flex items-center font-medium">
-                        <Sparkles className="w-3 h-3 mr-1 text-gold-600" />
-                        {userPromoCode ? `Promo "${userPromoCode}" Applied` : 'Sitewide Promotion Active'}
+                        <Sparkles className="w-3 h-3 mr-1 text-gold-400" />
+                        {userPromoCode ? `Promo "${userPromoCode}" Applied` : 'Seasonal Promotion Active'}
                       </span>
                       <span className="font-bold">{effectiveDiscount}% OFF</span>
                     </div>
                   )}
 
                   {promoStatus && !promoStatus.success && (
-                    <p className="text-[10px] text-red-600 flex items-center">
+                    <p className="text-[10px] text-red-500 flex items-center">
                       <AlertCircle className="w-3 h-3 mr-1" />
                       {promoStatus.message}
                     </p>
@@ -332,15 +411,15 @@ export default function RentalCartDrawer() {
                 </div>
 
                 {/* 4. ITEMS LIST WITH HOURLY / DAILY RATES */}
-                <div className="space-y-3 divide-y divide-champagne-200">
+                <div className="space-y-3 divide-y divide-gold-500/15">
                   {cartItems.map((item) => {
                     const itemUnitRate = calculateItemUnitRate(item);
                     const itemTotal = itemUnitRate * item.quantity;
                     const isHourly = rentalMode === 'HOURLY';
 
                     return (
-                      <div key={item.id} className="pt-3 first:pt-0 flex items-center space-x-3 transition-opacity">
-                        <div className="w-16 h-16 relative rounded-xl overflow-hidden bg-champagne-200 flex-shrink-0 border border-champagne-300">
+                      <div key={item.id} className="pt-3 first:pt-0 flex items-center space-x-3">
+                        <div className="w-16 h-16 relative rounded-xl overflow-hidden bg-obsidian-900 flex-shrink-0 border border-gold-500/30">
                           {item.imageUrl ? (
                             <Image
                               src={item.imageUrl}
@@ -350,33 +429,35 @@ export default function RentalCartDrawer() {
                               sizes="64px"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-xs text-obsidian-400">
+                            <div className="w-full h-full flex items-center justify-center text-xs text-gold-400">
                               No Img
                             </div>
                           )}
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <h5 className="font-serif text-sm text-obsidian-900 truncate">{item.name}</h5>
-                          <p className="text-[11px] text-obsidian-600 font-medium">
+                          <h5 className="font-serif text-sm truncate font-medium">{item.name}</h5>
+                          <p className={`text-[11px] font-medium ${isDarkMode ? 'text-champagne-300' : 'text-[#3D352A]'}`}>
                             {isHourly ? (
                               <span>
-                                PKR {(item.hourlyRate || item.rentalPrice * 0.2).toFixed(2)}/hr × {rentalHours}h = PKR {itemUnitRate.toFixed(2)}
+                                PKR {Math.round(item.hourlyRate || item.rentalPrice * 0.2).toLocaleString()}/hr × {rentalHours}h = PKR {Math.round(itemUnitRate).toLocaleString()}
                               </span>
                             ) : (
                               <span>
-                                PKR {item.rentalPrice.toFixed(2)}/day {daysCount > 1 ? `× ${daysCount}d` : ''}
+                                PKR {Math.round(item.rentalPrice).toLocaleString()}/day {daysCount > 1 ? `× ${daysCount}d` : ''}
                               </span>
                             )}
                           </p>
-                          <p className="text-[10px] text-gold-700">
-                            Deposit: PKR ${(item.depositAmount || item.rentalPrice * 0.3).toFixed(2)}/ea
+                          <p className="text-[10px] text-gold-500">
+                            Deposit: PKR {Math.round(item.depositAmount || item.rentalPrice * 0.25).toLocaleString()}/ea
                           </p>
 
                           <div className="flex items-center space-x-2 mt-1.5">
                             <button
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="p-1 rounded bg-champagne-200 hover:bg-champagne-300 text-obsidian-800 transition-colors"
+                              className={`p-1 rounded transition-colors ${
+                                isDarkMode ? 'bg-white/10 hover:bg-white/20 text-ivory-50' : 'bg-champagne-200 hover:bg-champagne-300 text-obsidian-800'
+                              }`}
                             >
                               <Minus className="w-3 h-3" />
                             </button>
@@ -386,28 +467,28 @@ export default function RentalCartDrawer() {
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
                               className={`p-1 rounded transition-colors ${
                                 item.availableQuantity !== undefined && item.quantity >= item.availableQuantity
-                                  ? 'bg-champagne-100 text-obsidian-300 cursor-not-allowed opacity-50'
-                                  : 'bg-champagne-200 hover:bg-champagne-300 text-obsidian-800'
+                                  ? 'opacity-40 cursor-not-allowed'
+                                  : isDarkMode ? 'bg-white/10 hover:bg-white/20 text-ivory-50' : 'bg-champagne-200 hover:bg-champagne-300 text-obsidian-800'
                               }`}
                               title={item.availableQuantity !== undefined && item.quantity >= item.availableQuantity ? 'Max available quantity reached' : 'Add 1 unit'}
                             >
                               <Plus className="w-3 h-3" />
                             </button>
                             {item.availableQuantity !== undefined && (
-                              <span className="text-[10px] text-obsidian-500 font-mono">
-                                (Max: {item.availableQuantity})
+                              <span className="text-[10px] text-gold-500 font-mono">
+                                (Stock: {item.availableQuantity})
                               </span>
                             )}
                           </div>
                         </div>
 
                         <div className="text-right flex flex-col items-end justify-between h-16">
-                          <span className="font-semibold text-sm text-obsidian-900">
-                            PKR {itemTotal.toFixed(2)}
+                          <span className="font-semibold text-sm text-gold-gradient">
+                            PKR {Math.round(itemTotal).toLocaleString()}
                           </span>
                           <button
                             onClick={() => handleRemoveItem(item.id, item.name)}
-                            className="text-red-500 hover:text-red-700 p-1.5 hover:bg-red-50 rounded-lg transition-colors"
+                            className="text-red-500 hover:text-red-400 p-1.5 hover:bg-red-500/10 rounded-lg transition-colors"
                             title="Remove item"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -424,7 +505,9 @@ export default function RentalCartDrawer() {
                       clearCart();
                       showToast('Rental cart cleared.', 'info');
                     }}
-                    className="text-[11px] text-obsidian-400 hover:text-red-600 transition-colors underline"
+                    className={`text-[11px] hover:text-red-500 transition-colors underline ${
+                      isDarkMode ? 'text-champagne-400/60' : 'text-obsidian-400'
+                    }`}
                   >
                     Clear All Items
                   </button>
@@ -433,25 +516,27 @@ export default function RentalCartDrawer() {
             ) : (
               /* Checkout Form Step with Validation */
               <form onSubmit={handleSubmitCheckout} id="rental-checkout-form" className="space-y-4">
-                <div className="p-3.5 bg-champagne-100/60 rounded-2xl text-xs text-obsidian-700 space-y-1">
-                  <p className="font-semibold text-obsidian-950">
+                <div className={`p-3.5 rounded-2xl text-xs space-y-1 ${
+                  isDarkMode ? 'bg-[#14141E] border border-gold-500/20' : 'bg-[#FAF7F2] border border-champagne-300'
+                }`}>
+                  <p className="font-semibold text-gold-500">
                     Mode: {rentalMode === 'HOURLY' ? `${rentalHours} Hours Rental` : `${daysCount} Day(s) Rental`}
                   </p>
-                  <p className="text-[11px] text-obsidian-600">
+                  <p className={`text-[11px] ${isDarkMode ? 'text-champagne-200' : 'text-obsidian-700'}`}>
                     Dates: {eventDate} to {returnDate}
                   </p>
                   {discountSavings > 0 && (
-                    <p className="text-[11px] text-gold-700 font-bold">
+                    <p className="text-[11px] text-gold-400 font-bold">
                       🎉 Promo Savings: -PKR {discountSavings.toFixed(2)} ({effectiveDiscount}% OFF)
                     </p>
                   )}
-                  <p className="text-[10px] text-obsidian-500 pt-1">
-                    A refundable security deposit of PKR {totalDeposit.toFixed(2)} is held and returned upon safe return of inventory.
+                  <p className={`text-[10px] pt-1 ${isDarkMode ? 'text-champagne-400/60' : 'text-obsidian-500'}`}>
+                    A refundable security deposit of PKR {totalDeposit.toFixed(2)} is held and returned upon safe inventory return.
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-obsidian-700 font-medium mb-1">
+                  <label className={labelClass}>
                     Your Full Name *
                   </label>
                   <input
@@ -461,23 +546,21 @@ export default function RentalCartDrawer() {
                       setFormData({ ...formData, name: e.target.value });
                       if (checkoutErrors.name) setCheckoutErrors({ ...checkoutErrors, name: null });
                     }}
-                    className={`w-full text-xs p-3 rounded-xl border bg-white focus:outline-none transition-colors ${
-                      checkoutErrors.name
-                        ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                        : 'border-champagne-300 focus:border-gold-500'
+                    className={`${inputClass} ${
+                      checkoutErrors.name ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5' : ''
                     }`}
                     placeholder="e.g. Eleanor Vance"
                   />
                   {checkoutErrors.name && (
-                    <p className="text-[10px] text-red-600 mt-1 flex items-center">
-                      <AlertCircle className="w-3 h-3 mr-1" />
+                    <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
                       {checkoutErrors.name}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-obsidian-700 font-medium mb-1">
+                  <label className={labelClass}>
                     Email Address *
                   </label>
                   <input
@@ -487,23 +570,21 @@ export default function RentalCartDrawer() {
                       setFormData({ ...formData, email: e.target.value });
                       if (checkoutErrors.email) setCheckoutErrors({ ...checkoutErrors, email: null });
                     }}
-                    className={`w-full text-xs p-3 rounded-xl border bg-white focus:outline-none transition-colors ${
-                      checkoutErrors.email
-                        ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                        : 'border-champagne-300 focus:border-gold-500'
+                    className={`${inputClass} ${
+                      checkoutErrors.email ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5' : ''
                     }`}
                     placeholder="you@example.com"
                   />
                   {checkoutErrors.email && (
-                    <p className="text-[10px] text-red-600 mt-1 flex items-center">
-                      <AlertCircle className="w-3 h-3 mr-1" />
+                    <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
                       {checkoutErrors.email}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-obsidian-700 font-medium mb-1">
+                  <label className={labelClass}>
                     Phone Number (Pakistan 🇵🇰) *
                   </label>
                   <input
@@ -513,16 +594,14 @@ export default function RentalCartDrawer() {
                       setFormData({ ...formData, phone: e.target.value });
                       if (checkoutErrors.phone) setCheckoutErrors({ ...checkoutErrors, phone: null });
                     }}
-                    className={`w-full text-xs p-3 rounded-xl border bg-white focus:outline-none transition-colors ${
-                      checkoutErrors.phone
-                        ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-                        : 'border-champagne-300 focus:border-gold-500'
+                    className={`${inputClass} ${
+                      checkoutErrors.phone ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5' : ''
                     }`}
                     placeholder="03140660985 or +923140660985"
                   />
                   {checkoutErrors.phone && (
-                    <p className="text-[10px] text-red-600 mt-1 flex items-center">
-                      <AlertCircle className="w-3 h-3 mr-1" />
+                    <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
                       {checkoutErrors.phone}
                     </p>
                   )}
@@ -542,14 +621,14 @@ export default function RentalCartDrawer() {
                 </div>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-obsidian-700 font-medium mb-1">
+                  <label className={labelClass}>
                     Event Venue & Delivery Notes (Optional)
                   </label>
                   <textarea
                     rows={3}
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    className="w-full text-xs p-3 rounded-xl border border-champagne-300 bg-white focus:outline-none focus:border-gold-500"
+                    className={inputClass}
                     placeholder="Specify gate code, delivery timing or special access instructions..."
                   />
                 </div>
@@ -559,48 +638,65 @@ export default function RentalCartDrawer() {
 
           {/* Footer Calculations & CTA */}
           {cartItems.length > 0 && (
-            <div className="p-5 sm:p-6 border-t border-champagne-200 bg-champagne-50/90 space-y-3 sm:space-y-4">
-              <div className="space-y-1.5 text-xs text-obsidian-600">
+            <div className={`p-5 sm:p-6 border-t space-y-3 sm:space-y-4 ${
+              isDarkMode
+                ? 'bg-[#14141E] border-gold-500/20'
+                : 'bg-[#FAF7F2] border-champagne-200'
+            }`}>
+              <div className={`space-y-1.5 text-xs ${isDarkMode ? 'text-champagne-300' : 'text-[#3D352A]'}`}>
                 <div className="flex justify-between">
                   <span>Gross Subtotal ({rentalMode.toLowerCase()})</span>
-                  <span className="font-semibold text-obsidian-900">PKR {rawSubtotal.toFixed(2)}</span>
+                  <span className="font-semibold">PKR {Math.round(rawSubtotal).toLocaleString()}</span>
                 </div>
 
                 {discountSavings > 0 && (
-                  <div className="flex justify-between text-gold-700 font-semibold">
+                  <div className="flex justify-between text-gold-500 font-semibold">
                     <span className="flex items-center">
                       <Sparkles className="w-3.5 h-3.5 mr-1" />
                       Discount ({effectiveDiscount}% OFF)
                     </span>
-                    <span>-PKR {discountSavings.toFixed(2)}</span>
+                    <span>-PKR {Math.round(discountSavings).toLocaleString()}</span>
                   </div>
                 )}
 
-                <div className="flex justify-between text-gold-700">
+                <div className="flex justify-between text-gold-500">
                   <span className="flex items-center">
                     <ShieldCheck className="w-3.5 h-3.5 mr-1" />
                     Refundable Security Deposit
                   </span>
-                  <span className="font-semibold">PKR {totalDeposit.toFixed(2)}</span>
+                  <span className="font-semibold">PKR {Math.round(totalDeposit).toLocaleString()}</span>
                 </div>
 
-                <div className="pt-2 border-t border-champagne-300 flex justify-between items-baseline font-bold text-obsidian-950">
+                <div className={`pt-2 border-t flex justify-between items-baseline font-bold ${
+                  isDarkMode ? 'border-white/10 text-ivory-50' : 'border-champagne-300 text-obsidian-950'
+                }`}>
                   <span className="text-sm">Total Due</span>
-                  <span className="font-serif text-xl text-gold-800">PKR {totalAmount.toFixed(2)}</span>
+                  <span className="font-serif text-xl text-gold-gradient">PKR {Math.round(totalAmount).toLocaleString()}</span>
                 </div>
               </div>
 
               {checkoutStep === 'cart' ? (
                 <button
-                  disabled={!eventDate || !returnDate}
-                  onClick={() => setCheckoutStep('checkout')}
-                  className={`w-full py-3.5 rounded-full font-medium text-xs uppercase tracking-[0.2em] flex items-center justify-center space-x-2 transition-all shadow-md ${
-                    !eventDate || !returnDate
-                      ? 'bg-obsidian-200 text-obsidian-400 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-gold-600 to-champagne-500 text-obsidian-950 hover:shadow-glow-gold hover:scale-[1.01]'
+                  disabled={!eventDate || !returnDate || returnDate < eventDate || eventDate < todayStr}
+                  onClick={() => {
+                    if (!eventDate || !returnDate || returnDate < eventDate || eventDate < todayStr) return;
+                    setCheckoutStep('checkout');
+                  }}
+                  className={`w-full py-4 rounded-full font-medium text-xs uppercase tracking-[0.2em] flex items-center justify-center space-x-2 transition-all shadow-md ${
+                    !eventDate || !returnDate || returnDate < eventDate || eventDate < todayStr
+                      ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed opacity-50'
+                      : 'btn-festivity-pill shadow-glow-pill hover:scale-[1.01]'
                   }`}
                 >
-                  <span>{!eventDate || !returnDate ? 'Select Dates to Proceed' : 'Proceed to Checkout'}</span>
+                  <span>
+                    {!eventDate || !returnDate
+                      ? 'Select Dates to Proceed'
+                      : eventDate < todayStr
+                      ? 'Event Date Cannot Be in Past'
+                      : returnDate < eventDate
+                      ? 'Invalid Return Date'
+                      : 'Proceed to Checkout'}
+                  </span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               ) : (
@@ -608,7 +704,11 @@ export default function RentalCartDrawer() {
                   <button
                     type="button"
                     onClick={() => setCheckoutStep('cart')}
-                    className="w-1/3 py-3 rounded-full border border-champagne-400 text-xs uppercase tracking-wider font-medium text-obsidian-700 hover:bg-champagne-200/50"
+                    className={`w-1/3 py-3 rounded-full border text-xs uppercase tracking-wider font-semibold transition-colors ${
+                      isDarkMode
+                        ? 'border-white/20 text-champagne-200 hover:bg-white/10'
+                        : 'border-champagne-400 text-obsidian-700 hover:bg-champagne-200/50'
+                    }`}
                   >
                     Back
                   </button>
@@ -616,15 +716,15 @@ export default function RentalCartDrawer() {
                     form="rental-checkout-form"
                     type="submit"
                     disabled={submitting}
-                    className="w-2/3 py-3 rounded-full bg-gradient-to-r from-gold-600 to-champagne-500 text-obsidian-950 font-semibold text-xs uppercase tracking-widest shadow-md hover:shadow-glow-gold flex items-center justify-center"
+                    className="w-2/3 py-3 rounded-full btn-festivity-pill text-xs uppercase tracking-widest font-bold shadow-glow-pill flex items-center justify-center"
                   >
                     {submitting ? (
                       <>
                         <Sparkles className="w-4 h-4 mr-2 animate-spin text-obsidian-950" />
-                        Submitting Order...
+                        <span>Submitting Order...</span>
                       </>
                     ) : (
-                      'Confirm Rental Booking'
+                      <span>Confirm Rental Booking</span>
                     )}
                   </button>
                 </div>

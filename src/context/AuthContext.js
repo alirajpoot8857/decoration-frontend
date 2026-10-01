@@ -39,9 +39,11 @@ export const AuthProvider = ({ children }) => {
     fetchCurrentUser();
   }, [fetchCurrentUser]);
 
-  const login = async (email, password) => {
+  const login = async (email, password, role) => {
     try {
-      const res = await api.login({ email, password });
+      const payload = { email, password };
+      if (role) payload.role = role.toUpperCase();
+      const res = await api.login(payload);
       if (res.token) {
         localStorage.setItem('lumiere_token', res.token);
         setUser(res.user);

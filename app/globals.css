@@ -3,23 +3,31 @@
 @import 'tailwindcss/utilities';
 
 :root {
-  --bg-primary: #FAF8F5;
-  --bg-secondary: #F5EFEB;
-  --text-primary: #141414;
+  --bg-primary: #070709;
+  --bg-secondary: #0D0D11;
+  --text-primary: #FAF8F5;
+}
+
+html.light, html.theme-mode-light, html[data-theme-mode="light"] {
+  --bg-primary: #FAF7F2;
+  --bg-secondary: #F4EDE2;
+  --text-primary: #141210;
 }
 
 html {
   scroll-behavior: smooth;
-  background-color: #FAF8F5;
-  color: #141414;
+  background-color: #070709;
+  color: #FAF8F5;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
 body {
-  font-family: var(--font-outfit), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  background-color: #FAF8F5;
-  color: #141414;
+  font-family: var(--font-jakarta), var(--font-outfit), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: #070709;
+  color: #FAF8F5;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ========================================================================= */
@@ -27,37 +35,37 @@ body {
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
-/* 1. ROYAL GOLD & OBSIDIAN (DEFAULT)                                        */
+/* 1. FESTIVITY ROYAL GOLD & OBSIDIAN (DEFAULT)                              */
 /* ------------------------------------------------------------------------- */
 :root, .theme-royalGold {
-  --color-gold-50: 253 249 238;
-  --color-gold-100: 251 240 211;
-  --color-gold-200: 245 222 159;
-  --color-gold-300: 236 200 103;
-  --color-gold-400: 226 177 52;
-  --color-gold-500: 212 175 55;
-  --color-gold-600: 184 151 38;
-  --color-gold-700: 148 117 28;
-  --color-gold-800: 117 90 27;
-  --color-gold-900: 95 71 25;
-  --color-gold-950: 50 37 13;
+  --color-gold-50: 254 252 245;
+  --color-gold-100: 253 246 227;
+  --color-gold-200: 250 234 185;
+  --color-gold-300: 245 214 130;
+  --color-gold-400: 238 190 84;
+  --color-gold-500: 229 168 59;
+  --color-gold-600: 202 138 32;
+  --color-gold-700: 168 108 22;
+  --color-gold-800: 133 82 20;
+  --color-gold-900: 108 65 18;
+  --color-gold-950: 45 25 8;
 
-  --color-champagne-50: 251 248 243;
-  --color-champagne-100: 245 239 235;
-  --color-champagne-200: 235 221 207;
-  --color-champagne-300: 223 200 178;
-  --color-champagne-400: 210 178 148;
-  --color-champagne-500: 197 168 128;
-  --color-champagne-600: 168 136 96;
-  --color-champagne-700: 137 108 72;
-  --color-champagne-800: 106 82 53;
-  --color-champagne-900: 78 58 36;
+  --color-champagne-50: 252 249 243;
+  --color-champagne-100: 247 241 233;
+  --color-champagne-200: 239 227 213;
+  --color-champagne-300: 229 208 186;
+  --color-champagne-400: 218 186 156;
+  --color-champagne-500: 203 162 125;
+  --color-champagne-600: 178 132 94;
+  --color-champagne-700: 144 102 68;
+  --color-champagne-800: 112 78 51;
+  --color-champagne-900: 82 56 36;
 
-  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(212,175,55,0.22) 0%, rgba(180,130,70,0.08) 45%, rgba(8,7,6,0.98) 75%);
-  --theme-glow-aura: rgba(212, 175, 55, 0.4);
-  --theme-glow-drop: rgba(212, 175, 55, 0.45);
-  --theme-stroke-color: #FFF8DC;
-  --theme-progress-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+  --theme-ambient-radial: radial-gradient(ellipse at center, rgba(229,168,59,0.25) 0%, rgba(168,108,22,0.1) 45%, rgba(10,10,12,0.98) 75%);
+  --theme-glow-aura: rgba(229, 168, 59, 0.42);
+  --theme-glow-drop: rgba(229, 168, 59, 0.48);
+  --theme-stroke-color: #FEF3C7;
+  --theme-progress-shadow: 0 0 14px rgba(229, 168, 59, 0.45);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -592,10 +600,106 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* Editorial Title Helpers */
-h1, h2, h3, .font-editorial {
-  font-family: var(--font-cormorant), 'Playfair Display', Georgia, serif;
+/* Editorial Title & Serif Helpers */
+h1, h2, h3, h4, h5, h6, .font-editorial, .font-serif {
+  font-family: var(--font-playfair), var(--font-cormorant), 'Playfair Display', Cormorant Garamond, Georgia, serif;
+  letter-spacing: -0.015em;
+  font-feature-settings: 'lnum' 1, 'pnum' 1;
 }
+
+/* Festivity Amber Gold Pill Button (as shown in reference screenshot) */
+.btn-festivity-pill {
+  background: linear-gradient(135deg, #F59E0B 0%, #E5A83B 50%, #D97706 100%);
+  color: #0A0A0A;
+  font-weight: 700;
+  border-radius: 9999px;
+  box-shadow: 0 4px 20px rgba(229, 168, 59, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-festivity-pill:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 8px 30px rgba(229, 168, 59, 0.55);
+}
+
+.btn-festivity-pill:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+/* Festivity Outline Pill */
+.btn-festivity-outline {
+  border: 1.5px solid rgba(229, 168, 59, 0.5);
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+}
+
+.btn-festivity-outline:hover {
+  border-color: #E5A83B;
+  background: rgba(229, 168, 59, 0.12);
+  box-shadow: 0 0 20px rgba(229, 168, 59, 0.3);
+}
+
+/* Festivity Floating Badge Pill */
+.badge-festivity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(229, 168, 59, 0.35);
+  background: rgba(15, 15, 18, 0.75);
+  backdrop-filter: blur(12px);
+  color: #F59E0B;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+}
+
+/* Large Serif Counter Number (e.g. 98%, 65, 10+, 15 in screenshot) */
+.stat-serif-number {
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-size: 3.5rem;
+  line-height: 1;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 640px) {
+  .stat-serif-number {
+    font-size: 4.75rem;
+  }
+}
+
+/* Admin Dashboard Luxury Cards & Surfaces */
+.admin-card-luxury {
+  background: #FFFFFF;
+  border: 1px solid rgba(229, 168, 59, 0.18);
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+}
+
+.admin-card-luxury:hover {
+  border-color: rgba(229, 168, 59, 0.38);
+  box-shadow: 0 16px 40px -12px rgba(229, 168, 59, 0.12);
+}
+
+/* Luxury Form Inputs & Selects */
+input:not([type='checkbox']):not([type='radio']), select, textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:not([type='checkbox']):not([type='radio']):focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #E5A83B !important;
+  box-shadow: 0 0 0 3px rgba(229, 168, 59, 0.18) !important;
+}
+
+/* ========================================================================= */
+/* 60FPS NON-BLOCKING LUXURY CSS GPU ANIMATIONS                             */
+/* ========================================================================= */
 
 @keyframes shimmer {
   0% {
@@ -607,7 +711,171 @@ h1, h2, h3, .font-editorial {
 }
 
 .animate-shimmer {
-  animation: shimmer 2s infinite linear;
+  animation: shimmer 2.5s infinite linear;
+}
+
+/* 3-Second Slide Progress Bar Animation */
+@keyframes slideTimer {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-slide-timer {
+  animation: slideTimer 3s linear forwards;
+}
+
+/* Gentle Sparkle Twinkle */
+@keyframes sparkleTwinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.85) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(45deg);
+  }
+}
+
+.animate-twinkle {
+  animation: sparkleTwinkle 2.5s ease-in-out infinite;
+}
+
+/* Shimmer Sweep on Luxury Cards */
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-150%) skewX(-25deg);
+  }
+  100% {
+    transform: translateX(250%) skewX(-25deg);
+  }
+}
+
+.animate-shimmer-sweep {
+  animation: shimmerSweep 3.5s infinite ease-in-out;
+}
+
+/* GPU-Accelerated Infinite Marquee Scroll */
+@keyframes marqueeScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee-infinite {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marqueeScroll 26s linear infinite;
+}
+
+.animate-marquee-infinite:hover {
+  animation-play-state: paused;
+}
+
+/* Subtle Floating Animation */
+@keyframes floatGently {
+  0%, 100% {
+    transform: translate3d(0, 0px, 0);
+  }
+  50% {
+    transform: translate3d(0, -7px, 0);
+  }
+}
+
+.animate-float-gently {
+  animation: floatGently 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Slow Ambient Pulse Glow */
+@keyframes glowPulseSlow {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glowPulseSlow 3.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Golden Halo Beacon Ring */
+@keyframes haloBeacon {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(229, 168, 59, 0.5);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(229, 168, 59, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(229, 168, 59, 0);
+  }
+}
+
+.animate-beacon {
+  animation: haloBeacon 2.5s infinite;
+}
+
+/* Smooth Fade In Up Reveal */
+@keyframes fadeInUpReveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUpReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Ambient Floating Particle Drift */
+@keyframes particleDrift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(12px, -15px, 0) rotate(180deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(360deg);
+  }
+}
+
+.animate-particle-drift {
+  animation: particleDrift 12s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Luxury Card Hover Lift & Gold Glow */
+.festivity-hover-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease;
+  will-change: transform, box-shadow;
+}
+
+.festivity-hover-card:hover {
+  transform: translate3d(0, -6px, 0);
+  border-color: rgba(229, 168, 59, 0.75);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.75), 0 0 30px rgba(229, 168, 59, 0.35);
 }
 
 .shadow-glow-gold {
@@ -627,5 +895,715 @@ h1, h2, h3, .font-editorial {
 
 /* Floating Navbar Luxury Glass Shadow */
 .shadow-floating-navbar {
-  box-shadow: 0 16px 45px -10px rgba(0, 0, 0, 0.75), 0 0 25px rgba(212, 175, 55, 0.15);
+  box-shadow: 0 16px 45px -10px rgba(0, 0, 0, 0.75), 0 0 25px rgba(229, 168, 59, 0.2);
 }
+
+/* Luxury Dark Mode Festivity Cards & Glass Panels */
+.festivity-card-dark {
+  background: rgba(14, 14, 18, 0.92);
+  border: 1px solid rgba(229, 168, 59, 0.25);
+  border-radius: 1.5rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.7);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease, box-shadow 0.28s ease;
+  will-change: transform, box-shadow;
+}
+
+.festivity-card-dark:hover {
+  transform: translate3d(0, -6px, 0);
+  border-color: rgba(229, 168, 59, 0.8);
+  box-shadow: 0 22px 55px -12px rgba(0, 0, 0, 0.9), 0 0 32px rgba(229, 168, 59, 0.4);
+}
+
+.festivity-glass-panel {
+  background: rgba(18, 18, 24, 0.75);
+  border: 1px solid rgba(229, 168, 59, 0.25);
+  border-radius: 1.25rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Global Responsive Layout Fixes */
+main, section, article {
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
+/* ========================================================================= */
+/* MODERN LUXURY DASHBOARD TABLES & CARDS                                    */
+/* ========================================================================= */
+
+.festivity-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.festivity-table thead th {
+  padding: 0.85rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgb(var(--color-gold-400));
+  background: rgba(18, 18, 26, 0.7);
+  border-bottom: 1px solid rgba(229, 168, 59, 0.2);
+}
+
+.festivity-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.festivity-table tbody tr:hover {
+  background: rgba(229, 168, 59, 0.08);
+}
+
+.festivity-table tbody td {
+  padding: 1rem 1rem;
+  font-size: 0.82rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ========================================================================= */
+/* SUPREME 60FPS GPU SCROLL-SLIDE-IN ANIMATION SYSTEM                       */
+/* ========================================================================= */
+
+/* All Sections & Cards: Fully Visible by Default (No Blank Screen Gaps) */
+.scroll-reveal,
+.section-slide-up,
+.scroll-reveal-left,
+.section-slide-left,
+.scroll-reveal-right,
+.section-slide-right,
+.scroll-reveal-scale,
+.section-slide-scale,
+.scroll-reveal-visible,
+.section-revealed {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* Staggered Delay Delays for Card Grids */
+.delay-100, .stagger-1 { transition-delay: 100ms; }
+.delay-150 { transition-delay: 150ms; }
+.delay-200, .stagger-2 { transition-delay: 200ms; }
+.delay-250 { transition-delay: 250ms; }
+.delay-300, .stagger-3 { transition-delay: 300ms; }
+.delay-350 { transition-delay: 350ms; }
+.delay-400, .stagger-4 { transition-delay: 400ms; }
+.delay-500, .stagger-5 { transition-delay: 500ms; }
+.delay-600, .stagger-6 { transition-delay: 600ms; }
+
+/* ========================================================================= */
+/* UNIVERSAL LUXURY CARD HOVER SYSTEM (DARK & LIGHT MODES)                  */
+/* ========================================================================= */
+.festivity-hover-card,
+.festivity-card-dark,
+.stat-card-hover {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease !important;
+  will-change: transform, box-shadow;
+}
+
+/* Hover in Dark Mode */
+.festivity-hover-card:hover,
+.festivity-card-dark:hover {
+  transform: translateY(-8px) scale(1.015) !important;
+  border-color: rgba(229, 168, 59, 0.65) !important;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.85), 0 0 30px rgba(229, 168, 59, 0.3) !important;
+}
+
+.stat-card-hover:hover {
+  transform: translateY(-6px) scale(1.03) !important;
+  border-color: rgba(229, 168, 59, 0.65) !important;
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.7), 0 0 25px rgba(229, 168, 59, 0.25) !important;
+}
+
+/* ========================================================================= */
+/* COMPLETE HAUTE LIGHT ELEGANCE MODE SYSTEM                                */
+/* ========================================================================= */
+
+html.light, 
+html.theme-mode-light, 
+html[data-theme-mode="light"],
+body.theme-mode-light,
+body.light {
+  background-color: #FAF7F2 !important;
+  color: #141210 !important;
+}
+
+html.light body, 
+html.theme-mode-light body,
+html[data-theme-mode="light"] body {
+  background-color: #FAF7F2 !important;
+  color: #141210 !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 1. Page & Section Backgrounds in Light Mode                               */
+/* ------------------------------------------------------------------------- */
+html.light .bg-\[\#070709\]:not(.hero-bg):not(.dark-preserve), 
+html.light .bg-\[\#0A0A0F\]:not(.dark-preserve),
+html.light .bg-\[\#0B0B0F\]:not(.dark-preserve), 
+html.light .bg-\[\#0B0B0E\]:not(.dark-preserve),
+html.light .bg-\[\#08080C\]:not(.dark-preserve),
+html.theme-mode-light .bg-\[\#070709\]:not(.hero-bg):not(.dark-preserve), 
+html.theme-mode-light .bg-\[\#0A0A0F\]:not(.dark-preserve),
+html.theme-mode-light .bg-\[\#0B0B0F\]:not(.dark-preserve), 
+html.theme-mode-light .bg-\[\#0B0B0E\]:not(.dark-preserve),
+html.theme-mode-light .bg-\[\#08080C\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#070709\]:not(.hero-bg):not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#0A0A0F\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#08080C\]:not(.dark-preserve),
+html.light .bg-obsidian-950:not(.hero-bg):not(.dark-preserve),
+html.theme-mode-light .bg-obsidian-950:not(.hero-bg):not(.dark-preserve),
+html[data-theme-mode="light"] .bg-obsidian-950:not(.hero-bg):not(.dark-preserve) {
+  background-color: #FAF7F2 !important;
+  color: #141210 !important;
+}
+
+/* Secondary Section Accent Background (e.g. 4 Pillars / Zebra section) */
+html.light .bg-\[\#09090E\], 
+html.theme-mode-light .bg-\[\#09090E\],
+html[data-theme-mode="light"] .bg-\[\#09090E\],
+html.light .bg-\[\#09090D\],
+html.theme-mode-light .bg-\[\#09090D\],
+html[data-theme-mode="light"] .bg-\[\#09090D\] {
+  background-color: #F4EDE2 !important;
+  color: #141210 !important;
+  border-color: rgba(200, 160, 80, 0.3) !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 2. Header Banner Gradients in Light Mode (About, Services, Contact, etc.) */
+/* ------------------------------------------------------------------------- */
+html.light .bg-gradient-to-b[class*="from-\[\#0D0D14\]"],
+html.theme-mode-light .bg-gradient-to-b[class*="from-\[\#0D0D14\]"],
+html[data-theme-mode="light"] .bg-gradient-to-b[class*="from-\[\#0D0D14\]"],
+html.light [class*="from-\[\#0D0D14\]"],
+html.theme-mode-light [class*="from-\[\#0D0D14\]"],
+html[data-theme-mode="light"] [class*="from-\[\#0D0D14\]"] {
+  background: linear-gradient(180deg, #FDF9F3 0%, #F5EDE2 50%, #FAF7F2 100%) !important;
+  border-color: rgba(200, 160, 80, 0.3) !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 3. Cards & Surface Containers in Light Mode                              */
+/* ------------------------------------------------------------------------- */
+html.light .bg-\[\#0C0C12\]:not(.dark-preserve), 
+html.theme-mode-light .bg-\[\#0C0C12\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#0C0C12\]:not(.dark-preserve),
+html.light .bg-\[\#0D0D12\]:not(.dark-preserve), 
+html.theme-mode-light .bg-\[\#0D0D12\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#0D0D12\]:not(.dark-preserve),
+html.light .bg-\[\#0D0D14\]:not(.dark-preserve), 
+html.theme-mode-light .bg-\[\#0D0D14\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#0D0D14\]:not(.dark-preserve),
+html.light .bg-\[\#0E0E14\]:not(.dark-preserve), 
+html.theme-mode-light .bg-\[\#0E0E14\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#0E0E14\]:not(.dark-preserve),
+html.light .bg-\[\#121218\]:not(.dark-preserve), 
+html.theme-mode-light .bg-\[\#121218\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#121218\]:not(.dark-preserve),
+html.light .bg-\[\#14141E\]:not(.dark-preserve), 
+html.theme-mode-light .bg-\[\#14141E\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#14141E\]:not(.dark-preserve),
+html.light .bg-\[\#181824\]:not(.dark-preserve), 
+html.theme-mode-light .bg-\[\#181824\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#181824\]:not(.dark-preserve),
+html.light .bg-\[\#181822\]:not(.dark-preserve),
+html.theme-mode-light .bg-\[\#181822\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#181822\]:not(.dark-preserve),
+html.light .festivity-card-dark, 
+html.theme-mode-light .festivity-card-dark,
+html[data-theme-mode="light"] .festivity-card-dark {
+  background: #FFFFFF !important;
+  color: #141210 !important;
+  border-color: rgba(200, 160, 80, 0.35) !important;
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.05), 0 0 15px rgba(229, 168, 59, 0.06) !important;
+}
+
+/* Demo box & secondary containers */
+html.light .bg-\[\#14141C\]:not(.dark-preserve),
+html.theme-mode-light .bg-\[\#14141C\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#14141C\]:not(.dark-preserve) {
+  background: #FAF5EB !important;
+  color: #141210 !important;
+  border-color: rgba(200, 160, 80, 0.3) !important;
+}
+
+/* Demo buttons & nested pills */
+html.light .bg-\[\#1A1A26\]:not(.dark-preserve),
+html.theme-mode-light .bg-\[\#1A1A26\]:not(.dark-preserve),
+html[data-theme-mode="light"] .bg-\[\#1A1A26\]:not(.dark-preserve) {
+  background: #FFFFFF !important;
+  color: #2D251C !important;
+  border-color: rgba(200, 160, 80, 0.35) !important;
+}
+
+/* Hover on Cards in Light Mode */
+html.light .festivity-hover-card:hover, 
+html.theme-mode-light .festivity-hover-card:hover,
+html[data-theme-mode="light"] .festivity-hover-card:hover,
+html.light .festivity-card-dark:hover,
+html.theme-mode-light .festivity-card-dark:hover,
+html[data-theme-mode="light"] .festivity-card-dark:hover,
+html.light .stat-card-hover:hover,
+html.theme-mode-light .stat-card-hover:hover,
+html[data-theme-mode="light"] .stat-card-hover:hover {
+  transform: translateY(-6px) scale(1.015) !important;
+  border-color: #D97706 !important;
+  box-shadow: 0 20px 45px -10px rgba(217, 119, 6, 0.2), 0 0 25px rgba(229, 168, 59, 0.25) !important;
+}
+
+html.light .festivity-glass-panel, 
+html.theme-mode-light .festivity-glass-panel,
+html[data-theme-mode="light"] .festivity-glass-panel {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(200, 160, 80, 0.3) !important;
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.05) !important;
+  color: #141210 !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 4. Light Mode Headings & General Typography                               */
+/* ------------------------------------------------------------------------- */
+html.light h1:not(.hero-text *):not(.dark-preserve *),
+html.light h2:not(.hero-text *):not(.dark-preserve *),
+html.light h3:not(.hero-text *):not(.dark-preserve *),
+html.light h4:not(.hero-text *):not(.dark-preserve *),
+html.light h5:not(.hero-text *):not(.dark-preserve *),
+html.light h6:not(.hero-text *):not(.dark-preserve *),
+html.theme-mode-light h1:not(.hero-text *):not(.dark-preserve *),
+html.theme-mode-light h2:not(.hero-text *):not(.dark-preserve *),
+html.theme-mode-light h3:not(.hero-text *):not(.dark-preserve *),
+html.theme-mode-light h4:not(.hero-text *):not(.dark-preserve *),
+html.theme-mode-light h5:not(.hero-text *):not(.dark-preserve *),
+html.theme-mode-light h6:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] h1:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] h2:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] h3:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] h4:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] h5:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] h6:not(.hero-text *):not(.dark-preserve *) {
+  color: #141210 !important;
+}
+
+html.light p:not(.hero-text *):not(.dark-preserve *),
+html.theme-mode-light p:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] p:not(.hero-text *):not(.dark-preserve *) {
+  color: #3D352A;
+}
+
+/* Universal High-Contrast Light Mode Class Wildcards */
+html.light [class*="text-champagne-"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html.theme-mode-light [class*="text-champagne-"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] [class*="text-champagne-"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html.light [class*="text-ivory-"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html.theme-mode-light [class*="text-ivory-"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] [class*="text-ivory-"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *) {
+  color: #2D251C;
+}
+
+html.light [class*="text-ivory-50"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.light [class*="text-ivory-100"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.light [class*="text-ivory-200"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.light .text-white:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html.theme-mode-light [class*="text-ivory-50"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html.theme-mode-light [class*="text-ivory-100"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.theme-mode-light [class*="text-ivory-200"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html.theme-mode-light .text-white:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] [class*="text-ivory-50"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] [class*="text-ivory-100"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] [class*="text-ivory-200"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *) {
+  color: #141210 !important;
+}
+
+html.light [class*="text-ivory-300"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.light [class*="text-ivory-400"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.light [class*="text-ivory-500"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.light [class*="text-champagne-100"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.light [class*="text-champagne-200"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.light [class*="text-champagne-300"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.theme-mode-light [class*="text-ivory-300"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.theme-mode-light [class*="text-ivory-400"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.theme-mode-light [class*="text-ivory-500"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html.theme-mode-light [class*="text-champagne-100"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.theme-mode-light [class*="text-champagne-200"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.theme-mode-light [class*="text-champagne-300"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] [class*="text-ivory-300"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] [class*="text-ivory-400"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] [class*="text-champagne-200"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *) {
+  color: #3D352A !important;
+}
+
+html.light [class*="text-champagne-400"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.light [class*="text-champagne-500"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html.theme-mode-light [class*="text-champagne-400"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.theme-mode-light [class*="text-champagne-500"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] [class*="text-champagne-400"]:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *) {
+  color: #5A4E3E !important;
+}
+
+html.light .text-gold-400:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.light .text-gold-500:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.theme-mode-light .text-gold-400:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *), 
+html.theme-mode-light .text-gold-500:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] .text-gold-400:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *),
+html[data-theme-mode="light"] .text-gold-500:not(.hero-text *):not(.dark-preserve *):not(header *):not(.btn-festivity-pill *) {
+  color: #9A6916 !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 5. Light Mode Inputs, Textareas & Selects                                 */
+/* ------------------------------------------------------------------------- */
+html.light input:not([type="submit"]):not([type="button"]):not(.dark-preserve *),
+html.light textarea:not(.dark-preserve *),
+html.light select:not(.dark-preserve *),
+html.theme-mode-light input:not([type="submit"]):not([type="button"]):not(.dark-preserve *),
+html.theme-mode-light textarea:not(.dark-preserve *),
+html.theme-mode-light select:not(.dark-preserve *),
+html[data-theme-mode="light"] input:not([type="submit"]):not([type="button"]):not(.dark-preserve *),
+html[data-theme-mode="light"] textarea:not(.dark-preserve *),
+html[data-theme-mode="light"] select:not(.dark-preserve *) {
+  background-color: #FFFFFF !important;
+  color: #141210 !important;
+  border-color: rgba(200, 160, 80, 0.4) !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder,
+html.theme-mode-light input::placeholder,
+html.theme-mode-light textarea::placeholder,
+html[data-theme-mode="light"] input::placeholder,
+html[data-theme-mode="light"] textarea::placeholder {
+  color: #8C8072 !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 6. Hero Section, Header, Promo Banner: ALWAYS PRESERVE CRISP LUMINOUS TEXT*/
+/* ------------------------------------------------------------------------- */
+.hero-text, .hero-text *, 
+.dark-preserve, .dark-preserve *, 
+header, header *,
+header nav a, header span, header svg {
+  /* Prevent light mode global text darkening from affecting dark glass elements */
+}
+
+.hero-text, .hero-text *, 
+.dark-preserve, .dark-preserve *,
+header .text-ivory-50, header .text-ivory-100, header .text-ivory-200, header .text-white,
+.dark-preserve .text-ivory-50, .dark-preserve .text-ivory-100, .dark-preserve .text-ivory-200, .dark-preserve .text-white {
+  color: #FAF8F5 !important;
+}
+
+header .text-\[\#FFFDF9\], header span.text-\[\#FFFDF9\], .dark-preserve .text-\[\#FFFDF9\] {
+  color: #FFFDF9 !important;
+}
+
+header .text-\[\#F3EFEB\], header a.text-\[\#F3EFEB\], .dark-preserve .text-\[\#F3EFEB\] {
+  color: #F3EFEB !important;
+}
+
+header .text-\[\#E5D0BA\], header span.text-\[\#E5D0BA\], .dark-preserve .text-\[\#E5D0BA\] {
+  color: #E5D0BA !important;
+}
+
+header .text-\[\#FBBF24\], header svg.text-\[\#FBBF24\], .dark-preserve .text-\[\#FBBF24\] {
+  color: #FBBF24 !important;
+}
+
+header .text-\[\#FDE68A\], .dark-preserve .text-\[\#FDE68A\] {
+  color: #FDE68A !important;
+}
+
+.hero-text .text-gold-400, .hero-text .text-gold-500, 
+.dark-preserve .text-gold-400, .dark-preserve .text-gold-500,
+header .text-gold-400, header .text-gold-500, header .text-gold-300 {
+  color: #F59E0B !important;
+}
+
+.hero-text .text-champagne-100, .hero-text .text-champagne-200, 
+.dark-preserve .text-champagne-100, .dark-preserve .text-champagne-200, .dark-preserve .text-champagne-300,
+header .text-champagne-100, header .text-champagne-200, header .text-champagne-300 {
+  color: #E5D0BA !important;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* 7. Hero Slider Navigation Arrows - Dedicated Indestructible Luxury Style */
+/* ------------------------------------------------------------------------- */
+.hero-slider-arrow,
+html.light .hero-slider-arrow,
+html.theme-mode-light .hero-slider-arrow,
+html[data-theme-mode="light"] .hero-slider-arrow {
+  background-color: rgba(15, 12, 9, 0.85) !important;
+  border: 2px solid #E5A83B !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(229, 168, 59, 0.35) !important;
+}
+
+.hero-slider-arrow:hover,
+html.light .hero-slider-arrow:hover,
+html.theme-mode-light .hero-slider-arrow:hover,
+html[data-theme-mode="light"] .hero-slider-arrow:hover {
+  background-color: #E5A83B !important;
+  border-color: #FDE68A !important;
+  box-shadow: 0 10px 35px rgba(229, 168, 59, 0.5), 0 0 25px rgba(229, 168, 59, 0.6) !important;
+}
+
+.hero-slider-arrow svg,
+html.light .hero-slider-arrow svg,
+html.theme-mode-light .hero-slider-arrow svg,
+html[data-theme-mode="light"] .hero-slider-arrow svg {
+  color: #FBBF24 !important;
+  stroke: #FBBF24 !important;
+}
+
+.hero-slider-arrow:hover svg,
+html.light .hero-slider-arrow:hover svg,
+html.theme-mode-light .hero-slider-arrow:hover svg,
+html[data-theme-mode="light"] .hero-slider-arrow:hover svg {
+  color: #0A0A0A !important;
+  stroke: #0A0A0A !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 8. Floating Badges, Image Overlay Pills & Dimensions in Light Mode        */
+/* ------------------------------------------------------------------------- */
+html.light .badge-festivity:not(.hero-text *):not(.dark-preserve *):not(.hero-slider-arrow *), 
+html.theme-mode-light .badge-festivity:not(.hero-text *):not(.dark-preserve *):not(.hero-slider-arrow *),
+html[data-theme-mode="light"] .badge-festivity:not(.hero-text *):not(.dark-preserve *):not(.hero-slider-arrow *) {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(200, 160, 80, 0.5) !important;
+  color: #9A6916 !important;
+  box-shadow: 0 4px 15px rgba(200, 160, 80, 0.15) !important;
+}
+
+/* Bottom Image Overlay Pills (e.g. Dimensions / Specs pill in rental cards) */
+html.light .bg-obsidian-950\/85:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.theme-mode-light .bg-obsidian-950\/85:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html[data-theme-mode="light"] .bg-obsidian-950\/85:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.light .bg-obsidian-950\/90:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.theme-mode-light .bg-obsidian-950\/90:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html[data-theme-mode="light"] .bg-obsidian-950\/90:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.light .bg-obsidian-950\/95:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.theme-mode-light .bg-obsidian-950\/95:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html[data-theme-mode="light"] .bg-obsidian-950\/95:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.light .bg-obsidian-950\/80:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.theme-mode-light .bg-obsidian-950\/80:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html[data-theme-mode="light"] .bg-obsidian-950\/80:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.light .bg-obsidian-900\/70:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.theme-mode-light .bg-obsidian-900\/70:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html[data-theme-mode="light"] .bg-obsidian-900\/70:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.light .bg-obsidian-900\/80:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html.theme-mode-light .bg-obsidian-900\/80:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *),
+html[data-theme-mode="light"] .bg-obsidian-900\/80:not(.hero-slider-arrow):not(.dark-preserve):not(.dark-preserve *) {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(200, 160, 80, 0.45) !important;
+  color: #2D251C !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Service price tag & Creative Director bottom badge overlay */
+html.light .bg-\[\#08080C\]\/95,
+html.theme-mode-light .bg-\[\#08080C\]\/95,
+html[data-theme-mode="light"] .bg-\[\#08080C\]\/95,
+html.light .bg-\[\#0E0E14\]\/95,
+html.theme-mode-light .bg-\[\#0E0E14\]\/95,
+html[data-theme-mode="light"] .bg-\[\#0E0E14\]\/95,
+html.light .bg-\[\#14141E\]\/95,
+html.theme-mode-light .bg-\[\#14141E\]\/95,
+html[data-theme-mode="light"] .bg-\[\#14141E\]\/95 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(200, 160, 80, 0.5) !important;
+  color: #141210 !important;
+  box-shadow: 0 4px 15px rgba(200, 160, 80, 0.15) !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 8. Outline Buttons in Light Mode                                          */
+/* ------------------------------------------------------------------------- */
+html.light .btn-festivity-outline:not(.hero-text *):not(.dark-preserve *), 
+html.theme-mode-light .btn-festivity-outline:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] .btn-festivity-outline:not(.hero-text *):not(.dark-preserve *) {
+  border-color: rgba(200, 160, 80, 0.6) !important;
+  color: #141210 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+html.light .btn-festivity-outline:not(.hero-text *):not(.dark-preserve *):hover, 
+html.theme-mode-light .btn-festivity-outline:not(.hero-text *):not(.dark-preserve *):hover,
+html[data-theme-mode="light"] .btn-festivity-outline:not(.hero-text *):not(.dark-preserve *):hover {
+  background: rgba(229, 168, 59, 0.15) !important;
+  border-color: #9A6916 !important;
+  color: #9A6916 !important;
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 9. Borders & Dividers in Light Mode                                       */
+/* ------------------------------------------------------------------------- */
+html.light .border-white\/10:not(.hero-text *):not(.dark-preserve *), 
+html.light .border-white\/5:not(.hero-text *):not(.dark-preserve *), 
+html.light .border-white\/15:not(.hero-text *):not(.dark-preserve *),
+html.light .border-gold-500\/20:not(.hero-text *):not(.dark-preserve *), 
+html.light .border-gold-500\/30:not(.hero-text *):not(.dark-preserve *),
+html.theme-mode-light .border-white\/10:not(.hero-text *):not(.dark-preserve *), 
+html.theme-mode-light .border-white\/5:not(.hero-text *):not(.dark-preserve *), 
+html.theme-mode-light .border-white\/15:not(.hero-text *):not(.dark-preserve *),
+html.theme-mode-light .border-gold-500\/20:not(.hero-text *):not(.dark-preserve *), 
+html.theme-mode-light .border-gold-500\/30:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] .border-white\/10:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] .border-white\/15:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] .border-gold-500\/20:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] .border-gold-500\/30:not(.hero-text *):not(.dark-preserve *) {
+  border-color: rgba(200, 160, 80, 0.35) !important;
+}
+
+html.light .border-obsidian-800,
+html.theme-mode-light .border-obsidian-800,
+html[data-theme-mode="light"] .border-obsidian-800 {
+  border-color: rgba(200, 160, 80, 0.25) !important;
+}
+
+html.light .bg-white\/\[0\.03\]:not(.hero-text *):not(.dark-preserve *), 
+html.light .bg-white\/\[0\.06\]:not(.hero-text *):not(.dark-preserve *),
+html.theme-mode-light .bg-white\/\[0\.03\]:not(.hero-text *):not(.dark-preserve *), 
+html.theme-mode-light .bg-white\/\[0\.06\]:not(.hero-text *):not(.dark-preserve *),
+html[data-theme-mode="light"] .bg-white\/\[0\.03\]:not(.hero-text *):not(.dark-preserve *) {
+  background-color: rgba(229, 168, 59, 0.08) !important;
+  border-color: rgba(200, 160, 80, 0.25) !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 10. Admin Dashboard Sidebar & Layout in Light Mode                        */
+/* ------------------------------------------------------------------------- */
+html.light aside, 
+html.theme-mode-light aside,
+html[data-theme-mode="light"] aside {
+  background-color: #FFFFFF !important;
+  border-color: rgba(200, 160, 80, 0.25) !important;
+  color: #141210 !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.03) !important;
+}
+
+html.light aside nav a:not([class*="from-gold-"]),
+html.theme-mode-light aside nav a:not([class*="from-gold-"]),
+html[data-theme-mode="light"] aside nav a:not([class*="from-gold-"]) {
+  color: #5A4E3E !important;
+}
+
+html.light aside nav a:not([class*="from-gold-"]):hover,
+html.theme-mode-light aside nav a:not([class*="from-gold-"]):hover,
+html[data-theme-mode="light"] aside nav a:not([class*="from-gold-"]):hover {
+  background-color: rgba(229, 168, 59, 0.12) !important;
+  color: #141210 !important;
+}
+
+html.light .bg-obsidian-900\/70,
+html.theme-mode-light .bg-obsidian-900\/70,
+html[data-theme-mode="light"] .bg-obsidian-900\/70,
+html.light .bg-obsidian-800,
+html.theme-mode-light .bg-obsidian-800,
+html[data-theme-mode="light"] .bg-obsidian-800 {
+  background-color: #FAF5EB !important;
+  border-color: rgba(200, 160, 80, 0.25) !important;
+  color: #141210 !important;
+}
+
+html.light .bg-obsidian-800:hover,
+html.theme-mode-light .bg-obsidian-800:hover,
+html[data-theme-mode="light"] .bg-obsidian-800:hover {
+  background-color: #F0E6D4 !important;
+  color: #9A6916 !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 11. Tables in Light Mode                                                  */
+/* ------------------------------------------------------------------------- */
+html.light .festivity-table thead th, 
+html.theme-mode-light .festivity-table thead th,
+html[data-theme-mode="light"] .festivity-table thead th,
+html.light table thead th,
+html.theme-mode-light table thead th,
+html[data-theme-mode="light"] table thead th {
+  background: #F3ECE1 !important;
+  color: #926315 !important;
+  font-weight: 700 !important;
+  border-bottom: 2px solid rgba(200, 160, 80, 0.45) !important;
+}
+
+html.light .festivity-table tbody td, 
+html.theme-mode-light .festivity-table tbody td,
+html[data-theme-mode="light"] .festivity-table tbody td,
+html.light table tbody td,
+html.theme-mode-light table tbody td,
+html[data-theme-mode="light"] table tbody td {
+  border-bottom: 1px solid rgba(225, 215, 200, 0.7) !important;
+  color: #2D251C !important;
+}
+
+html.light .festivity-table tbody tr:hover, 
+html.theme-mode-light .festivity-table tbody tr:hover,
+html[data-theme-mode="light"] .festivity-table tbody tr:hover,
+html.light table tbody tr:hover,
+html.theme-mode-light table tbody tr:hover,
+html[data-theme-mode="light"] table tbody tr:hover {
+  background: rgba(229, 168, 59, 0.08) !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 12. Gold Buttons with Dark Text Always Maintained                         */
+/* ------------------------------------------------------------------------- */
+.btn-festivity-pill, 
+button[class*="from-gold-"], 
+a[class*="from-gold-"],
+.bg-gradient-to-r[class*="from-gold-"] {
+  color: #0A0A0A !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 13. Mobile Modal Smooth Touch & Luxury Custom Scrollbars                  */
+/* ------------------------------------------------------------------------- */
+.overscroll-contain {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.25);
+  border-radius: 9999px;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 14. Floating Vertical Animation for WhatsApp & Interactive Badges         */
+/* ------------------------------------------------------------------------- */
+@keyframes floatUpDown {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+.animate-float-vertical {
+  animation: floatUpDown 2.8s ease-in-out infinite;
+}
+
+.animate-float-vertical:hover {
+  animation-play-state: paused;
+}
+
+
+

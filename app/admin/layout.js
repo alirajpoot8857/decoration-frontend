@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../../src/context/AuthContext';
 import { useTheme } from '../../src/context/ThemeContext';
 import LuxurySpinner from '../../src/components/ui/LuxurySpinner';
+import LuxuryPreloader from '../../src/components/ui/LuxuryPreloader';
 import {
   LayoutDashboard,
   CalendarCheck,
@@ -29,6 +30,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 const ADMIN_NAV = [
@@ -52,10 +55,11 @@ const ADMIN_NAV = [
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading, logout, isStaffOrAdmin } = useAuth();
-  const { siteName } = useTheme();
+  const { user, loading, logout, isStaffOrAdmin, login } = useAuth();
+  const { siteName, mode, isDarkMode, toggleMode } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile drawer state
   const [isCollapsed, setIsCollapsed] = useState(false); // Desktop icon-only collapse state
+  const [demoLoggingIn, setDemoLoggingIn] = useState(false);
 
   // Restore collapse preference from localStorage
   useEffect(() => {
@@ -95,37 +99,129 @@ export default function AdminLayout({ children }) {
   }, []);
 
   useEffect(() => {
-    if (!loading && (!user || !isStaffOrAdmin)) {
-      router.push('/login');
-    }
-  }, [user, loading, isStaffOrAdmin, router]);
-
-  useEffect(() => {
     setSidebarOpen(false);
   }, [pathname]);
 
-  if (loading || !user || !isStaffOrAdmin) {
+  const handleQuickAdminLogin = async () => {
+    setDemoLoggingIn(true);
+    try {
+      await login('admin@lumieredecor.com', 'Admin@123456');
+    } catch (e) {
+      console.warn('Admin quick login failed', e);
+    } finally {
+      setDemoLoggingIn(false);
+    }
+  };
+
+  if (loading) {
+    return <LuxuryPreloader isDashboard={true} forceShow={true} />;
+  }
+
+  if (!user) {
     return (
-      <div className="min-h-screen bg-ivory-100 flex items-center justify-center">
-        <LuxurySpinner size="lg" text="Authorizing Atelier Access..." />
+      <div className="min-h-screen bg-[#08080C] text-ivory-50 flex items-center justify-center p-4 selection:bg-gold-500 selection:text-obsidian-950">
+        <div className="max-w-md w-full bg-[#0E0E14] border border-gold-500/30 rounded-3xl p-8 text-center space-y-6 shadow-2xl">
+          <div className="w-16 h-16 rounded-2xl bg-gold-500/10 border border-gold-500/30 flex items-center justify-center mx-auto text-gold-400 shadow-glow-pill">
+            <Crown className="w-8 h-8" />
+          </div>
+          <div className="space-y-2">
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-gold-500/10 text-gold-400 text-[10px] uppercase font-bold tracking-widest border border-gold-500/30">
+              <Sparkles className="w-3 h-3" />
+              <span>Restricted Terminal</span>
+            </div>
+            <h2 className="font-serif text-2xl text-ivory-50 font-light">Staff & Admin Access Required</h2>
+            <p className="text-xs text-champagne-200/80 leading-relaxed font-sans">
+              Please sign in with your staff or administrator account to access studio management, inventory, and bookings.
+            </p>
+          </div>
+          <div className="space-y-3 pt-2">
+            <Link
+              href="/login?role=admin&redirect=/admin"
+              className="w-full btn-festivity-pill py-3.5 text-xs uppercase tracking-widest font-bold shadow-glow-pill transition-all flex items-center justify-center space-x-2"
+            >
+              <span>Sign In to Executive Admin</span>
+              <Crown className="w-4 h-4 text-obsidian-950" />
+            </Link>
+
+            <Link
+              href="/login?role=staff&redirect=/admin"
+              className="w-full py-3 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 text-xs font-semibold uppercase tracking-wider transition-colors flex items-center justify-center space-x-2"
+            >
+              <span>Sign In to Staff Terminal</span>
+            </Link>
+
+            <div className="pt-2 text-center text-xs">
+              <Link href="/" className="text-ivory-400 hover:text-gold-400 transition-colors">
+                ← Return to Public Website
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isStaffOrAdmin) {
+    return (
+      <div className="min-h-screen bg-[#08080C] text-ivory-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-[#0E0E14] border border-amber-500/30 rounded-3xl p-8 text-center space-y-6 shadow-2xl">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
+            <User className="w-8 h-8" />
+          </div>
+          <div className="space-y-2">
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 text-[10px] uppercase font-bold tracking-widest border border-amber-500/30">
+              <span>Client Account Active</span>
+            </div>
+            <h2 className="font-serif text-2xl text-ivory-50 font-light">Client Portal Redirect</h2>
+            <p className="text-xs text-champagne-200/80 leading-relaxed font-sans">
+              You are signed in as <strong className="text-gold-400">{user.name}</strong> (Private Client). The Admin & Staff console is restricted to studio operators.
+            </p>
+          </div>
+          <div className="space-y-3 pt-2">
+            <Link
+              href="/portal"
+              className="w-full btn-festivity-pill py-3.5 text-xs uppercase tracking-widest font-bold shadow-glow-pill transition-all flex items-center justify-center space-x-2"
+            >
+              <span>Go to My Client Portal</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <button
+              onClick={logout}
+              className="w-full py-2.5 rounded-full border border-white/10 text-ivory-300 hover:bg-white/5 text-xs uppercase tracking-wider transition-colors"
+            >
+              Sign Out & Switch Account
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF] text-obsidian-900 flex flex-col lg:flex-row antialiased">
+    <div className="min-h-screen bg-[#08080C] text-ivory-50 flex flex-col lg:flex-row antialiased">
+      <LuxuryPreloader isDashboard={true} />
       {/* Mobile Header Bar */}
       <div className="lg:hidden bg-obsidian-950 text-ivory-50 px-4 py-3 flex items-center justify-between border-b border-gold-500/20 sticky top-0 z-40 shadow-sm">
-        <Link href="/admin" className="font-serif text-base sm:text-lg uppercase tracking-widest text-gold-400 truncate max-w-[220px]">
+        <Link href="/admin" className="font-serif text-base sm:text-lg uppercase tracking-widest text-gold-400 truncate max-w-[180px]">
           {siteName} <span className="text-ivory-50 text-[10px] sm:text-xs font-sans">ADMIN</span>
         </Link>
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 text-ivory-50 rounded-lg hover:bg-white/10 active:scale-95 transition-transform"
-          aria-label="Toggle admin sidebar"
-        >
-          {sidebarOpen ? <X className="w-6 h-6 text-gold-400" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center space-x-2">
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleMode}
+            className="p-1.5 rounded-full border border-gold-500/30 bg-gold-500/10 text-gold-400 hover:bg-gold-500/20 transition-all"
+            title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {isDarkMode ? <Sun className="w-4 h-4 text-gold-400" /> : <Moon className="w-4 h-4 text-gold-500" />}
+          </button>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 text-ivory-50 rounded-lg hover:bg-white/10 active:scale-95 transition-transform"
+            aria-label="Toggle admin sidebar"
+          >
+            {sidebarOpen ? <X className="w-6 h-6 text-gold-400" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Backdrop Overlay - Smooth Fade In & Out */}
@@ -174,7 +270,7 @@ export default function AdminLayout({ children }) {
             </div>
 
             {/* Nav Menu Items - Fluid Smooth Collapse */}
-            <nav className={`py-3 space-y-1 overflow-x-hidden overflow-y-auto max-h-[calc(100vh-190px)] scrollbar-none transition-all duration-300 ${
+            <nav className={`py-3 space-y-1 overflow-x-hidden overflow-y-auto max-h-[calc(100vh-230px)] scrollbar-none transition-all duration-300 ${
               isCollapsed ? 'px-2' : 'px-3'
             }`}>
               {ADMIN_NAV.map((item) => {
@@ -217,13 +313,17 @@ export default function AdminLayout({ children }) {
           </div>
 
           {/* User Info & Quick Switchers */}
-          <div className="border-t border-obsidian-800 bg-obsidian-900/70 p-3 transition-all duration-300">
+          <div className="border-t border-obsidian-800 bg-obsidian-900/70 p-3 transition-all duration-300 space-y-2">
             <div className="flex items-center space-x-3 px-1 overflow-hidden">
               <div
                 title={`${user.name} (${user.role})`}
-                className="w-8 h-8 rounded-full bg-gold-500/20 border border-gold-500/30 text-gold-400 font-bold flex items-center justify-center text-xs shrink-0 cursor-pointer shadow-inner"
+                className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs shrink-0 cursor-pointer shadow-inner font-bold ${
+                  user.role === 'ADMIN'
+                    ? 'bg-gold-500/20 border-gold-500/40 text-gold-400'
+                    : 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+                }`}
               >
-                {user.name.charAt(0)}
+                {user.role === 'ADMIN' ? '👑' : '🛠️'}
               </div>
               <div
                 className={`flex-1 min-w-0 transition-all duration-300 overflow-hidden ${
@@ -231,12 +331,35 @@ export default function AdminLayout({ children }) {
                 }`}
               >
                 <p className="text-xs font-semibold text-ivory-100 truncate whitespace-nowrap">{user.name}</p>
-                <span className="text-[9px] text-gold-400 font-mono font-bold uppercase block">{user.role}</span>
+                <span className={`text-[8.5px] font-mono font-bold uppercase tracking-wider block ${
+                  user.role === 'ADMIN' ? 'text-gold-400' : 'text-emerald-400'
+                }`}>
+                  {user.role === 'ADMIN' ? '👑 Master Admin' : '🛠️ Staff Operator'}
+                </span>
               </div>
             </div>
 
+            {/* Theme Toggle in Sidebar */}
+            <button
+              onClick={toggleMode}
+              className={`w-full py-1.5 px-2 rounded-lg border border-gold-500/30 bg-gold-500/10 text-gold-400 hover:bg-gold-500/20 text-[10px] font-semibold tracking-wider uppercase transition-colors flex items-center ${
+                isCollapsed ? 'justify-center' : 'justify-between px-3'
+              }`}
+              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              <div className="flex items-center space-x-1.5">
+                {isDarkMode ? <Sun className="w-3.5 h-3.5 text-gold-400" /> : <Moon className="w-3.5 h-3.5 text-gold-400" />}
+                {!isCollapsed && <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>}
+              </div>
+              {!isCollapsed && (
+                <span className="text-[8px] bg-gold-500/20 px-1.5 py-0.5 rounded font-mono font-bold">
+                  {isDarkMode ? '☀️' : '🌙'}
+                </span>
+              )}
+            </button>
+
             <div
-              className={`flex items-center gap-2 pt-2.5 transition-all duration-300 ${
+              className={`flex items-center gap-2 pt-1 transition-all duration-300 ${
                 isCollapsed ? 'flex-col justify-center' : 'justify-between'
               }`}
             >

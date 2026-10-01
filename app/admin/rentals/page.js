@@ -7,6 +7,7 @@ import { useToast } from '../../../src/context/ToastContext';
 import { useConfirmModal } from '../../../src/context/ConfirmModalContext';
 import LuxurySpinner from '../../../src/components/ui/LuxurySpinner';
 import AdminInfiniteTableFooter, { useInfiniteTable } from '../../../src/components/ui/AdminInfiniteTable';
+import useBodyScrollLock from '../../../src/hooks/useBodyScrollLock';
 import {
   ShoppingBag,
   Search,
@@ -40,14 +41,13 @@ import {
 
 const CATEGORIES = [
   'All',
-  'Chairs',
-  'Tables',
-  'Arches',
-  'Lighting',
-  'Centerpieces',
-  'Candles',
+  'Flower Bouquets',
+  'Cakes & Chocolates',
+  'Gifts',
   'Stage décor',
   'Backdrops',
+  'Arches',
+  'Lighting',
   'Decorative props',
 ];
 
@@ -81,6 +81,8 @@ export default function AdminRentalsPage() {
   const [adjustDelta, setAdjustDelta] = useState(10);
   const [adjustReason, setAdjustReason] = useState('Inventory Restock');
   const [adjusting, setAdjusting] = useState(false);
+
+  useBodyScrollLock(Boolean(selectedRental || (adjustModalOpen && adjustingItem)));
 
   // Fetch summary & catalog items
   const fetchSummaryAndCatalog = async () => {
@@ -269,40 +271,40 @@ export default function AdminRentalsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-[10px] uppercase tracking-[0.25em] font-semibold">
+          <div className="inline-flex items-center space-x-2 text-gold-400 text-[10px] uppercase tracking-[0.25em] font-semibold">
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Rental Operations & Live Stock Control</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-obsidian-950 font-light">
+          <h1 className="font-serif text-3xl sm:text-4xl text-ivory-50 font-light">
             Rental Dashboard & Inventory Control
           </h1>
-          <p className="text-xs text-obsidian-500 font-light mt-1">
+          <p className="text-xs text-ivory-400 font-light mt-1">
             Real-time rental orders dispatch, customer dossiers, dynamic warehouse inventory levels, and live stock tracking.
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center bg-champagne-200/80 p-1 rounded-full border border-champagne-300 shadow-sm self-start sm:self-auto">
+        <div className="flex items-center bg-[#14141E] p-1 rounded-full border border-gold-500/30 shadow-md self-start sm:self-auto">
           <button
             onClick={() => setActiveTab('ORDERS')}
             className={`px-5 py-2 rounded-full text-xs uppercase tracking-wider font-semibold transition-all flex items-center space-x-1.5 ${
               activeTab === 'ORDERS'
-                ? 'bg-obsidian-950 text-ivory-50 shadow-md'
-                : 'text-obsidian-700 hover:text-obsidian-950'
+                ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-md'
+                : 'text-ivory-300 hover:text-gold-300'
             }`}
           >
-            <ShoppingBag className="w-3.5 h-3.5 text-gold-400" />
+            <ShoppingBag className="w-3.5 h-3.5" />
             <span>Rental Orders ({rentals.length})</span>
           </button>
           <button
             onClick={() => setActiveTab('INVENTORY')}
             className={`px-5 py-2 rounded-full text-xs uppercase tracking-wider font-semibold transition-all flex items-center space-x-1.5 ${
               activeTab === 'INVENTORY'
-                ? 'bg-obsidian-950 text-ivory-50 shadow-md'
-                : 'text-obsidian-700 hover:text-obsidian-950'
+                ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-md'
+                : 'text-ivory-300 hover:text-gold-300'
             }`}
           >
-            <Boxes className="w-3.5 h-3.5 text-gold-400" />
+            <Boxes className="w-3.5 h-3.5" />
             <span>Stock & Asset Levels ({catalogItems.length})</span>
           </button>
         </div>
@@ -311,77 +313,77 @@ export default function AdminRentalsPage() {
       {/* DYNAMIC REAL-TIME INVENTORY & RENTAL KPI METRIC CARDS */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Total Stock Units */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-          <div className="flex justify-between items-center text-obsidian-500 text-[10px] font-bold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all relative overflow-hidden group">
+          <div className="flex justify-between items-center text-ivory-400 text-[10px] font-bold uppercase tracking-wider">
             <span>Total Stock</span>
-            <span className="p-1.5 rounded-xl bg-champagne-200 text-obsidian-800">
+            <span className="p-1.5 rounded-xl bg-gold-500/10 text-gold-400 border border-gold-500/20">
               <Boxes className="w-3.5 h-3.5" />
             </span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-obsidian-950 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-ivory-50 group-hover:text-gold-300 transition-colors mt-2">
             {dynamicTotalStock.toLocaleString()}
           </p>
-          <p className="text-[11px] text-obsidian-500 mt-0.5">
+          <p className="text-[11px] text-ivory-400 mt-0.5">
             {catalogItems.length} curated asset types
           </p>
         </div>
 
         {/* Available Stock Units */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-          <div className="flex justify-between items-center text-sage-800 text-[10px] font-bold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all relative overflow-hidden group">
+          <div className="flex justify-between items-center text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
             <span>Available Stock</span>
-            <span className="p-1.5 rounded-xl bg-sage-100 text-sage-800">
+            <span className="p-1.5 rounded-xl bg-emerald-950/60 text-emerald-400 border border-emerald-500/30">
               <CheckCircle2 className="w-3.5 h-3.5" />
             </span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-sage-700 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-emerald-400 mt-2">
             {dynamicAvailableStock.toLocaleString()}
           </p>
-          <p className="text-[11px] text-sage-600 mt-0.5">Ready for instant dispatch</p>
+          <p className="text-[11px] text-ivory-400 mt-0.5">Ready for instant dispatch</p>
         </div>
 
         {/* Currently Rented Units */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-          <div className="flex justify-between items-center text-purple-800 text-[10px] font-bold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all relative overflow-hidden group">
+          <div className="flex justify-between items-center text-purple-400 text-[10px] font-bold uppercase tracking-wider">
             <span>Currently Rented</span>
-            <span className="p-1.5 rounded-xl bg-purple-100 text-purple-800">
+            <span className="p-1.5 rounded-xl bg-purple-950/60 text-purple-400 border border-purple-500/30">
               <Clock className="w-3.5 h-3.5" />
             </span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-purple-900 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-purple-300 mt-2">
             {dynamicRentedStock.toLocaleString()}
           </p>
-          <p className="text-[11px] text-purple-600 mt-0.5">Dispatched in active events</p>
+          <p className="text-[11px] text-ivory-400 mt-0.5">Dispatched in active events</p>
         </div>
 
         {/* Out of Stock Items */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-          <div className="flex justify-between items-center text-red-800 text-[10px] font-bold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all relative overflow-hidden group">
+          <div className="flex justify-between items-center text-rose-400 text-[10px] font-bold uppercase tracking-wider">
             <span>Out of Stock</span>
-            <span className="p-1.5 rounded-xl bg-red-100 text-red-800">
+            <span className="p-1.5 rounded-xl bg-rose-950/60 text-rose-400 border border-rose-500/30">
               <AlertTriangle className="w-3.5 h-3.5" />
             </span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-red-700 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-rose-400 mt-2">
             {dynamicOutOfStockCount}
           </p>
-          <p className="text-[11px] text-red-600 mt-0.5">
+          <p className="text-[11px] text-rose-400/80 mt-0.5">
             {dynamicLowStockCount > 0 ? `${dynamicLowStockCount} low stock alerts` : 'Stock healthy'}
           </p>
         </div>
 
         {/* Today's Rental Revenue */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden col-span-2 sm:col-span-2 lg:col-span-1">
-          <div className="flex justify-between items-center text-gold-800 text-[10px] font-bold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all relative overflow-hidden col-span-2 sm:col-span-2 lg:col-span-1 group">
+          <div className="flex justify-between items-center text-gold-400 text-[10px] font-bold uppercase tracking-wider">
             <span>Today's Rentals</span>
-            <span className="p-1.5 rounded-xl bg-gold-500/10 text-gold-800">
+            <span className="p-1.5 rounded-xl bg-gold-500/10 text-gold-400 border border-gold-500/20">
               <DollarSign className="w-3.5 h-3.5" />
             </span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-gold-800 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-gold-300 mt-2">
             PKR {todayRevenue.toFixed(2)}
           </p>
-          <p className="text-[11px] text-obsidian-500 mt-0.5">{todayRentals.length} orders placed today</p>
+          <p className="text-[11px] text-ivory-400 mt-0.5">{todayRentals.length} orders placed today</p>
         </div>
       </div>
 
@@ -393,25 +395,25 @@ export default function AdminRentalsPage() {
           {/* Orders Filter & Search Bar */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-gold-400/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by customer name, phone, rental ref #..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-full border border-champagne-300 bg-white text-xs focus:outline-none focus:border-gold-500 shadow-sm"
+                className="w-full pl-10 pr-4 py-2.5 rounded-full border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none focus:border-gold-400 shadow-sm"
               />
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
               {/* Date Filter Tabs */}
-              <div className="flex items-center space-x-1 bg-ivory-50 p-1 rounded-full border border-champagne-300 text-[11px]">
+              <div className="flex items-center space-x-1 bg-[#14141E] p-1 rounded-full border border-gold-500/30 text-[11px]">
                 {['All', 'Today', 'Yesterday', 'Last 7 Days'].map((d) => (
                   <button
                     key={d}
                     onClick={() => setDateFilter(d)}
                     className={`px-3 py-1 rounded-full font-semibold transition-colors ${
-                      dateFilter === d ? 'bg-obsidian-900 text-ivory-50 shadow-sm' : 'text-obsidian-700 hover:text-gold-700'
+                      dateFilter === d ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-sm' : 'text-ivory-300 hover:text-gold-300'
                     }`}
                   >
                     {d}
@@ -427,8 +429,8 @@ export default function AdminRentalsPage() {
                     onClick={() => setStatusFilter(st)}
                     className={`px-3 py-1.5 rounded-full text-xs uppercase tracking-wider font-semibold transition-all ${
                       statusFilter === st
-                        ? 'bg-gold-600 text-obsidian-950 font-bold shadow-sm'
-                        : 'bg-white text-obsidian-700 border border-champagne-300 hover:bg-champagne-100'
+                        ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-sm'
+                        : 'bg-[#14141E] text-ivory-300 border border-gold-500/20 hover:border-gold-400 hover:text-ivory-50'
                     }`}
                   >
                     {st}
@@ -439,15 +441,15 @@ export default function AdminRentalsPage() {
           </div>
 
           {/* Orders Table */}
-          <div className="bg-white border border-champagne-300/80 rounded-3xl overflow-hidden shadow-sm">
+          <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl overflow-hidden shadow-xl">
             {loadingRentals ? (
               <div className="py-20">
                 <LuxurySpinner size="lg" text="Loading rental orders & dispatch schedules..." />
               </div>
             ) : filteredRentals.length === 0 ? (
               <div className="p-12 text-center space-y-2">
-                <p className="font-serif text-lg text-obsidian-800">No rental requests found.</p>
-                <p className="text-xs text-obsidian-500">Try changing your search or date filter.</p>
+                <p className="font-serif text-lg text-ivory-200">No rental requests found.</p>
+                <p className="text-xs text-ivory-400">Try changing your search or date filter.</p>
               </div>
             ) : (
               <>
@@ -455,8 +457,8 @@ export default function AdminRentalsPage() {
                   onScroll={handleRentalsScroll}
                   className="overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gold-500/20"
                 >
-                  <table className="w-full text-left text-xs text-obsidian-700">
-                    <thead className="bg-champagne-100/95 border-b border-champagne-200 text-[9px] uppercase font-bold tracking-wider text-obsidian-600 sticky top-0 z-10 backdrop-blur-md shadow-sm">
+                  <table className="w-full text-left text-xs text-ivory-200">
+                    <thead className="bg-[#14141E]/95 border-b border-gold-500/20 text-[9px] uppercase font-bold tracking-wider text-gold-400 sticky top-0 z-10 backdrop-blur-md shadow-sm">
                       <tr>
                         <th className="py-3 px-3 pl-5">Order Ref</th>
                         <th className="py-3 px-3">Customer</th>
@@ -467,7 +469,7 @@ export default function AdminRentalsPage() {
                         <th className="py-3 px-3 pr-5 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-champagne-200">
+                    <tbody className="divide-y divide-white/5">
                       {infiniteRentals.map((r) => {
                         const items = Array.isArray(r.items)
                           ? r.items
@@ -479,55 +481,55 @@ export default function AdminRentalsPage() {
                         const totalUnits = items.reduce((sum, i) => sum + (Number(i.quantity) || 1), 0);
 
                         return (
-                          <tr key={r.id} className="hover:bg-champagne-50/70 transition-colors">
+                          <tr key={r.id} className="hover:bg-gold-500/5 transition-colors">
                             <td className="py-3 px-3 pl-5">
-                              <span className="font-mono font-bold text-gold-700 text-xs block">{r.rentalNumber}</span>
-                              <span className="text-[9px] text-obsidian-400">
+                              <span className="font-mono font-bold text-gold-400 text-xs block">{r.rentalNumber}</span>
+                              <span className="text-[9px] text-ivory-500">
                                 {new Date(r.createdAt).toLocaleDateString()}
                               </span>
                             </td>
                             <td className="py-3 px-3">
-                              <p className="font-semibold text-obsidian-950 text-xs truncate max-w-[140px]">{r.customerName}</p>
-                              <p className="text-[10px] text-obsidian-500 font-mono truncate max-w-[140px]">{r.customerPhone}</p>
+                              <p className="font-semibold text-ivory-50 text-xs truncate max-w-[140px]">{r.customerName}</p>
+                              <p className="text-[10px] text-ivory-400 font-mono truncate max-w-[140px]">{r.customerPhone}</p>
                             </td>
                             <td className="py-3 px-3">
-                              <span className={`inline-flex items-center px-1.5 py-0.2 text-[8px] rounded-full font-bold uppercase mb-0.5 ${
-                                isHourly ? 'bg-purple-100 text-purple-800' : 'bg-gold-500/10 text-gold-800'
+                              <span className={`inline-flex items-center px-2 py-0.5 text-[8px] rounded-full font-bold uppercase mb-0.5 ${
+                                isHourly ? 'bg-purple-950/60 text-purple-300 border border-purple-500/30' : 'bg-gold-950/60 text-gold-300 border border-gold-500/30'
                               }`}>
                                 {isHourly ? 'Hourly' : 'Daily'}
                               </span>
-                              <p className="text-[10px] text-obsidian-600 font-mono truncate max-w-[160px]">
+                              <p className="text-[10px] text-ivory-300 font-mono truncate max-w-[160px]">
                                 {r.eventDate && !isNaN(new Date(r.eventDate).getTime())
                                   ? new Date(r.eventDate).toLocaleDateString()
                                   : r.startDate && !isNaN(new Date(r.startDate).getTime())
                                   ? new Date(r.startDate).toLocaleDateString()
                                   : 'N/A'}
                                 {r.returnDate && !isNaN(new Date(r.returnDate).getTime()) && (
-                                  <span className="text-[9px] text-obsidian-400 block">
+                                  <span className="text-[9px] text-ivory-500 block">
                                     to {new Date(r.returnDate).toLocaleDateString()}
                                   </span>
                                 )}
                               </p>
                             </td>
                             <td className="py-3 px-3">
-                              <span className="font-bold text-obsidian-950">{totalUnits} pieces</span>
-                              <span className="block text-[9px] text-obsidian-400">{items.length} designs</span>
+                              <span className="font-bold text-ivory-100">{totalUnits} pieces</span>
+                              <span className="block text-[9px] text-ivory-500">{items.length} designs</span>
                             </td>
-                            <td className="py-3 px-3 font-mono font-bold text-obsidian-950">
+                            <td className="py-3 px-3 font-mono font-bold text-gold-300">
                               PKR {r.totalAmount.toLocaleString()}
                             </td>
                             <td className="py-3 px-3">
                               <select
                                 value={r.status}
                                 onChange={(e) => handleUpdateStatus(r.id, e.target.value)}
-                                className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border cursor-pointer focus:outline-none ${
+                                className={`text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border cursor-pointer focus:outline-none transition-colors ${
                                   r.status === 'APPROVED' || r.status === 'COMPLETED' || r.status === 'RETURNED'
-                                    ? 'bg-sage-100 text-sage-800 border-sage-300'
+                                    ? 'bg-emerald-950/70 text-emerald-300 border-emerald-500/40'
                                     : r.status === 'PENDING'
-                                    ? 'bg-amber-100 text-amber-800 border-amber-300'
+                                    ? 'bg-amber-950/70 text-amber-300 border-amber-500/40'
                                     : r.status === 'RENTED'
-                                    ? 'bg-gold-100 text-gold-900 border-gold-300'
-                                    : 'bg-red-100 text-red-800 border-red-300'
+                                    ? 'bg-purple-950/70 text-purple-300 border-purple-500/40'
+                                    : 'bg-rose-950/70 text-rose-300 border-rose-500/40'
                                 }`}
                               >
                                 <option value="PENDING">PENDING</option>
@@ -543,7 +545,7 @@ export default function AdminRentalsPage() {
                                 <button
                                   type="button"
                                   onClick={() => setSelectedRental(r)}
-                                  className="px-2.5 py-1 bg-obsidian-950 hover:bg-gold-600 text-ivory-50 hover:text-obsidian-950 font-semibold text-[11px] rounded-lg transition-all shadow-sm inline-flex items-center space-x-1"
+                                  className="px-3 py-1 bg-[#1A1A26] hover:bg-gold-500 text-ivory-50 hover:text-obsidian-950 font-semibold text-[11px] rounded-lg border border-gold-500/30 transition-all shadow-sm inline-flex items-center space-x-1"
                                 >
                                   <Eye className="w-3 h-3 text-gold-400" />
                                   <span>Dossier</span>
@@ -551,7 +553,7 @@ export default function AdminRentalsPage() {
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteRental(r.id, r.rentalNumber)}
-                                  className="p-1 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                  className="p-1.5 text-rose-400 hover:bg-rose-950/50 rounded-lg transition-colors border border-rose-500/20"
                                   title="Delete Rental Order"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
@@ -586,13 +588,13 @@ export default function AdminRentalsPage() {
           {/* Inventory Controls */}
           <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
             <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-gold-400/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={inventorySearch}
                 onChange={(e) => setInventorySearch(e.target.value)}
                 placeholder="Search catalog items by name, category..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-full border border-champagne-300 bg-white text-xs focus:outline-none focus:border-gold-500 shadow-sm"
+                className="w-full pl-10 pr-4 py-2.5 rounded-full border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none focus:border-gold-400 shadow-sm"
               />
             </div>
 
@@ -601,17 +603,17 @@ export default function AdminRentalsPage() {
               <select
                 value={inventoryCategory}
                 onChange={(e) => setInventoryCategory(e.target.value)}
-                className="px-3.5 py-2 rounded-full text-xs font-semibold bg-white border border-champagne-300 text-obsidian-800 focus:outline-none shadow-sm"
+                className="px-4 py-2 rounded-full text-xs font-semibold bg-[#14141E] border border-gold-500/30 text-ivory-100 focus:outline-none shadow-sm cursor-pointer"
               >
                 {CATEGORIES.map((c) => (
-                  <option key={c} value={c}>
+                  <option key={c} value={c} className="bg-[#14141E] text-ivory-100">
                     {c === 'All' ? 'All Categories' : c}
                   </option>
                 ))}
               </select>
 
               {/* Stock Filter Pills */}
-              <div className="flex items-center space-x-1 bg-ivory-50 p-1 rounded-full border border-champagne-300 text-[11px]">
+              <div className="flex items-center space-x-1 bg-[#14141E] p-1 rounded-full border border-gold-500/30 text-[11px]">
                 {[
                   { id: 'ALL', label: 'All Items' },
                   { id: 'AVAILABLE', label: 'In Stock' },
@@ -623,8 +625,8 @@ export default function AdminRentalsPage() {
                     onClick={() => setInventoryStockFilter(f.id)}
                     className={`px-3 py-1 rounded-full font-semibold transition-colors ${
                       inventoryStockFilter === f.id
-                        ? 'bg-obsidian-950 text-ivory-50 shadow-sm'
-                        : 'text-obsidian-700 hover:text-gold-700'
+                        ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-sm'
+                        : 'text-ivory-300 hover:text-gold-300'
                     }`}
                   >
                     {f.label}
@@ -635,14 +637,14 @@ export default function AdminRentalsPage() {
           </div>
 
           {/* Catalog Inventory Table */}
-          <div className="bg-white border border-champagne-300/80 rounded-3xl overflow-hidden shadow-sm">
+          <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl overflow-hidden shadow-xl">
             {loadingCatalog ? (
               <div className="py-20">
                 <LuxurySpinner size="lg" text="Loading rental catalog stock matrix..." />
               </div>
             ) : filteredCatalogItems.length === 0 ? (
               <div className="p-12 text-center space-y-2">
-                <p className="font-serif text-lg text-obsidian-800">No rental items matched your search filters.</p>
+                <p className="font-serif text-lg text-ivory-200">No rental items matched your search filters.</p>
               </div>
             ) : (
               <>
@@ -650,8 +652,8 @@ export default function AdminRentalsPage() {
                   onScroll={handleCatalogScroll}
                   className="overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gold-500/20"
                 >
-                  <table className="w-full text-left text-xs text-obsidian-700">
-                    <thead className="bg-champagne-100/95 border-b border-champagne-200 text-[9px] uppercase font-bold tracking-wider text-obsidian-600 sticky top-0 z-10 backdrop-blur-md shadow-sm">
+                  <table className="w-full text-left text-xs text-ivory-200">
+                    <thead className="bg-[#14141E]/95 border-b border-gold-500/20 text-[9px] uppercase font-bold tracking-wider text-gold-400 sticky top-0 z-10 backdrop-blur-md shadow-sm">
                       <tr>
                         <th className="py-3 px-3 pl-5">Rental Piece</th>
                         <th className="py-3 px-3">Category</th>
@@ -661,7 +663,7 @@ export default function AdminRentalsPage() {
                         <th className="py-3 px-3 pr-5 text-right">Stock Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-champagne-200">
+                    <tbody className="divide-y divide-white/5">
                       {infiniteCatalog.map((item) => {
                         const isOut = item.availableQuantity <= 0 || item.status === 'OUT_OF_STOCK';
                         const isLow = item.availableQuantity > 0 && item.availableQuantity <= 2;
@@ -669,19 +671,19 @@ export default function AdminRentalsPage() {
                         const percentAvailable = Math.round((item.availableQuantity / Math.max(1, item.totalQuantity)) * 100);
 
                         return (
-                          <tr key={item.id} className="hover:bg-champagne-50/70 transition-colors">
+                          <tr key={item.id} className="hover:bg-gold-500/5 transition-colors">
                             <td className="py-3 px-3 pl-5">
                               <div className="flex items-center space-x-3">
                                 {item.imageUrl && (
-                                  <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-champagne-300 flex-shrink-0 bg-champagne-100">
+                                  <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-gold-500/30 flex-shrink-0 bg-[#161622]">
                                     <Image src={item.imageUrl} alt={item.name} fill className="object-cover" />
                                   </div>
                                 )}
                                 <div className="min-w-0">
-                                  <p className="font-serif text-xs font-bold text-obsidian-950 truncate max-w-[200px]">
+                                  <p className="font-serif text-xs font-bold text-ivory-50 truncate max-w-[200px]">
                                     {item.name}
                                   </p>
-                                  <span className="text-[10px] font-mono text-gold-700 block">
+                                  <span className="text-[10px] font-mono text-gold-400 block">
                                     {item.slug?.slice(0, 24) || 'SKU-RENT'}
                                   </span>
                                 </div>
@@ -689,7 +691,7 @@ export default function AdminRentalsPage() {
                             </td>
 
                             <td className="py-3 px-3">
-                              <span className="px-2.5 py-0.5 rounded-full bg-champagne-200 text-obsidian-800 text-[10px] font-semibold">
+                              <span className="px-2.5 py-0.5 rounded-full bg-[#181826] border border-gold-500/20 text-gold-300 text-[10px] font-semibold">
                                 {item.category}
                               </span>
                             </td>
@@ -697,14 +699,14 @@ export default function AdminRentalsPage() {
                             <td className="py-3 px-3">
                               <div className="space-y-1">
                                 <div className="flex items-center space-x-2 text-[11px]">
-                                  <span className="font-bold text-sage-800">{item.availableQuantity} available</span>
-                                  <span className="text-obsidian-400">/</span>
-                                  <span className="text-obsidian-600">{item.totalQuantity} total</span>
+                                  <span className="font-bold text-emerald-400">{item.availableQuantity} available</span>
+                                  <span className="text-ivory-500">/</span>
+                                  <span className="text-ivory-300">{item.totalQuantity} total</span>
                                 </div>
-                                <div className="w-28 bg-champagne-200 h-1.5 rounded-full overflow-hidden">
+                                <div className="w-28 bg-[#1E1E2C] h-1.5 rounded-full overflow-hidden">
                                   <div
                                     className={`h-full rounded-full ${
-                                      isOut ? 'bg-red-500' : isLow ? 'bg-amber-500' : 'bg-sage-600'
+                                      isOut ? 'bg-rose-500' : isLow ? 'bg-amber-500' : 'bg-emerald-500'
                                     }`}
                                     style={{ width: `${percentAvailable}%` }}
                                   />
@@ -713,22 +715,22 @@ export default function AdminRentalsPage() {
                             </td>
 
                             <td className="py-3 px-3">
-                              <p className="font-mono font-bold text-obsidian-950 text-xs">
+                              <p className="font-mono font-bold text-ivory-50 text-xs">
                                 PKR {item.rentalPrice.toLocaleString()}/day
                               </p>
-                              <span className="text-[10px] font-mono text-obsidian-500 block">
+                              <span className="text-[10px] font-mono text-gold-400/80 block">
                                 PKR {hourlyRate.toLocaleString()}/hr
                               </span>
                             </td>
 
                             <td className="py-3 px-3">
                               <span
-                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
                                   isOut
-                                    ? 'bg-red-100 text-red-800'
+                                    ? 'bg-rose-950/70 text-rose-300 border border-rose-500/30'
                                     : isLow
-                                    ? 'bg-amber-100 text-amber-800'
-                                    : 'bg-sage-100 text-sage-800'
+                                    ? 'bg-amber-950/70 text-amber-300 border border-amber-500/30'
+                                    : 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/30'
                                 }`}
                               >
                                 {isOut ? 'Depleted' : isLow ? 'Low Stock' : 'In Stock'}
@@ -744,9 +746,9 @@ export default function AdminRentalsPage() {
                                   setAdjustReason('Shipment replenishment');
                                   setAdjustModalOpen(true);
                                 }}
-                                className="px-3 py-1 bg-champagne-200 hover:bg-gold-500 text-obsidian-950 font-semibold text-[11px] rounded-lg transition-all shadow-sm inline-flex items-center space-x-1"
+                                className="px-3 py-1 bg-[#1A1A26] hover:bg-gold-500 text-ivory-50 hover:text-obsidian-950 font-semibold text-[11px] rounded-lg border border-gold-500/30 transition-all shadow-sm inline-flex items-center space-x-1"
                               >
-                                <RefreshCw className="w-3 h-3" />
+                                <RefreshCw className="w-3 h-3 text-gold-400" />
                                 <span>Adjust Stock</span>
                               </button>
                             </td>
@@ -772,8 +774,8 @@ export default function AdminRentalsPage() {
 
       {/* QUICK STOCK ADJUSTMENT MODAL */}
       {adjustModalOpen && adjustingItem && (
-        <div className="fixed inset-0 z-[99999] overflow-y-auto flex items-center justify-center p-4 bg-obsidian-950/80 backdrop-blur-sm">
-          <div className="relative bg-ivory-50 text-obsidian-950 border border-gold-500/60 rounded-3xl overflow-hidden shadow-2xl max-w-md w-full p-6 space-y-5">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-3 sm:p-4 bg-obsidian-950/80 backdrop-blur-sm animate-fadeIn">
+          <div className="relative bg-ivory-50 text-obsidian-950 border border-gold-500/60 rounded-3xl overflow-hidden shadow-2xl max-w-md w-full max-h-[92dvh] flex flex-col p-5 sm:p-6 space-y-4 overflow-y-auto overscroll-contain">
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] uppercase tracking-[0.2em] text-gold-700 font-bold">
@@ -860,13 +862,13 @@ export default function AdminRentalsPage() {
 
       {/* COMPLETE RENTAL ORDER DOSSIER MODAL */}
       {selectedRental && (
-        <div className="fixed inset-0 z-[99999] overflow-y-auto flex items-center justify-center p-3 sm:p-6 bg-obsidian-950/85 backdrop-blur-md">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-2.5 sm:p-4 md:p-6 bg-obsidian-950/85 backdrop-blur-md animate-fadeIn">
           <div
-            className="relative bg-ivory-50 text-obsidian-950 border border-gold-500/60 rounded-3xl overflow-hidden shadow-2xl max-w-3xl w-full flex flex-col max-h-[92vh] select-none"
+            className="relative bg-ivory-50 text-obsidian-950 border border-gold-500/60 rounded-3xl overflow-hidden shadow-2xl max-w-3xl w-full flex flex-col max-h-[92dvh] sm:max-h-[90dvh] select-none"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.6), 0 0 25px rgba(212,175,55,0.3)' }}
           >
             {/* Modal Header */}
-            <div className="p-6 bg-obsidian-950 text-ivory-50 border-b border-gold-500/30 flex items-center justify-between">
+            <div className="p-4 sm:p-6 bg-obsidian-950 text-ivory-50 border-b border-gold-500/30 flex items-center justify-between flex-shrink-0">
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
                   <span className="font-mono text-sm font-bold text-gold-400">
@@ -901,7 +903,7 @@ export default function AdminRentalsPage() {
             </div>
 
             {/* Scrollable Content Body */}
-            <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 text-xs overscroll-contain">
               {/* Customer & Location Card */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Client Info */}
@@ -1031,7 +1033,7 @@ export default function AdminRentalsPage() {
             </div>
 
             {/* Modal Footer Controls */}
-            <div className="p-4 bg-white border-t border-champagne-300 flex flex-wrap items-center justify-between gap-3">
+            <div className="p-3.5 sm:p-4 bg-white border-t border-champagne-300 flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
               <div className="flex items-center space-x-2">
                 <span className="text-[11px] font-bold uppercase text-obsidian-600">Update Status:</span>
                 {selectedRental.status === 'PENDING' && (

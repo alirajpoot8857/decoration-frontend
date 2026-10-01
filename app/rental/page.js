@@ -5,8 +5,10 @@ import Image from 'next/image';
 import api from '../../src/lib/api';
 import { useRentalCart } from '../../src/context/RentalCartContext';
 import { useDiscount } from '../../src/context/DiscountContext';
+import { useTheme } from '../../src/context/ThemeContext';
 import CustomSelect from '../../src/components/ui/CustomSelect';
 import LuxurySpinner from '../../src/components/ui/LuxurySpinner';
+import useBodyScrollLock from '../../src/hooks/useBodyScrollLock';
 import {
   ShoppingBag,
   Search,
@@ -27,14 +29,13 @@ import {
 
 const RENTAL_CATEGORIES = [
   'All',
-  'Chairs',
-  'Tables',
-  'Arches',
-  'Lighting',
-  'Centerpieces',
-  'Candles',
+  'Flower Bouquets',
+  'Cakes & Chocolates',
+  'Gifts',
   'Stage décor',
   'Backdrops',
+  'Arches',
+  'Lighting',
   'Decorative props',
 ];
 
@@ -67,8 +68,10 @@ export default function RentalPage() {
   const [modalHours, setModalHours] = useState(4);
   const [modalQuantity, setModalQuantity] = useState(1);
 
+  const { isDarkMode } = useTheme();
   const { addToCart, setIsCartOpen } = useRentalCart();
   const { effectiveDiscount, calculateDiscount } = useDiscount();
+  useBodyScrollLock(Boolean(selectedItemDetail));
 
   const sentinelRef = useRef(null);
   const scrollContainerRef = useRef(null);
@@ -257,28 +260,28 @@ export default function RentalPage() {
   };
 
   return (
-    <div className="bg-ivory-100 text-obsidian-900 pt-24 sm:pt-28 pb-16 sm:pb-20 w-full overflow-hidden">
+    <div className="bg-[#070709] text-ivory-50 pt-24 sm:pt-28 pb-16 sm:pb-20 w-full overflow-hidden selection:bg-gold-500 selection:text-obsidian-950">
       {/* ========================================================================= */}
       {/* 1. LUXURY HEADER BANNER */}
       {/* ========================================================================= */}
-      <section className="py-10 sm:py-14 bg-champagne-50 border-b border-champagne-300/60 relative">
+      <section className="py-10 sm:py-14 bg-[#0B0B0F] border-b border-gold-500/20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4">
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-[11px] sm:text-xs uppercase tracking-[0.3em] font-semibold">
-            <Sparkles className="w-4 h-4" />
+          <div className="badge-festivity animate-float-gently">
+            <Sparkles className="w-3.5 h-3.5 text-gold-400" />
             <span>Curated Décor Inventory & Live Stock Logistics</span>
           </div>
 
-          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-obsidian-950 font-light">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-ivory-50 font-light">
             Luxury Décor & Furniture Rentals
           </h1>
 
-          <p className="text-xs sm:text-sm md:text-base text-obsidian-600 max-w-2xl mx-auto font-light leading-relaxed">
-            Rent our collection of <strong className="text-obsidian-900 font-semibold">{dynamicStats.totalItems} luxury pieces</strong> ({dynamicStats.totalStock.toLocaleString()} total stock units) by the <strong className="text-obsidian-900 font-semibold">Hour</strong> or by the <strong className="text-obsidian-900 font-semibold">Day</strong> with real-time warehouse availability.
+          <p className="text-xs sm:text-sm md:text-base text-champagne-200/80 max-w-2xl mx-auto font-light leading-relaxed">
+            Rent our collection of <strong className="text-gold-400 font-semibold">{dynamicStats.totalItems} luxury pieces</strong> ({dynamicStats.totalStock.toLocaleString()} total stock units) by the <strong className="text-gold-400 font-semibold">Hour</strong> or by the <strong className="text-gold-400 font-semibold">Day</strong> with real-time warehouse availability.
           </p>
 
           {effectiveDiscount > 0 && (
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/40 text-gold-800 text-xs font-semibold shadow-sm">
-              <Tag className="w-3.5 h-3.5 text-gold-600" />
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/40 text-gold-300 text-xs font-semibold shadow-sm">
+              <Tag className="w-3.5 h-3.5 text-gold-400" />
               <span>Sitewide Promo Active: All rentals get {effectiveDiscount}% OFF automatically applied at checkout!</span>
             </div>
           )}
@@ -289,48 +292,48 @@ export default function RentalPage() {
       {/* 2. DYNAMIC LIVE STOCK & INVENTORY METRICS TICKER */}
       {/* ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-7 relative z-10">
-        <div className="bg-white/95 backdrop-blur-md rounded-3xl border border-champagne-300/90 p-4 sm:p-5 shadow-luxury grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div className="festivity-card-dark p-4 sm:p-5 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 shadow-2xl">
           {/* Total Curated Pieces */}
-          <div className="p-3 bg-champagne-50/60 rounded-2xl border border-champagne-200/70 flex items-center space-x-3">
-            <div className="p-2.5 bg-champagne-200 text-obsidian-900 rounded-xl">
+          <div className="p-3 bg-white/[0.04] rounded-2xl border border-white/10 flex items-center space-x-3">
+            <div className="p-2.5 bg-gold-500/20 text-gold-400 rounded-xl">
               <Boxes className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-obsidian-500 tracking-wider block">Total Pieces</span>
-              <p className="font-serif text-lg sm:text-xl font-bold text-obsidian-950">{dynamicStats.totalItems} Designs</p>
+              <span className="text-[10px] uppercase font-bold text-champagne-400/70 tracking-wider block">Total Pieces</span>
+              <p className="font-serif text-lg sm:text-xl font-bold text-ivory-50">{dynamicStats.totalItems} Designs</p>
             </div>
           </div>
 
           {/* Total Stock Units */}
-          <div className="p-3 bg-champagne-50/60 rounded-2xl border border-champagne-200/70 flex items-center space-x-3">
-            <div className="p-2.5 bg-gold-500/10 text-gold-800 rounded-xl">
+          <div className="p-3 bg-white/[0.04] rounded-2xl border border-white/10 flex items-center space-x-3">
+            <div className="p-2.5 bg-gold-500/20 text-gold-400 rounded-xl">
               <Layers className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-obsidian-500 tracking-wider block">Total Stock</span>
-              <p className="font-serif text-lg sm:text-xl font-bold text-obsidian-950">{dynamicStats.totalStock.toLocaleString()} Units</p>
+              <span className="text-[10px] uppercase font-bold text-champagne-400/70 tracking-wider block">Total Stock</span>
+              <p className="font-serif text-lg sm:text-xl font-bold text-ivory-50">{dynamicStats.totalStock.toLocaleString()} Units</p>
             </div>
           </div>
 
           {/* Available Units */}
-          <div className="p-3 bg-sage-50/70 rounded-2xl border border-sage-200 flex items-center space-x-3">
-            <div className="p-2.5 bg-sage-100 text-sage-800 rounded-xl">
+          <div className="p-3 bg-emerald-950/40 rounded-2xl border border-emerald-500/30 flex items-center space-x-3">
+            <div className="p-2.5 bg-emerald-500/20 text-emerald-400 rounded-xl">
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-sage-800 tracking-wider block">Available Stock</span>
-              <p className="font-serif text-lg sm:text-xl font-bold text-sage-700">{dynamicStats.availableStock.toLocaleString()} Units</p>
+              <span className="text-[10px] uppercase font-bold text-emerald-400/80 tracking-wider block">Available Stock</span>
+              <p className="font-serif text-lg sm:text-xl font-bold text-emerald-300">{dynamicStats.availableStock.toLocaleString()} Units</p>
             </div>
           </div>
 
           {/* Currently Rented */}
-          <div className="p-3 bg-purple-50/70 rounded-2xl border border-purple-200 flex items-center space-x-3">
-            <div className="p-2.5 bg-purple-100 text-purple-800 rounded-xl">
+          <div className="p-3 bg-purple-950/40 rounded-2xl border border-purple-500/30 flex items-center space-x-3">
+            <div className="p-2.5 bg-purple-500/20 text-purple-400 rounded-xl">
               <Clock className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-purple-800 tracking-wider block">Currently Rented</span>
-              <p className="font-serif text-lg sm:text-xl font-bold text-purple-900">{dynamicStats.rentedStock.toLocaleString()} Units</p>
+              <span className="text-[10px] uppercase font-bold text-purple-400/80 tracking-wider block">Currently Rented</span>
+              <p className="font-serif text-lg sm:text-xl font-bold text-purple-300">{dynamicStats.rentedStock.toLocaleString()} Units</p>
             </div>
           </div>
         </div>
@@ -343,13 +346,13 @@ export default function RentalPage() {
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
           {/* Search Box */}
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-champagne-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search chairs, arches, stage décor, chandeliers, tables..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-full border border-champagne-300 bg-white text-xs focus:outline-none focus:border-gold-500 shadow-sm transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 rounded-full border border-gold-500/30 bg-[#121218] text-ivory-50 text-xs focus:outline-none focus:border-gold-500 shadow-sm transition-colors"
             />
           </div>
 
@@ -365,7 +368,7 @@ export default function RentalPage() {
             </div>
 
             {/* Availability Filter Tabs */}
-            <div className="flex items-center space-x-1 bg-white p-1 rounded-full border border-champagne-300 shadow-sm text-xs">
+            <div className="flex items-center space-x-1 bg-[#121218] p-1 rounded-full border border-gold-500/30 shadow-sm text-xs">
               {[
                 { id: 'ALL', label: 'All Stock' },
                 { id: 'IN_STOCK', label: 'In Stock' },
@@ -376,8 +379,8 @@ export default function RentalPage() {
                   onClick={() => setStockAvailabilityFilter(f.id)}
                   className={`px-3 py-1 rounded-full font-semibold transition-all ${
                     stockAvailabilityFilter === f.id
-                      ? 'bg-obsidian-950 text-ivory-50 shadow-sm'
-                      : 'text-obsidian-700 hover:text-gold-700'
+                      ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-glow-pill'
+                      : 'text-champagne-300 hover:text-gold-300'
                   }`}
                 >
                   {f.label}
@@ -386,13 +389,13 @@ export default function RentalPage() {
             </div>
 
             {/* Hourly vs Daily Pricing View Switcher */}
-            <div className="flex items-center bg-champagne-200/80 p-1 rounded-full border border-champagne-300">
+            <div className="flex items-center bg-[#121218] p-1 rounded-full border border-gold-500/30">
               <button
                 onClick={() => setPricingViewMode('DAILY')}
                 className={`px-4 py-1.5 rounded-full text-xs uppercase tracking-wider font-semibold transition-all ${
                   pricingViewMode === 'DAILY'
-                    ? 'bg-obsidian-900 text-ivory-50 shadow-sm'
-                    : 'text-obsidian-700 hover:text-obsidian-950'
+                    ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-glow-pill'
+                    : 'text-champagne-300 hover:text-gold-300'
                 }`}
               >
                 Daily Rates
@@ -401,8 +404,8 @@ export default function RentalPage() {
                 onClick={() => setPricingViewMode('HOURLY')}
                 className={`px-4 py-1.5 rounded-full text-xs uppercase tracking-wider font-semibold transition-all ${
                   pricingViewMode === 'HOURLY'
-                    ? 'bg-obsidian-900 text-ivory-50 shadow-sm'
-                    : 'text-obsidian-700 hover:text-obsidian-950'
+                    ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-glow-pill'
+                    : 'text-champagne-300 hover:text-gold-300'
                 }`}
               >
                 Hourly Rates
@@ -412,9 +415,9 @@ export default function RentalPage() {
             {/* Cart Drawer Trigger */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="flex items-center justify-center space-x-2 px-5 py-2.5 bg-obsidian-900 text-ivory-50 rounded-full text-xs uppercase tracking-widest hover:bg-gold-600 hover:text-obsidian-950 hover:scale-105 active:scale-95 transition-all duration-300 shadow-md"
+              className="btn-festivity-pill flex items-center justify-center space-x-2 px-5 py-2.5 text-xs uppercase tracking-widest shadow-glow-pill"
             >
-              <ShoppingBag className="w-4 h-4 text-gold-400" />
+              <ShoppingBag className="w-4 h-4 text-obsidian-950" />
               <span>Rental Cart</span>
             </button>
           </div>
@@ -431,12 +434,12 @@ export default function RentalPage() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs uppercase tracking-wider font-semibold transition-all duration-300 flex items-center space-x-1.5 ${
                   isSelected
-                    ? 'bg-gold-600 text-obsidian-950 font-bold shadow-sm scale-105'
-                    : 'bg-white text-obsidian-700 border border-champagne-300 hover:bg-champagne-100 hover:border-gold-400 hover:text-obsidian-950'
+                    ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-glow-pill scale-105'
+                    : 'bg-[#121218] text-champagne-200 border border-gold-500/25 hover:border-gold-500 hover:text-gold-300'
                 }`}
               >
                 <span>{cat}</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-obsidian-950/20 text-obsidian-950' : 'bg-champagne-200 text-obsidian-600'}`}>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-obsidian-950/20 text-obsidian-950' : 'bg-white/10 text-gold-400'}`}>
                   {count}
                 </span>
               </button>
@@ -445,38 +448,33 @@ export default function RentalPage() {
         </div>
 
         {/* Status Counter */}
-        <div className="text-xs text-obsidian-500 font-light flex items-center justify-between">
+        <div className="text-xs text-champagne-300/80 font-light flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <span>Showing <strong className="font-semibold text-obsidian-900">{displayedItems.length}</strong> of <strong className="font-semibold text-obsidian-900">{filteredAndSortedItems.length}</strong> rental pieces</span>
-            <span className="text-gold-600 text-[10px] uppercase tracking-wider font-semibold bg-gold-500/10 px-2.5 py-0.5 rounded-full border border-gold-500/20">
-              Scroll Inside Frame
-            </span>
+            <span>Showing <strong className="font-semibold text-gold-400">{displayedItems.length}</strong> of <strong className="font-semibold text-gold-400">{filteredAndSortedItems.length}</strong> rental pieces</span>
           </div>
 
-          <span className="text-[11px] text-obsidian-400 hidden sm:inline-block">
+          <span className="text-[11px] text-champagne-400/60 hidden sm:inline-block">
             All prices subject to refundable security deposit
           </span>
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 4. REDESIGNED LUXURY RENTAL CARDS GRID */}
-      {/* ========================================================================= */}
-      <section className="py-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Main Rental Items Section with Fixed Scrollable Container */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {loading ? (
-          <div className="py-24">
-            <LuxurySpinner size="lg" text="Loading rental catalog..." />
+          <div className="py-24 text-center">
+            <LuxurySpinner size="lg" text="Curating Luxury Décor & Furniture Rental Archive..." />
           </div>
         ) : displayedItems.length === 0 ? (
-          <div className="text-center py-20 space-y-3 bg-white rounded-3xl p-8 border border-champagne-300 shadow-sm">
-            <p className="font-serif text-lg sm:text-xl text-obsidian-600">No rental items found in this selection.</p>
+          <div className="text-center py-20 bg-[#0E0E14] rounded-3xl border border-gold-500/20 space-y-3 p-8">
+            <p className="font-serif text-lg sm:text-xl text-champagne-200">No rental items found in this selection.</p>
             <button
               onClick={() => {
                 setSelectedCategory('All');
                 setSearchQuery('');
                 setStockAvailabilityFilter('ALL');
               }}
-              className="text-xs uppercase tracking-widest text-gold-700 font-bold underline hover:text-gold-900"
+              className="px-6 py-2 rounded-full bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 text-xs uppercase tracking-wider font-bold hover:brightness-110 transition-all"
             >
               Reset All Filters
             </button>
@@ -485,10 +483,14 @@ export default function RentalPage() {
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="max-h-[660px] sm:max-h-[740px] lg:max-h-[800px] overflow-y-auto pr-2 sm:pr-3 rounded-3xl border border-champagne-300/70 bg-ivory-50/50 p-4 sm:p-6 shadow-luxury-card transition-all"
+            className={`max-h-[640px] sm:max-h-[720px] lg:max-h-[780px] overflow-y-auto pr-2 sm:pr-3 rounded-3xl border p-4 sm:p-6 shadow-2xl transition-all ${
+              isDarkMode
+                ? 'border-gold-500/20 bg-[#0A0A0F]/80 text-ivory-50'
+                : 'border-gold-500/35 bg-[#FAF7F2] text-[#141210] shadow-[0_12px_40px_rgba(212,175,55,0.12)]'
+            }`}
             style={{ scrollBehavior: 'smooth' }}
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
               {displayedItems.map((item) => {
                 const isHourlyView = pricingViewMode === 'HOURLY';
                 const rawHourly = item.hourlyRate || +(item.rentalPrice * 0.2).toFixed(2);
@@ -506,12 +508,16 @@ export default function RentalPage() {
                 return (
                   <div
                     key={item.id}
-                    className="bg-white rounded-3xl overflow-hidden border border-champagne-300/80 shadow-luxury hover:shadow-luxury-lg hover:border-gold-500/70 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group"
+                    className={`overflow-hidden flex flex-col justify-between group rounded-3xl border transition-all duration-300 ${
+                      isDarkMode
+                        ? 'festivity-card-dark bg-[#0E0E14] text-ivory-50 border-gold-500/30 hover:border-gold-400 hover:shadow-glow-gold'
+                        : 'bg-white text-[#141210] border-gold-500/35 shadow-md hover:border-gold-500 hover:shadow-[0_12px_30px_rgba(212,175,55,0.2)]'
+                    }`}
                   >
                     {/* Item Image Container & Badges */}
                     <div
                       onClick={() => handleOpenItemDetail(item)}
-                      className="relative h-64 sm:h-72 w-full overflow-hidden bg-champagne-100 cursor-pointer"
+                      className="relative h-64 sm:h-72 w-full overflow-hidden bg-obsidian-900 cursor-pointer"
                     >
                       <Image
                         src={item.imageUrl}
@@ -523,11 +529,11 @@ export default function RentalPage() {
 
                       {/* Top-Left Category & Promo Badges */}
                       <div className="absolute top-3 left-3 flex flex-col space-y-1.5 z-10">
-                        <span className="bg-obsidian-950/85 backdrop-blur-md text-gold-300 text-[10px] uppercase tracking-widest font-semibold px-3 py-1 rounded-full border border-gold-500/20 shadow-sm">
+                        <span className="bg-obsidian-950/85 backdrop-blur-md text-gold-400 text-[10px] uppercase tracking-widest font-semibold px-3 py-1 rounded-full border border-gold-500/30 shadow-sm">
                           {item.category}
                         </span>
                         {hasDiscount && (
-                          <span className="bg-gradient-to-r from-gold-600 to-amber-500 text-obsidian-950 text-[10px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full shadow-sm">
+                          <span className="bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 text-[10px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full shadow-glow-pill">
                             {effectiveDiscount}% OFF
                           </span>
                         )}
@@ -538,13 +544,13 @@ export default function RentalPage() {
                         <span
                           className={`text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full shadow-md backdrop-blur-md flex items-center space-x-1.5 ${
                             !isAvailable
-                              ? 'bg-red-600/90 text-white ring-1 ring-red-300/50'
+                              ? 'bg-red-950/80 text-red-300 ring-1 ring-red-500/50'
                               : isLowStock
-                              ? 'bg-amber-600/90 text-white ring-1 ring-amber-300/50'
-                              : 'bg-sage-700/90 text-white ring-1 ring-sage-300/50'
+                              ? 'bg-amber-950/80 text-amber-300 ring-1 ring-amber-500/50'
+                              : 'bg-emerald-950/80 text-emerald-300 ring-1 ring-emerald-500/50'
                           }`}
                         >
-                          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
                           <span>
                             {!isAvailable
                               ? 'Out of Stock'
@@ -558,7 +564,7 @@ export default function RentalPage() {
                       {/* Bottom Image Specs Overlay Pill */}
                       {(item.dimensions || item.material) && (
                         <div className="absolute bottom-3 left-3 right-3 z-10 pointer-events-none">
-                          <span className="inline-block bg-obsidian-950/75 backdrop-blur-md text-ivory-100 text-[9px] px-3 py-1 rounded-full border border-white/10 font-light truncate max-w-full">
+                          <span className="inline-block bg-obsidian-950/85 backdrop-blur-md text-champagne-200 text-[9px] px-3 py-1 rounded-full border border-gold-500/20 font-light truncate max-w-full">
                             {item.dimensions ? `${item.dimensions}` : ''} {item.dimensions && item.material ? '• ' : ''}{item.material || ''}
                           </span>
                         </div>
@@ -571,32 +577,32 @@ export default function RentalPage() {
                         onClick={() => handleOpenItemDetail(item)}
                         className="cursor-pointer space-y-1.5"
                       >
-                        <h4 className="font-serif text-lg sm:text-xl text-obsidian-950 font-medium group-hover:text-gold-700 transition-colors line-clamp-1">
+                        <h4 className="font-serif text-lg sm:text-xl text-ivory-50 font-medium group-hover:text-gold-400 transition-colors line-clamp-1">
                           {item.name}
                         </h4>
-                        <p className="text-xs text-obsidian-600 line-clamp-2 font-light leading-relaxed">
+                        <p className="text-xs text-champagne-200/80 line-clamp-2 font-light leading-relaxed">
                           {item.description}
                         </p>
                       </div>
 
                       {/* Live Stock Level Progress Meter */}
-                      <div className="pt-2 border-t border-champagne-200/70 space-y-1">
+                      <div className="pt-2 border-t border-gold-500/20 space-y-1">
                         <div className="flex items-center justify-between text-[11px]">
-                          <span className="text-obsidian-600 font-medium">
-                            Stock: <strong className="text-obsidian-950 font-bold">{item.availableQuantity}</strong> / {item.totalQuantity} available
+                          <span className="text-champagne-300 font-medium">
+                            Stock: <strong className="text-gold-400 font-bold">{item.availableQuantity}</strong> / {item.totalQuantity} available
                           </span>
-                          <span className="text-purple-800 font-semibold text-[10px]">
+                          <span className="text-purple-400 font-semibold text-[10px]">
                             {item.rentedQuantity || 0} rented
                           </span>
                         </div>
-                        <div className="w-full bg-champagne-200/80 rounded-full h-1.5 overflow-hidden">
+                        <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${
                               !isAvailable
                                 ? 'bg-red-500'
                                 : isLowStock
                                 ? 'bg-amber-500'
-                                : 'bg-gradient-to-r from-gold-500 to-sage-600'
+                                : 'bg-gradient-to-r from-gold-500 to-emerald-400'
                             }`}
                             style={{ width: `${Math.min(100, Math.max(0, percentAvailable))}%` }}
                           />
@@ -605,44 +611,44 @@ export default function RentalPage() {
                     </div>
 
                     {/* Dual Hourly and Daily Pricing & Add to Cart Section */}
-                    <div className="p-4 sm:p-5 pt-0 border-t border-champagne-200/70 mt-1 space-y-3">
+                    <div className="p-4 sm:p-5 pt-0 border-t border-gold-500/20 mt-1 space-y-3">
                       <div className="flex items-baseline justify-between pt-2.5">
                         <div>
                           {hasDiscount ? (
                             <div className="flex items-baseline space-x-1.5">
-                              <span className="font-serif text-xl sm:text-2xl font-bold text-gold-800">
-                                PKR {discountedPrice.toFixed(2)}
+                              <span className="font-serif text-xl sm:text-2xl font-bold text-gold-gradient">
+                                PKR {Math.round(discountedPrice).toLocaleString()}
                               </span>
-                              <span className="text-xs text-obsidian-400 line-through">
-                                PKR {basePrice.toFixed(2)}
+                              <span className="text-xs text-champagne-400/50 line-through">
+                                PKR {Math.round(basePrice).toLocaleString()}
                               </span>
-                              <span className="text-[10px] text-obsidian-500 font-semibold">
+                              <span className="text-[10px] text-champagne-300 font-semibold">
                                 /{isHourlyView ? 'hr' : 'day'}
                               </span>
                             </div>
                           ) : (
                             <div>
-                              <span className="font-serif text-xl sm:text-2xl font-bold text-obsidian-950">
-                                PKR {displayPrice.toFixed(2)}
+                              <span className="font-serif text-xl sm:text-2xl font-bold text-ivory-50">
+                                PKR {Math.round(displayPrice).toLocaleString()}
                               </span>
-                              <span className="text-[10px] text-obsidian-500 font-semibold">
+                              <span className="text-[10px] text-champagne-300 font-semibold">
                                 /{isHourlyView ? 'hr' : 'day'}
                               </span>
                             </div>
                           )}
 
-                          <span className="block text-[10px] text-obsidian-500 mt-0.5">
+                          <span className="block text-[10px] text-champagne-400/70 mt-0.5">
                             {isHourlyView
-                              ? `Daily rate: PKR ${item.rentalPrice.toFixed(2)}/day`
-                              : `Hourly rate: PKR ${rawHourly.toFixed(2)}/hr`}
+                              ? `Daily rate: PKR ${Math.round(item.rentalPrice).toLocaleString()}/day`
+                              : `Hourly rate: PKR ${Math.round(rawHourly).toLocaleString()}/hr`}
                           </span>
                         </div>
 
                         <div className="text-right">
-                          <span className="text-[10px] text-gold-800 font-medium block">
-                            Dep: PKR ${(item.depositAmount || item.rentalPrice * 0.3).toFixed(2)}
+                          <span className="text-[10px] text-gold-400 font-medium block">
+                            Dep: PKR {Math.round(item.depositAmount || item.rentalPrice * 0.25).toLocaleString()}
                           </span>
-                          <span className="text-[9px] text-obsidian-400">Refundable</span>
+                          <span className="text-[9px] text-champagne-400/60">Refundable</span>
                         </div>
                       </div>
 
@@ -653,12 +659,12 @@ export default function RentalPage() {
                           onClick={() => isAvailable && addToCart(item, 1, 'DAILY', 24)}
                           className={`py-2.5 px-3 rounded-full font-bold text-[10px] uppercase tracking-wider flex items-center justify-center space-x-1.5 transition-all shadow-sm ${
                             isAvailable
-                              ? 'bg-obsidian-950 text-ivory-50 hover:bg-gold-600 hover:text-obsidian-950 active:scale-95'
-                              : 'bg-obsidian-200 text-obsidian-400 cursor-not-allowed opacity-60'
+                              ? 'btn-festivity-pill text-obsidian-950'
+                              : 'bg-white/10 text-champagne-400/40 cursor-not-allowed'
                           }`}
                           title={isAvailable ? 'Reserve as Daily rental' : 'Item currently out of stock'}
                         >
-                          <Calendar className="w-3.5 h-3.5 text-gold-400" />
+                          <Calendar className="w-3.5 h-3.5 text-obsidian-950" />
                           <span>{isAvailable ? 'Rent Daily' : 'Out of Stock'}</span>
                         </button>
 
@@ -667,12 +673,12 @@ export default function RentalPage() {
                           onClick={() => isAvailable && addToCart(item, 1, 'HOURLY', 4)}
                           className={`py-2.5 px-3 rounded-full font-bold text-[10px] uppercase tracking-wider flex items-center justify-center space-x-1.5 transition-all shadow-sm ${
                             isAvailable
-                              ? 'bg-champagne-200 text-obsidian-900 hover:bg-gold-500 hover:text-obsidian-950 active:scale-95 border border-champagne-300'
-                              : 'bg-obsidian-200 text-obsidian-400 cursor-not-allowed opacity-60'
+                              ? 'btn-festivity-outline text-ivory-50 hover:text-gold-300'
+                              : 'bg-white/10 text-champagne-400/40 cursor-not-allowed'
                           }`}
                           title={isAvailable ? 'Reserve as Hourly rental (4 hours default)' : 'Item currently out of stock'}
                         >
-                          <Clock className="w-3.5 h-3.5 text-obsidian-800" />
+                          <Clock className="w-3.5 h-3.5 text-gold-400" />
                           <span>{isAvailable ? 'Rent Hourly' : 'Out of Stock'}</span>
                         </button>
                       </div>
@@ -694,15 +700,15 @@ export default function RentalPage() {
 
             {/* End of Catalog Message */}
             {!hasMore && filteredAndSortedItems.length > 0 && (
-              <div className="mt-8 py-6 text-center space-y-1.5 border-t border-champagne-300/60 max-w-md mx-auto">
-                <div className="flex items-center justify-center space-x-2 text-gold-600 text-xs">
+              <div className="mt-8 py-6 text-center space-y-1.5 border-t border-gold-500/20 max-w-md mx-auto">
+                <div className="flex items-center justify-center space-x-2 text-gold-400 text-xs">
                   <span>✦</span>
-                  <span className="font-serif uppercase tracking-[0.25em] text-[11px] font-medium text-obsidian-800">
+                  <span className="font-serif uppercase tracking-[0.25em] text-[11px] font-medium text-ivory-100">
                     All {filteredAndSortedItems.length} Rental Pieces Revealed
                   </span>
                   <span>✦</span>
                 </div>
-                <p className="text-[11px] text-obsidian-500 font-light">
+                <p className="text-[11px] text-champagne-300/70 font-light">
                   Looking for bespoke custom builds or larger quantities? Inquire with our production atelier.
                 </p>
               </div>
@@ -715,26 +721,26 @@ export default function RentalPage() {
       {/* 5. ITEM DETAIL MODAL */}
       {/* ========================================================================= */}
       {selectedItemDetail && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-obsidian-950/80 backdrop-blur-sm">
-          <div className="relative bg-ivory-50 rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full border border-champagne-300 p-6 sm:p-8 space-y-5">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-3 sm:p-4 md:p-6 bg-obsidian-950/85 backdrop-blur-md animate-fadeIn">
+          <div className="relative bg-[#0E0E14] text-ivory-50 rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full max-h-[92dvh] sm:max-h-[90dvh] flex flex-col border border-gold-500/50 p-5 sm:p-8 space-y-4 overflow-y-auto overscroll-contain">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-[10px] uppercase tracking-[0.2em] text-gold-700 font-bold">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-gold-400 font-bold">
                   {selectedItemDetail.category}
                 </span>
-                <h3 className="font-serif text-xl sm:text-2xl text-obsidian-950 font-light mt-1">
+                <h3 className="font-serif text-xl sm:text-2xl text-ivory-50 font-light mt-1">
                   {selectedItemDetail.name}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedItemDetail(null)}
-                className="p-2 rounded-full hover:bg-champagne-200 transition-colors text-obsidian-500"
+                className="p-2 rounded-full hover:bg-white/10 transition-colors text-champagne-300"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="relative h-64 sm:h-72 rounded-2xl overflow-hidden bg-champagne-200">
+            <div className="relative h-64 sm:h-72 rounded-2xl overflow-hidden bg-obsidian-900 border border-gold-500/20">
               <Image
                 src={selectedItemDetail.imageUrl}
                 alt={selectedItemDetail.name}
@@ -744,33 +750,33 @@ export default function RentalPage() {
             </div>
 
             {/* Live Stock Breakdown in Modal */}
-            <div className="grid grid-cols-3 gap-3 p-3.5 bg-white rounded-2xl border border-champagne-300 text-center">
+            <div className="grid grid-cols-3 gap-3 p-3.5 bg-white/[0.04] rounded-2xl border border-white/10 text-center">
               <div>
-                <span className="text-[10px] text-obsidian-500 uppercase font-bold">Total Stock</span>
-                <p className="font-serif text-base font-bold text-obsidian-950">{selectedItemDetail.totalQuantity} units</p>
+                <span className="text-[10px] text-champagne-400 uppercase font-bold">Total Stock</span>
+                <p className="font-serif text-base font-bold text-ivory-50">{selectedItemDetail.totalQuantity} units</p>
               </div>
               <div>
-                <span className="text-[10px] text-sage-700 uppercase font-bold">Available Now</span>
-                <p className="font-serif text-base font-bold text-sage-800">{selectedItemDetail.availableQuantity} in Stock</p>
+                <span className="text-[10px] text-emerald-400 uppercase font-bold">Available Now</span>
+                <p className="font-serif text-base font-bold text-emerald-300">{selectedItemDetail.availableQuantity} in Stock</p>
               </div>
               <div>
-                <span className="text-[10px] text-purple-700 uppercase font-bold">Rented / Field</span>
-                <p className="font-serif text-base font-bold text-purple-900">{selectedItemDetail.rentedQuantity || 0} units</p>
+                <span className="text-[10px] text-purple-400 uppercase font-bold">Rented / Field</span>
+                <p className="font-serif text-base font-bold text-purple-300">{selectedItemDetail.rentedQuantity || 0} units</p>
               </div>
             </div>
 
-            <p className="text-xs text-obsidian-600 font-light leading-relaxed">
+            <p className="text-xs text-champagne-200/80 font-light leading-relaxed">
               {selectedItemDetail.description}
             </p>
 
             {/* Duration Mode Selector inside Modal */}
-            <div className="p-4 bg-champagne-100/60 rounded-2xl space-y-3 border border-champagne-300">
-              <div className="flex items-center justify-between text-xs font-semibold text-obsidian-800 uppercase tracking-wider">
+            <div className="p-4 bg-white/[0.04] rounded-2xl space-y-3 border border-gold-500/20">
+              <div className="flex items-center justify-between text-xs font-semibold text-champagne-200 uppercase tracking-wider">
                 <span>Select Rental Mode:</span>
-                <span className="text-gold-700 font-bold">
+                <span className="text-gold-400 font-bold">
                   {modalDurationMode === 'HOURLY'
-                    ? `PKR ${(selectedItemDetail.hourlyRate || selectedItemDetail.rentalPrice * 0.2).toFixed(2)}/hr`
-                    : `PKR ${selectedItemDetail.rentalPrice.toFixed(2)}/day`}
+                    ? `PKR ${Math.round(selectedItemDetail.hourlyRate || selectedItemDetail.rentalPrice * 0.2).toLocaleString()}/hr`
+                    : `PKR ${Math.round(selectedItemDetail.rentalPrice).toLocaleString()}/day`}
                 </span>
               </div>
 
@@ -780,28 +786,28 @@ export default function RentalPage() {
                   onClick={() => setModalDurationMode('DAILY')}
                   className={`py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all ${
                     modalDurationMode === 'DAILY'
-                      ? 'bg-obsidian-900 text-ivory-50 shadow-sm'
-                      : 'bg-white text-obsidian-700 border border-champagne-300 hover:bg-champagne-200'
+                      ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-glow-pill'
+                      : 'bg-white/5 text-champagne-200 border border-white/10 hover:bg-white/10'
                   }`}
                 >
-                  Daily Rate (PKR {selectedItemDetail.rentalPrice.toFixed(2)}/day)
+                  Daily Rate (PKR {Math.round(selectedItemDetail.rentalPrice).toLocaleString()}/day)
                 </button>
                 <button
                   type="button"
                   onClick={() => setModalDurationMode('HOURLY')}
                   className={`py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all ${
                     modalDurationMode === 'HOURLY'
-                      ? 'bg-obsidian-900 text-ivory-50 shadow-sm'
-                      : 'bg-white text-obsidian-700 border border-champagne-300 hover:bg-champagne-200'
+                      ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-glow-pill'
+                      : 'bg-white/5 text-champagne-200 border border-white/10 hover:bg-white/10'
                   }`}
                 >
-                  Hourly Rate (PKR {(selectedItemDetail.hourlyRate || selectedItemDetail.rentalPrice * 0.2).toFixed(2)}/hr)
+                  Hourly Rate (PKR {Math.round(selectedItemDetail.hourlyRate || selectedItemDetail.rentalPrice * 0.2).toLocaleString()}/hr)
                 </button>
               </div>
 
               {modalDurationMode === 'HOURLY' && (
-                <div className="flex items-center justify-between pt-2 border-t border-champagne-200">
-                  <span className="text-xs text-obsidian-600 font-medium">Rental Duration (Hours):</span>
+                <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                  <span className="text-xs text-champagne-300 font-medium">Rental Duration (Hours):</span>
                   <div className="flex items-center space-x-1.5">
                     {[2, 4, 6, 8, 12, 24].map((hrs) => (
                       <button
@@ -809,8 +815,8 @@ export default function RentalPage() {
                         onClick={() => setModalHours(hrs)}
                         className={`px-3 py-1 rounded-lg text-xs font-bold uppercase transition-all ${
                           modalHours === hrs
-                            ? 'bg-gold-500 text-obsidian-950 shadow-sm'
-                            : 'bg-white text-obsidian-700 border border-champagne-300 hover:bg-champagne-200'
+                            ? 'bg-gold-500 text-obsidian-950 shadow-glow-pill'
+                            : 'bg-white/5 text-champagne-200 border border-white/10 hover:bg-white/10'
                         }`}
                       >
                         {hrs}h
@@ -824,18 +830,18 @@ export default function RentalPage() {
             {/* Quantity Selector & Add to Cart */}
             <div className="flex items-center justify-between pt-2">
               <div className="flex items-center space-x-2">
-                <span className="text-xs text-obsidian-600 font-semibold">Quantity:</span>
-                <div className="flex items-center border border-champagne-300 rounded-xl bg-white overflow-hidden">
+                <span className="text-xs text-champagne-300 font-semibold">Quantity:</span>
+                <div className="flex items-center border border-gold-500/30 rounded-xl bg-white/5 overflow-hidden">
                   <button
                     onClick={() => setModalQuantity((q) => Math.max(1, q - 1))}
-                    className="px-3 py-1.5 text-obsidian-700 hover:bg-champagne-100 font-bold"
+                    className="px-3 py-1.5 text-gold-400 hover:bg-white/10 font-bold"
                   >
                     -
                   </button>
-                  <span className="px-3 py-1.5 font-bold text-xs font-mono">{modalQuantity}</span>
+                  <span className="px-3 py-1.5 font-bold text-xs font-mono text-ivory-50">{modalQuantity}</span>
                   <button
                     onClick={() => setModalQuantity((q) => Math.min(selectedItemDetail.availableQuantity, q + 1))}
-                    className="px-3 py-1.5 text-obsidian-700 hover:bg-champagne-100 font-bold"
+                    className="px-3 py-1.5 text-gold-400 hover:bg-white/10 font-bold"
                   >
                     +
                   </button>
@@ -850,8 +856,8 @@ export default function RentalPage() {
                 }}
                 className={`px-6 py-3 rounded-full font-bold uppercase tracking-wider text-xs transition-all shadow-md ${
                   selectedItemDetail.availableQuantity > 0
-                    ? 'bg-obsidian-950 text-ivory-50 hover:bg-gold-600 hover:text-obsidian-950 active:scale-95'
-                    : 'bg-obsidian-200 text-obsidian-400 cursor-not-allowed'
+                    ? 'btn-festivity-pill text-obsidian-950 shadow-glow-pill'
+                    : 'bg-white/10 text-champagne-400/40 cursor-not-allowed'
                 }`}
               >
                 {selectedItemDetail.availableQuantity > 0 ? 'Add to Rental Cart' : 'Out of Stock'}

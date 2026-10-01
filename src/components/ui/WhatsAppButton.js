@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MessageCircle, Sparkles, X } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
+import { Sparkles, X } from 'lucide-react';
 
 export default function WhatsAppButton({
   phoneNumber = '+923140660985', // Studio concierge WhatsApp number 03140660985
   defaultMessage = 'Hello Lumière Décor! I would like to inquire about event decoration packages and luxury rentals.',
 }) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const { isDarkMode } = useTheme();
 
   // Clean phone number for WhatsApp link
   const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
@@ -15,15 +17,27 @@ export default function WhatsAppButton({
   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end animate-float-vertical">
       {/* Luxury Concierge Interactive Tooltip */}
       {showTooltip && (
         <div
-          className="mb-3 p-3.5 bg-obsidian-950/95 text-ivory-50 border border-gold-500/50 rounded-2xl shadow-2xl backdrop-blur-md max-w-xs transition-all duration-300 animate-fadeIn select-none"
-          style={{ boxShadow: '0 15px 35px -5px rgba(0,0,0,0.5), 0 0 20px rgba(212,175,55,0.25)' }}
+          className={`mb-3 p-3.5 rounded-2xl shadow-2xl backdrop-blur-md max-w-xs transition-all duration-300 animate-fadeIn select-none border ${
+            isDarkMode
+              ? 'bg-obsidian-950/95 text-ivory-50 border-gold-500/50'
+              : 'bg-white/95 text-[#141210] border-gold-500/40 shadow-[0_15px_35px_-5px_rgba(212,175,55,0.25)]'
+          }`}
+          style={{
+            boxShadow: isDarkMode
+              ? '0 15px 35px -5px rgba(0,0,0,0.5), 0 0 20px rgba(212,175,55,0.25)'
+              : '0 15px 35px -5px rgba(212,175,55,0.2), 0 0 15px rgba(0,0,0,0.06)',
+          }}
         >
           <div className="flex items-center justify-between gap-2 border-b border-gold-500/20 pb-2 mb-2">
-            <div className="flex items-center space-x-1.5 text-gold-400 text-[11px] font-semibold tracking-wider uppercase">
+            <div
+              className={`flex items-center space-x-1.5 text-[11px] font-semibold tracking-wider uppercase ${
+                isDarkMode ? 'text-gold-400' : 'text-[#9A6916]'
+              }`}
+            >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Atelier Concierge</span>
             </div>
@@ -33,39 +47,62 @@ export default function WhatsAppButton({
                 e.stopPropagation();
                 setShowTooltip(false);
               }}
-              className="text-obsidian-400 hover:text-ivory-50 transition-colors"
+              className={`transition-colors ${
+                isDarkMode ? 'text-obsidian-400 hover:text-ivory-50' : 'text-stone-400 hover:text-stone-800'
+              }`}
             >
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
-          <p className="text-xs text-obsidian-200 font-light leading-relaxed">
+          <p
+            className={`text-xs font-light leading-relaxed ${
+              isDarkMode ? 'text-obsidian-200' : 'text-[#4A3E31]'
+            }`}
+          >
             Connect instantly with our lead creative directors & event designers on WhatsApp.
           </p>
-          <div className="mt-2.5 flex items-center space-x-1.5 text-[10px] text-emerald-400 font-medium">
+          <div className="mt-2.5 flex items-center space-x-1.5 text-[10px] text-emerald-500 font-medium">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
             <span>Design Atelier is Online Now</span>
           </div>
         </div>
       )}
 
-      {/* Floating Luxury WhatsApp Button */}
+      {/* Floating Luxury WhatsApp Button - Dynamically Styled for Light & Dark Mode */}
       <a
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
         onMouseEnter={() => setShowTooltip(true)}
         aria-label="Direct WhatsApp Consultation Chat"
-        className="group relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-obsidian-900 via-obsidian-950 to-obsidian-900 text-ivory-50 border-2 border-gold-400/90 shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 hover:border-gold-300"
+        className={`group relative flex items-center justify-center w-14 h-14 rounded-full border-2 transition-all duration-300 hover:scale-110 active:scale-95 ${
+          isDarkMode
+            ? 'bg-gradient-to-br from-obsidian-900 via-obsidian-950 to-obsidian-900 border-gold-400/90 hover:border-gold-300'
+            : 'bg-gradient-to-br from-white via-[#FFFDF9] to-[#F6F1E7] border-gold-500 hover:border-gold-600 shadow-[0_10px_28px_rgba(212,175,55,0.35)]'
+        }`}
         style={{
-          boxShadow:
-            '0 12px 28px rgba(0, 0, 0, 0.45), 0 0 22px rgba(212, 175, 55, 0.35)',
+          boxShadow: isDarkMode
+            ? '0 12px 28px rgba(0, 0, 0, 0.45), 0 0 22px rgba(212, 175, 55, 0.35)'
+            : '0 10px 28px rgba(212, 175, 55, 0.35), 0 4px 14px rgba(0, 0, 0, 0.08)',
         }}
       >
         {/* Glowing Pulse Aura */}
-        <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-emerald-500/30 to-gold-500/30 blur-sm opacity-70 group-hover:opacity-100 transition-opacity animate-pulse" />
+        <span
+          className={`absolute -inset-1 rounded-full blur-sm opacity-70 group-hover:opacity-100 transition-opacity animate-pulse ${
+            isDarkMode
+              ? 'bg-gradient-to-r from-emerald-500/30 to-gold-500/30'
+              : 'bg-gradient-to-r from-emerald-500/25 to-amber-500/30'
+          }`}
+        />
 
-        {/* WhatsApp Icon with Emerald & Gold Accent */}
-        <div className="relative z-10 flex items-center justify-center text-emerald-400 group-hover:text-gold-300 transition-colors">
+        {/* WhatsApp Icon with Emerald & Gold Transition */}
+        <div
+          className={`relative z-10 flex items-center justify-center transition-colors duration-300 ${
+            isDarkMode
+              ? 'text-emerald-400 group-hover:text-gold-300'
+              : 'text-[#25D366] group-hover:text-[#B45309]'
+          }`}
+        >
           <svg
             className="w-7 h-7 fill-current"
             viewBox="0 0 24 24"
@@ -75,9 +112,14 @@ export default function WhatsAppButton({
           </svg>
         </div>
 
-        {/* Live Badge dot */}
-        <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-obsidian-950" />
+        {/* Live Status Badge dot */}
+        <span
+          className={`absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 ${
+            isDarkMode ? 'border-obsidian-950' : 'border-white'
+          }`}
+        />
       </a>
     </div>
   );
 }
+

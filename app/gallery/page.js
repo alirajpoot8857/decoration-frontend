@@ -6,10 +6,12 @@ import Link from 'next/link';
 import api from '../../src/lib/api';
 import { useAuth } from '../../src/context/AuthContext';
 import { useToast } from '../../src/context/ToastContext';
+import { useTheme } from '../../src/context/ThemeContext';
 import LuxurySpinner from '../../src/components/ui/LuxurySpinner';
 import CustomDatePicker from '../../src/components/ui/CustomDatePicker';
 import LocationPicker from '../../src/components/ui/LocationPicker';
 import { isValidPakistaniPhone } from '../../src/lib/validation';
+import useBodyScrollLock from '../../src/hooks/useBodyScrollLock';
 import {
   Sparkles,
   X,
@@ -26,15 +28,37 @@ import {
 
 const CATEGORIES = [
   'All',
-  'Luxury weddings',
+  'Flower Bouquets',
+  'Cakes & Chocolates',
+  'Gifts',
   'Floral stages',
   'Mehndi setups',
-  'Birthday themes',
+  'Luxury weddings',
   'Outdoor décor',
-  'Reception tables',
   'Entrance décor',
-  'Romantic candle setups',
 ];
+
+export const parseGalleryPrice = (img) => {
+  if (!img) return 25000;
+  if (img.price && typeof img.price === 'number') return img.price;
+  if (img.description) {
+    const match = img.description.match(/(?:Price:\s*(?:Rs\.|PKR)\s*|PKR\s*|Rs\.\s*)([\d,]+)/i);
+    if (match && match[1]) {
+      const parsed = parseInt(match[1].replace(/,/g, ''), 10);
+      if (!isNaN(parsed) && parsed > 0) return parsed;
+    }
+  }
+  const cat = (img.category || '').toLowerCase();
+  if (cat.includes('wedding') || cat.includes('walima') || cat.includes('barat')) return 300000;
+  if (cat.includes('stage')) return 120000;
+  if (cat.includes('mehndi') || cat.includes('mayun')) return 65000;
+  if (cat.includes('outdoor')) return 45000;
+  if (cat.includes('entrance') || cat.includes('arch')) return 35000;
+  if (cat.includes('bouquet') || cat.includes('flower')) return 4500;
+  if (cat.includes('cake') || cat.includes('chocolate')) return 3200;
+  if (cat.includes('gift')) return 6500;
+  return 25000;
+};
 
 const INITIAL_BATCH = 9;
 const BATCH_INCREMENT = 6;
@@ -42,6 +66,7 @@ const BATCH_INCREMENT = 6;
 export default function GalleryPage() {
   const { user } = useAuth();
   const { showToast } = useToast();
+  const { isDarkMode } = useTheme();
 
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [allImages, setAllImages] = useState([]);
@@ -56,6 +81,8 @@ export default function GalleryPage() {
   const [commissionImage, setCommissionImage] = useState(null);
   const [submittingOrder, setSubmittingOrder] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(null);
+
+  useBodyScrollLock(Boolean(activeLightboxImage || (orderModalOpen && commissionImage)));
 
   const [orderForm, setOrderForm] = useState({
     customerName: user?.name || '',
@@ -85,6 +112,20 @@ export default function GalleryPage() {
       }
     };
     fetchGallery();
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get('category');
+      const searchParam = params.get('search');
+      if (catParam) {
+        const matched = CATEGORIES.find((c) => c.toLowerCase() === catParam.toLowerCase()) ||
+          CATEGORIES.find((c) => c.toLowerCase().includes(catParam.toLowerCase()) || catParam.toLowerCase().includes(c.toLowerCase()));
+        if (matched) setSelectedCategory(matched);
+      }
+      if (searchParam) {
+        setSearchQuery(searchParam);
+      }
+    }
   }, []);
 
   // Calculate dynamic category item counts
@@ -183,6 +224,7 @@ export default function GalleryPage() {
   const hasMore = visibleCount < filteredImages.length;
 
   const handleOpenCommissionModal = (img) => {
+    const itemPrice = parseGalleryPrice(img);
     setCommissionImage(img);
     setOrderForm({
       customerName: user?.name || '',
@@ -191,8 +233,8 @@ export default function GalleryPage() {
       eventDate: '',
       venue: '',
       guestCount: 150,
-      budget: 4500,
-      specialRequests: `Requested Gallery Style: ${img.title} (${img.category})`,
+      budget: itemPrice,
+      specialRequests: `Requested Gallery Style: ${img.title} (${img.category}) - Est. PKR ${itemPrice.toLocaleString()}`,
     });
     setOrderErrors({});
     setOrderSuccess(null);
@@ -237,6 +279,19 @@ export default function GalleryPage() {
       const res = await api.createBooking(payload);
       setOrderSuccess(res.booking);
       showToast(`Gallery order #${res.booking.bookingNumber} placed! Email notification sent to studio.`, 'success');
+
+      // Reset / empty order form values
+      setOrderForm({
+        customerName: user?.name || '',
+        customerEmail: user?.email || '',
+        customerPhone: (user?.phone && isValidPakistaniPhone(user?.phone)) ? user.phone : '03140660985',
+        eventDate: '',
+        venue: '',
+        guestCount: 150,
+        budget: 4500,
+        specialRequests: '',
+      });
+      setOrderErrors({});
     } catch (err) {
       const msg = err.data?.message || err.message || 'Failed to submit gallery order';
       showToast(msg, 'error');
@@ -246,19 +301,20 @@ export default function GalleryPage() {
   };
 
   return (
-    <div className="bg-ivory-100 text-obsidian-900 pt-24 sm:pt-28 pb-16 sm:pb-20 w-full overflow-hidden">
+    <div className="bg-[#070709] text-ivory-50 pt-24 sm:pt-28 pb-16 sm:pb-20 w-full overflow-hidden min-h-screen">
       {/* Header Banner */}
-      <section className="py-10 sm:py-14 bg-champagne-50 border-b border-champagne-300/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4">
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-[11px] sm:text-xs uppercase tracking-[0.3em] font-semibold">
-            <Sparkles className="w-4 h-4" />
+      <section className="py-10 sm:py-14 bg-gradient-to-b from-[#0D0D14] via-[#09090D] to-[#070709] border-b border-gold-500/20 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(229,168,59,0.08),transparent_70%)] pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4 relative z-10">
+          <div className="inline-flex items-center space-x-2 text-gold-400 text-[11px] sm:text-xs uppercase tracking-[0.3em] font-semibold bg-gold-500/10 px-4 py-1.5 rounded-full border border-gold-500/30">
+            <Sparkles className="w-4 h-4 text-gold-400" />
             <span>Curated Portfolio & Bespoke Commissions</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-obsidian-950 font-light">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-ivory-50 font-light tracking-tight">
             The Scénographie Gallery
           </h1>
-          <p className="text-xs sm:text-sm md:text-base text-obsidian-600 max-w-2xl mx-auto font-light leading-relaxed">
-            Immerse yourself in our collection of {allImages.length}+ luxury floral stages, intimate candle sanctuaries, and grand reception architecture.
+          <p className="text-xs sm:text-sm md:text-base text-ivory-300 max-w-2xl mx-auto font-light leading-relaxed">
+            Immerse yourself in our collection of {allImages.length}+ luxury floral stages, intimate candle sanctuaries, and grand reception architecture across Pakistan.
           </p>
         </div>
       </section>
@@ -268,19 +324,19 @@ export default function GalleryPage() {
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           {/* Search Box */}
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-gold-400/70 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search wedding arches, candle rooms, stages..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-full border border-champagne-300 bg-white text-xs focus:outline-none focus:border-gold-500 shadow-sm transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 rounded-full border border-gold-500/30 bg-[#121218] text-ivory-50 text-xs placeholder:text-ivory-600 focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-500/20 shadow-inner transition-colors"
             />
           </div>
 
           {/* Active category indicator badge */}
-          <div className="text-xs text-obsidian-600 font-serif font-light self-center sm:self-auto">
-            Showing <span className="font-semibold text-gold-800">{filteredImages.length}</span> curated pieces
+          <div className="text-xs text-ivory-400 font-serif font-light self-center sm:self-auto">
+            Showing <span className="font-semibold text-gold-400">{filteredImages.length}</span> curated pieces
           </div>
         </div>
 
@@ -288,17 +344,18 @@ export default function GalleryPage() {
         <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none">
           {CATEGORIES.map((cat) => {
             const count = categoryCounts[cat] ?? 0;
+            const isActive = selectedCategory === cat;
             return (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
-                  selectedCategory === cat
-                    ? 'bg-gradient-to-r from-gold-600 to-champagne-600 text-obsidian-950 shadow-md font-bold'
-                    : 'bg-white text-obsidian-700 border border-champagne-300 hover:bg-champagne-100/80 hover:border-gold-400'
+                  isActive
+                    ? 'bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 shadow-md font-bold'
+                    : 'bg-[#121218] text-ivory-300 border border-gold-500/20 hover:bg-[#181822] hover:border-gold-400/60'
                 }`}
               >
-                {cat} <span className="ml-1 text-[10px] opacity-75 font-mono">({count})</span>
+                {cat} <span className="ml-1 text-[10px] opacity-80 font-mono">({count})</span>
               </button>
             );
           })}
@@ -312,14 +369,14 @@ export default function GalleryPage() {
             <LuxurySpinner size="lg" text="Curating Haute Scénographie Archive..." />
           </div>
         ) : filteredImages.length === 0 ? (
-          <div className="text-center py-20 bg-ivory-50 rounded-3xl border border-champagne-300 space-y-3">
-            <p className="font-serif text-lg text-obsidian-800">No installations found in this category.</p>
+          <div className="text-center py-20 bg-[#0E0E14] rounded-3xl border border-gold-500/20 space-y-3">
+            <p className="font-serif text-lg text-ivory-200">No installations found in this category.</p>
             <button
               onClick={() => {
                 setSelectedCategory('All');
                 setSearchQuery('');
               }}
-              className="px-6 py-2 rounded-full bg-obsidian-900 text-ivory-50 text-xs uppercase tracking-wider hover:bg-gold-600 transition-colors"
+              className="px-6 py-2 rounded-full bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 text-xs uppercase tracking-wider font-bold hover:brightness-110 transition-all"
             >
               Reset Filters
             </button>
@@ -328,40 +385,68 @@ export default function GalleryPage() {
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="max-h-[640px] sm:max-h-[720px] lg:max-h-[780px] overflow-y-auto pr-2 sm:pr-3 rounded-3xl border border-champagne-300/60 bg-ivory-50/50 p-4 sm:p-6 shadow-luxury-card transition-all"
+            className={`max-h-[640px] sm:max-h-[720px] lg:max-h-[780px] overflow-y-auto pr-2 sm:pr-3 rounded-3xl border p-4 sm:p-6 shadow-2xl transition-all ${
+              isDarkMode
+                ? 'border-gold-500/20 bg-[#0A0A0F]/80 text-ivory-50'
+                : 'border-gold-500/35 bg-[#FAF7F2] text-[#141210] shadow-[0_12px_40px_rgba(212,175,55,0.12)]'
+            }`}
             style={{ scrollBehavior: 'smooth' }}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-              {displayedImages.map((img) => (
-                <div
-                  key={img.id}
-                  onClick={() => setActiveLightboxImage(img)}
-                  className="group relative h-72 sm:h-80 rounded-3xl overflow-hidden shadow-luxury border border-champagne-300 bg-champagne-100 hover:border-gold-500 hover:shadow-luxury-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-                >
-                  <Image
-                    src={img.imageUrl}
-                    alt={img.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-obsidian-950/90 via-obsidian-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-ivory-50">
-                    <span className="text-[10px] uppercase tracking-widest text-gold-400 font-semibold mb-1">
-                      {img.category}
-                    </span>
-                    <h4 className="font-serif text-base sm:text-lg font-light">{img.title}</h4>
-                    {img.description && (
-                      <p className="text-xs text-obsidian-300 line-clamp-2 mt-1 font-light">
-                        {img.description}
-                      </p>
-                    )}
-                    <div className="mt-3 pt-2.5 border-t border-white/20 flex items-center justify-between text-xs uppercase tracking-widest text-gold-300 font-bold">
-                      <span>VIEW DETAILS →</span>
-                      <span className="text-[10px] text-ivory-200 font-normal">Order & Reserve</span>
+              {displayedImages.map((img) => {
+                const itemPrice = parseGalleryPrice(img);
+                return (
+                  <div
+                    key={img.id}
+                    onClick={() => setActiveLightboxImage(img)}
+                    className="festivity-card-dark group relative h-72 sm:h-80 rounded-3xl overflow-hidden border border-gold-500/30 bg-[#121218] hover:border-gold-400 hover:shadow-glow-gold hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                  >
+                    <Image
+                      src={img.imageUrl}
+                      alt={img.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+
+                    {/* Top-Left Category Badge */}
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="bg-obsidian-950/85 backdrop-blur-md text-gold-400 text-[10px] uppercase tracking-widest font-semibold px-3 py-1 rounded-full border border-gold-500/30 shadow-sm">
+                        {img.category}
+                      </span>
+                    </div>
+
+                    {/* Top-Right Price Tag Badge */}
+                    <div className="absolute top-3 right-3 z-10">
+                      <span className="bg-obsidian-950/90 backdrop-blur-md text-gold-300 text-[11px] font-bold px-3 py-1 rounded-full border border-gold-500/40 shadow-md flex items-center space-x-1">
+                        <span>PKR {itemPrice.toLocaleString()}</span>
+                      </span>
+                    </div>
+
+                    {/* Hover Card Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-obsidian-950/95 via-obsidian-950/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-ivory-50 z-20">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] uppercase tracking-widest text-gold-400 font-semibold">
+                          {img.category}
+                        </span>
+                        <span className="text-[11px] font-bold font-serif text-gold-300 bg-gold-500/20 px-2.5 py-0.5 rounded-full border border-gold-500/30">
+                          PKR {itemPrice.toLocaleString()}
+                        </span>
+                      </div>
+                      <h4 className="font-serif text-base sm:text-lg font-light text-ivory-50">{img.title}</h4>
+                      {img.description && (
+                        <p className="text-xs text-ivory-300 line-clamp-2 mt-1 font-light">
+                          {img.description}
+                        </p>
+                      )}
+                      <div className="mt-3 pt-2.5 border-t border-gold-500/30 flex items-center justify-between text-xs uppercase tracking-widest text-gold-400 font-bold">
+                        <span>VIEW DETAILS →</span>
+                        <span className="text-[10px] text-ivory-300 font-normal">Order & Reserve</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Infinite Scroll Sentinel */}
@@ -376,15 +461,15 @@ export default function GalleryPage() {
 
             {/* End of Collection Refined Luxury Message */}
             {!hasMore && filteredImages.length > 0 && (
-              <div className="mt-8 py-6 text-center space-y-1.5 border-t border-champagne-300/60 max-w-md mx-auto">
-                <div className="flex items-center justify-center space-x-2 text-gold-600 text-xs">
+              <div className="mt-8 py-6 text-center space-y-1.5 border-t border-gold-500/20 max-w-md mx-auto">
+                <div className="flex items-center justify-center space-x-2 text-gold-400 text-xs">
                   <span>✦</span>
-                  <span className="font-serif uppercase tracking-[0.25em] text-[11px] font-medium text-obsidian-800">
+                  <span className="font-serif uppercase tracking-[0.25em] text-[11px] font-medium text-ivory-200">
                     All {filteredImages.length} Curated Installations Revealed
                   </span>
                   <span>✦</span>
                 </div>
-                <p className="text-[11px] text-obsidian-500 font-light">
+                <p className="text-[11px] text-ivory-400 font-light">
                   Seeking a bespoke spatial transformation? Inquire with our principal atelier.
                 </p>
               </div>
@@ -395,11 +480,17 @@ export default function GalleryPage() {
 
       {/* Lightbox Modal */}
       {activeLightboxImage && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-6 bg-obsidian-950/85 backdrop-blur-md">
-          <div className="relative bg-ivory-50 rounded-3xl overflow-hidden shadow-2xl max-w-4xl w-full border border-gold-500/40">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-2.5 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md animate-fadeIn">
+          <div className={`relative ${
+            isDarkMode ? 'bg-[#0D0D12] text-ivory-50 border-gold-500/40' : 'bg-[#FFFDF8] text-stone-900 border-gold-500/30'
+          } rounded-3xl overflow-hidden shadow-2xl max-w-4xl w-full max-h-[92dvh] sm:max-h-[90dvh] flex flex-col overflow-y-auto border`}>
             <button
               onClick={() => setActiveLightboxImage(null)}
-              className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-obsidian-900/70 text-ivory-50 hover:bg-obsidian-900 hover:scale-110 active:scale-95 transition-all"
+              className={`absolute top-4 right-4 z-20 p-2.5 rounded-full transition-all border shadow-md ${
+                isDarkMode
+                  ? 'bg-obsidian-900/80 text-ivory-50 hover:bg-gold-500 hover:text-obsidian-950 border-gold-500/30'
+                  : 'bg-stone-200/90 text-stone-900 hover:bg-gold-500 hover:text-stone-950 border-stone-300'
+              }`}
             >
               <X className="w-5 h-5" />
             </button>
@@ -415,24 +506,53 @@ export default function GalleryPage() {
                 />
               </div>
 
-              <div className="lg:col-span-5 p-5 sm:p-8 flex flex-col justify-between space-y-5">
+              <div className={`lg:col-span-5 p-5 sm:p-8 flex flex-col justify-between space-y-5 ${
+                isDarkMode ? 'bg-[#0F0F16]' : 'bg-[#FAF7F0]'
+              }`}>
                 <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-gold-700 font-bold">
+                    <span className={`text-[10px] uppercase tracking-[0.25em] font-bold ${
+                      isDarkMode ? 'text-gold-400' : 'text-gold-700'
+                    }`}>
                       {activeLightboxImage.category}
                     </span>
-                    <h3 className="font-serif text-xl sm:text-2xl text-obsidian-950 font-light mt-1">
+                    <h3 className={`font-serif text-xl sm:text-2xl font-light mt-1 ${
+                      isDarkMode ? 'text-ivory-50' : 'text-stone-900'
+                    }`}>
                       {activeLightboxImage.title}
                     </h3>
                   </div>
 
-                  <p className="text-xs text-obsidian-600 font-light leading-relaxed">
+                  {/* Estimated Price Rate Box */}
+                  <div className={`p-3.5 rounded-2xl border flex items-center justify-between shadow-sm ${
+                    isDarkMode ? 'bg-gold-500/10 border-gold-500/30 text-ivory-50' : 'bg-gold-500/10 border-gold-500/40 text-stone-900'
+                  }`}>
+                    <div>
+                      <span className={`text-[10px] uppercase tracking-wider font-bold block ${
+                        isDarkMode ? 'text-gold-400' : 'text-gold-800'
+                      }`}>
+                        Estimated Investment
+                      </span>
+                      <p className="font-serif text-xl sm:text-2xl font-bold text-gold-gradient">
+                        PKR {parseGalleryPrice(activeLightboxImage).toLocaleString()}
+                      </p>
+                    </div>
+                    <span className="text-[10px] px-2.5 py-1 bg-gold-500/20 text-gold-300 border border-gold-500/40 rounded-full font-semibold">
+                      🇵🇰 Pakistan Market Rate
+                    </span>
+                  </div>
+
+                  <p className={`text-xs font-light leading-relaxed ${
+                    isDarkMode ? 'text-ivory-300' : 'text-stone-700'
+                  }`}>
                     {activeLightboxImage.description || 'Bespoke commissioned décor styled by the Lumière creative team.'}
                   </p>
 
                   {activeLightboxImage.tags && (
                     <div className="space-y-1.5 pt-1">
-                      <p className="text-[10px] uppercase tracking-widest text-obsidian-400 font-semibold">
+                      <p className={`text-[10px] uppercase tracking-widest font-semibold ${
+                        isDarkMode ? 'text-gold-400' : 'text-gold-700'
+                      }`}>
                         Aesthetic Tags
                       </p>
                       <div className="flex flex-wrap gap-1.5">
@@ -444,7 +564,11 @@ export default function GalleryPage() {
                         ).map((tag, i) => (
                           <span
                             key={i}
-                            className="px-2.5 py-1 rounded-full bg-champagne-200 text-obsidian-800 text-[10px] font-medium"
+                            className={`px-2.5 py-1 rounded-full border text-[10px] font-medium ${
+                              isDarkMode
+                                ? 'bg-[#181824] border-gold-500/30 text-ivory-200'
+                                : 'bg-white border-gold-500/30 text-stone-800 shadow-sm'
+                            }`}
                           >
                             #{tag}
                           </span>
@@ -454,7 +578,7 @@ export default function GalleryPage() {
                   )}
                 </div>
 
-                <div className="pt-3 border-t border-champagne-200 space-y-2">
+                <div className={`pt-3 border-t space-y-2 ${isDarkMode ? 'border-gold-500/20' : 'border-gold-500/25'}`}>
                   <button
                     type="button"
                     onClick={() => {
@@ -462,7 +586,7 @@ export default function GalleryPage() {
                       setActiveLightboxImage(null);
                       handleOpenCommissionModal(img);
                     }}
-                    className="w-full py-3 rounded-full bg-gold-600 text-obsidian-950 font-bold text-xs uppercase tracking-widest text-center block hover:brightness-110 hover:scale-[1.02] active:scale-95 transition-all shadow-md flex items-center justify-center space-x-1.5"
+                    className="w-full py-3 rounded-full bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 font-bold text-xs uppercase tracking-widest text-center hover:brightness-110 hover:scale-[1.02] active:scale-95 transition-all shadow-md flex items-center justify-center space-x-1.5"
                   >
                     <Crown className="w-3.5 h-3.5" />
                     <span>Order & Reserve This Installation</span>
@@ -470,7 +594,11 @@ export default function GalleryPage() {
 
                   <Link
                     href="/contact"
-                    className="w-full py-2.5 rounded-full bg-obsidian-900 text-ivory-50 font-semibold text-[11px] uppercase tracking-widest text-center block hover:bg-obsidian-800 transition-colors"
+                    className={`w-full py-2.5 rounded-full border font-semibold text-[11px] uppercase tracking-widest text-center block transition-colors ${
+                      isDarkMode
+                        ? 'bg-[#1A1A24] border-gold-500/30 text-ivory-200 hover:bg-gold-500 hover:text-obsidian-950'
+                        : 'bg-white border-stone-300 text-stone-800 hover:bg-gold-500 hover:text-stone-900 shadow-sm'
+                    }`}
                   >
                     Contact Atelier Directly
                   </Link>
@@ -483,22 +611,30 @@ export default function GalleryPage() {
 
       {/* GALLERY INSTALLATION ORDER & COMMISSION MODAL */}
       {orderModalOpen && commissionImage && (
-        <div className="fixed inset-0 z-[99999] overflow-y-auto flex items-center justify-center p-3 sm:p-6 bg-obsidian-950/85 backdrop-blur-md">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-2.5 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md animate-fadeIn">
           <div
-            className="relative bg-ivory-50 text-obsidian-950 border border-gold-500/60 rounded-3xl overflow-hidden shadow-2xl max-w-xl w-full flex flex-col max-h-[92vh] select-none"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.6), 0 0 25px rgba(212,175,55,0.3)' }}
+            className={`relative ${
+              isDarkMode ? 'bg-[#0D0D12] text-ivory-50' : 'bg-[#FFFDF8] text-stone-900'
+            } border border-gold-500/50 rounded-3xl overflow-hidden shadow-2xl max-w-xl w-full flex flex-col max-h-[92dvh] sm:max-h-[90dvh] select-none`}
+            style={{ boxShadow: isDarkMode ? '0 25px 50px -12px rgba(0,0,0,0.9), 0 0 30px rgba(212,175,55,0.25)' : '0 25px 50px -12px rgba(0,0,0,0.2), 0 0 30px rgba(212,175,55,0.15)' }}
           >
             {/* Modal Header */}
-            <div className="p-5 sm:p-6 bg-obsidian-950 text-ivory-50 border-b border-gold-500/30 flex items-center justify-between">
+            <div className={`p-4 sm:p-6 ${
+              isDarkMode ? 'bg-[#08080C] text-ivory-50' : 'bg-[#F4EFE6] text-stone-900'
+            } border-b border-gold-500/30 flex items-center justify-between flex-shrink-0`}>
               <div className="flex items-center space-x-3">
-                <div className="p-2.5 bg-gold-500/20 text-gold-400 rounded-full">
+                <div className="p-2.5 bg-gold-500/20 text-gold-500 rounded-full border border-gold-500/30">
                   <Crown className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase tracking-[0.25em] text-gold-400 font-semibold">
+                  <span className={`text-[10px] uppercase tracking-[0.25em] font-semibold ${
+                    isDarkMode ? 'text-gold-400' : 'text-gold-800'
+                  }`}>
                     Gallery Commission Request
                   </span>
-                  <h3 className="font-serif text-lg sm:text-xl font-light text-ivory-50 truncate max-w-xs sm:max-w-sm">
+                  <h3 className={`font-serif text-lg sm:text-xl font-light truncate max-w-xs sm:max-w-sm ${
+                    isDarkMode ? 'text-ivory-50' : 'text-stone-900'
+                  }`}>
                     {commissionImage.title}
                   </h3>
                 </div>
@@ -507,23 +643,25 @@ export default function GalleryPage() {
               <button
                 type="button"
                 onClick={() => setOrderModalOpen(false)}
-                className="p-2 rounded-full hover:bg-white/10 text-ivory-200 transition-colors"
+                className={`p-2 rounded-full transition-colors ${
+                  isDarkMode ? 'hover:bg-white/10 text-ivory-300' : 'hover:bg-stone-200 text-stone-700'
+                }`}
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Scrollable Form Body */}
-            <div className="p-5 sm:p-6 overflow-y-auto space-y-4 text-xs flex-1">
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs flex-1 overscroll-contain">
               {orderSuccess ? (
                 <div className="py-8 text-center space-y-4">
-                  <div className="w-16 h-16 mx-auto bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center">
+                  <div className="w-16 h-16 mx-auto bg-emerald-950/80 border border-emerald-500/50 text-emerald-400 rounded-full flex items-center justify-center">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
-                  <h3 className="font-serif text-2xl text-obsidian-950 font-light">
+                  <h3 className={`font-serif text-2xl font-light ${isDarkMode ? 'text-ivory-50' : 'text-stone-900'}`}>
                     Commission Request Received!
                   </h3>
-                  <p className="text-xs text-obsidian-600 max-w-sm mx-auto leading-relaxed">
+                  <p className={`text-xs max-w-sm mx-auto leading-relaxed ${isDarkMode ? 'text-ivory-300' : 'text-stone-700'}`}>
                     Order <strong>#{orderSuccess.bookingNumber}</strong> has been registered. An automated notification has been dispatched to our studio atelier and our lead creative directors.
                   </p>
                   <button
@@ -532,7 +670,7 @@ export default function GalleryPage() {
                       setOrderModalOpen(false);
                       setOrderSuccess(null);
                     }}
-                    className="px-6 py-2.5 bg-obsidian-950 text-ivory-50 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-gold-600 transition-colors"
+                    className="px-6 py-2.5 bg-gradient-to-r from-gold-500 to-champagne-500 text-obsidian-950 rounded-full text-xs uppercase tracking-widest font-bold hover:brightness-110 transition-colors"
                   >
                     Return to Gallery
                   </button>
@@ -540,15 +678,21 @@ export default function GalleryPage() {
               ) : (
                 <form onSubmit={handleCommissionSubmit} className="space-y-4">
                   {/* Selected Style Card */}
-                  <div className="p-3 bg-champagne-100/70 border border-champagne-300 rounded-2xl flex items-center space-x-3">
-                    <div className="relative w-14 h-14 rounded-xl overflow-hidden border border-champagne-300 flex-shrink-0">
+                  <div className={`p-3 ${
+                    isDarkMode ? 'bg-[#13131B]' : 'bg-[#F4EFE6]'
+                  } border border-gold-500/30 rounded-2xl flex items-center space-x-3`}>
+                    <div className="relative w-14 h-14 rounded-xl overflow-hidden border border-gold-500/30 flex-shrink-0">
                       <Image src={commissionImage.imageUrl} alt={commissionImage.title} fill className="object-cover" />
                     </div>
                     <div>
-                      <span className="text-[9px] uppercase font-bold text-gold-800 tracking-wider">
+                      <span className={`text-[9px] uppercase font-bold tracking-wider ${
+                        isDarkMode ? 'text-gold-400' : 'text-gold-800'
+                      }`}>
                         {commissionImage.category}
                       </span>
-                      <h4 className="font-serif text-sm font-semibold text-obsidian-950">
+                      <h4 className={`font-serif text-sm font-semibold ${
+                        isDarkMode ? 'text-ivory-50' : 'text-stone-900'
+                      }`}>
                         {commissionImage.title}
                       </h4>
                     </div>
@@ -556,56 +700,98 @@ export default function GalleryPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                      <label className={`block text-xs uppercase tracking-wider font-semibold mb-1 ${
+                        isDarkMode ? 'text-gold-400' : 'text-gold-800'
+                      }`}>
                         Full Name *
                       </label>
                       <input
                         type="text"
                         required
                         value={orderForm.customerName}
-                        onChange={(e) => setOrderForm({ ...orderForm, customerName: e.target.value })}
+                        onChange={(e) => {
+                          setOrderForm({ ...orderForm, customerName: e.target.value });
+                          if (orderErrors.customerName) setOrderErrors({ ...orderErrors, customerName: null });
+                        }}
                         placeholder="e.g. Marcus Sterling"
-                        className={`w-full text-xs p-2.5 rounded-xl border bg-white focus:outline-none ${
-                          orderErrors.customerName ? 'border-red-400' : 'border-champagne-300 focus:border-gold-500'
+                        className={`w-full text-xs p-2.5 rounded-xl border transition-colors focus:outline-none ${
+                          orderErrors.customerName
+                            ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5'
+                            : isDarkMode
+                            ? 'bg-[#14141C] text-ivory-50 border-gold-500/30 placeholder:text-ivory-600 focus:border-gold-400'
+                            : 'bg-white text-stone-900 border-stone-300 placeholder:text-stone-400 focus:border-gold-500'
                         }`}
                       />
-                      {orderErrors.customerName && <p className="text-[10px] text-red-600 mt-0.5">{orderErrors.customerName}</p>}
+                      {orderErrors.customerName && (
+                        <p className="text-xs text-red-600 font-semibold mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
+                          {orderErrors.customerName}
+                        </p>
+                      )}
                     </div>
 
                     <div>
-                      <label className="block text-xs uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                      <label className={`block text-xs uppercase tracking-wider font-semibold mb-1 ${
+                        isDarkMode ? 'text-gold-400' : 'text-gold-800'
+                      }`}>
                         Email Address *
                       </label>
                       <input
                         type="email"
                         required
                         value={orderForm.customerEmail}
-                        onChange={(e) => setOrderForm({ ...orderForm, customerEmail: e.target.value })}
+                        onChange={(e) => {
+                          setOrderForm({ ...orderForm, customerEmail: e.target.value });
+                          if (orderErrors.customerEmail) setOrderErrors({ ...orderErrors, customerEmail: null });
+                        }}
                         placeholder="marcus@example.com"
-                        className={`w-full text-xs p-2.5 rounded-xl border bg-white focus:outline-none ${
-                          orderErrors.customerEmail ? 'border-red-400' : 'border-champagne-300 focus:border-gold-500'
+                        className={`w-full text-xs p-2.5 rounded-xl border transition-colors focus:outline-none ${
+                          orderErrors.customerEmail
+                            ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5'
+                            : isDarkMode
+                            ? 'bg-[#14141C] text-ivory-50 border-gold-500/30 placeholder:text-ivory-600 focus:border-gold-400'
+                            : 'bg-white text-stone-900 border-stone-300 placeholder:text-stone-400 focus:border-gold-500'
                         }`}
                       />
-                      {orderErrors.customerEmail && <p className="text-[10px] text-red-600 mt-0.5">{orderErrors.customerEmail}</p>}
+                      {orderErrors.customerEmail && (
+                        <p className="text-xs text-red-600 font-semibold mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
+                          {orderErrors.customerEmail}
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                      <label className={`block text-xs uppercase tracking-wider font-semibold mb-1 ${
+                        isDarkMode ? 'text-gold-400' : 'text-gold-800'
+                      }`}>
                         Phone Number (Pakistan 🇵🇰) *
                       </label>
                       <input
                         type="tel"
                         required
                         value={orderForm.customerPhone}
-                        onChange={(e) => setOrderForm({ ...orderForm, customerPhone: e.target.value })}
+                        onChange={(e) => {
+                          setOrderForm({ ...orderForm, customerPhone: e.target.value });
+                          if (orderErrors.customerPhone) setOrderErrors({ ...orderErrors, customerPhone: null });
+                        }}
                         placeholder="03140660985 or +923140660985"
-                        className={`w-full text-xs p-2.5 rounded-xl border bg-white focus:outline-none ${
-                          orderErrors.customerPhone ? 'border-red-400' : 'border-champagne-300 focus:border-gold-500'
+                        className={`w-full text-xs p-2.5 rounded-xl border transition-colors focus:outline-none ${
+                          orderErrors.customerPhone
+                            ? 'border-red-500 ring-2 ring-red-500/20 bg-red-500/5'
+                            : isDarkMode
+                            ? 'bg-[#14141C] text-ivory-50 border-gold-500/30 placeholder:text-ivory-600 focus:border-gold-400'
+                            : 'bg-white text-stone-900 border-stone-300 placeholder:text-stone-400 focus:border-gold-500'
                         }`}
                       />
-                      {orderErrors.customerPhone && <p className="text-[10px] text-red-600 mt-0.5">{orderErrors.customerPhone}</p>}
+                      {orderErrors.customerPhone && (
+                        <p className="text-xs text-red-600 font-semibold mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
+                          {orderErrors.customerPhone}
+                        </p>
+                      )}
                     </div>
 
                     <div>
@@ -618,6 +804,7 @@ export default function GalleryPage() {
                         }}
                         minDate={new Date().toISOString().split('T')[0]}
                         error={orderErrors.eventDate}
+                        align="right"
                       />
                     </div>
                   </div>
@@ -637,32 +824,46 @@ export default function GalleryPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                      <label className={`block text-xs uppercase tracking-wider font-semibold mb-1 ${
+                        isDarkMode ? 'text-gold-400' : 'text-gold-800'
+                      }`}>
                         Guest Count
                       </label>
                       <input
                         type="number"
                         value={orderForm.guestCount}
                         onChange={(e) => setOrderForm({ ...orderForm, guestCount: e.target.value })}
-                        className="w-full text-xs p-2.5 rounded-xl border border-champagne-300 bg-white focus:outline-none focus:border-gold-500"
+                        className={`w-full text-xs p-2.5 rounded-xl border focus:outline-none ${
+                          isDarkMode
+                            ? 'bg-[#14141C] text-ivory-50 border-gold-500/30 focus:border-gold-400'
+                            : 'bg-white text-stone-900 border-stone-300 focus:border-gold-500'
+                        }`}
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                      <label className={`block text-xs uppercase tracking-wider font-semibold mb-1 ${
+                        isDarkMode ? 'text-gold-400' : 'text-gold-800'
+                      }`}>
                         Estimated Budget (PKR)
                       </label>
                       <input
                         type="number"
                         value={orderForm.budget}
                         onChange={(e) => setOrderForm({ ...orderForm, budget: e.target.value })}
-                        className="w-full text-xs p-2.5 rounded-xl border border-champagne-300 bg-white focus:outline-none focus:border-gold-500"
+                        className={`w-full text-xs p-2.5 rounded-xl border focus:outline-none ${
+                          isDarkMode
+                            ? 'bg-[#14141C] text-ivory-50 border-gold-500/30 focus:border-gold-400'
+                            : 'bg-white text-stone-900 border-stone-300 focus:border-gold-500'
+                        }`}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                    <label className={`block text-xs uppercase tracking-wider font-semibold mb-1 ${
+                      isDarkMode ? 'text-gold-400' : 'text-gold-800'
+                    }`}>
                       Custom Styling & Scénographie Notes
                     </label>
                     <textarea
@@ -670,22 +871,32 @@ export default function GalleryPage() {
                       value={orderForm.specialRequests}
                       onChange={(e) => setOrderForm({ ...orderForm, specialRequests: e.target.value })}
                       placeholder="Color palette, floral preferences, lighting requirements..."
-                      className="w-full text-xs p-2.5 rounded-xl border border-champagne-300 bg-white focus:outline-none focus:border-gold-500"
+                      className={`w-full text-xs p-2.5 rounded-xl border focus:outline-none ${
+                        isDarkMode
+                          ? 'bg-[#14141C] text-ivory-50 border-gold-500/30 placeholder:text-ivory-600 focus:border-gold-400'
+                          : 'bg-white text-stone-900 border-stone-300 placeholder:text-stone-400 focus:border-gold-500'
+                      }`}
                     />
                   </div>
 
-                  <div className="pt-3 flex justify-end space-x-3 border-t border-champagne-200">
+                  <div className={`pt-3 flex justify-end space-x-3 border-t ${
+                    isDarkMode ? 'border-gold-500/20' : 'border-gold-500/25'
+                  }`}>
                     <button
                       type="button"
                       onClick={() => setOrderModalOpen(false)}
-                      className="px-5 py-2 rounded-full border border-champagne-300 text-xs font-semibold text-obsidian-600 hover:bg-champagne-100"
+                      className={`px-5 py-2 rounded-full border text-xs font-semibold transition-colors ${
+                        isDarkMode
+                          ? 'border-gold-500/30 text-ivory-300 hover:bg-white/5'
+                          : 'border-stone-300 text-stone-700 hover:bg-stone-100'
+                      }`}
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={submittingOrder}
-                      className="px-6 py-2.5 rounded-full bg-gold-600 hover:bg-gold-700 text-obsidian-950 text-xs font-bold uppercase tracking-wider transition-colors shadow-md flex items-center space-x-1.5"
+                      className="px-6 py-2.5 rounded-full bg-gradient-to-r from-gold-500 to-champagne-500 hover:brightness-110 text-obsidian-950 text-xs font-bold uppercase tracking-wider transition-colors shadow-md flex items-center space-x-1.5"
                     >
                       <Crown className="w-3.5 h-3.5" />
                       <span>{submittingOrder ? 'Submitting Commission...' : 'Confirm Gallery Order'}</span>

@@ -5,6 +5,7 @@ import api from '../../../src/lib/api';
 import { useToast } from '../../../src/context/ToastContext';
 import LuxurySpinner from '../../../src/components/ui/LuxurySpinner';
 import AdminInfiniteTableFooter, { useInfiniteTable } from '../../../src/components/ui/AdminInfiniteTable';
+import useBodyScrollLock from '../../../src/hooks/useBodyScrollLock';
 import {
   CalendarCheck,
   Search,
@@ -30,6 +31,8 @@ export default function AdminBookingsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [updating, setUpdating] = useState(false);
+
+  useBodyScrollLock(Boolean(selectedBooking));
 
   // Infinite Scroll Engine
   const {
@@ -106,26 +109,29 @@ export default function AdminBookingsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-[10px] uppercase tracking-[0.25em] font-semibold">
+          <div className="inline-flex items-center space-x-2 text-gold-400 text-[10px] uppercase tracking-[0.25em] font-semibold">
             <CalendarCheck className="w-3.5 h-3.5" />
             <span>Event Management</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-obsidian-950 font-light">
+          <h1 className="font-serif text-3xl sm:text-4xl text-ivory-50 font-light">
             Client Bookings & Consultations
           </h1>
+          <p className="text-xs text-ivory-400 font-light mt-1">
+            Track bespoke event inquiries, confirmed consultations, venue logistics, and VIP bespoke bookings.
+          </p>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-gold-400/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by customer, booking ref, venue..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-full border border-champagne-300 bg-white text-xs focus:outline-none focus:border-gold-500 shadow-sm"
+            className="w-full pl-10 pr-4 py-2.5 rounded-full border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none focus:border-gold-400 shadow-sm"
           />
         </div>
 
@@ -136,8 +142,8 @@ export default function AdminBookingsPage() {
               onClick={() => setStatusFilter(st)}
               className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs uppercase tracking-wider font-semibold transition-all ${
                 statusFilter === st
-                  ? 'bg-obsidian-900 text-ivory-50 shadow-sm'
-                  : 'bg-white text-obsidian-700 border border-champagne-300 hover:bg-champagne-100'
+                  ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-sm'
+                  : 'bg-[#14141E] text-ivory-300 border border-gold-500/20 hover:border-gold-400 hover:text-ivory-50'
               }`}
             >
               {st}
@@ -147,15 +153,15 @@ export default function AdminBookingsPage() {
       </div>
 
       {/* Bookings Table - Fixed Height Container with Internal Scroll & Sticky Header */}
-      <div className="bg-white border border-champagne-300/80 rounded-3xl overflow-hidden shadow-sm flex flex-col">
+      <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl overflow-hidden shadow-xl flex flex-col">
         {loading ? (
           <div className="py-20">
             <LuxurySpinner size="lg" text="Loading client bookings..." />
           </div>
         ) : bookings.length === 0 ? (
           <div className="p-12 text-center space-y-2">
-            <p className="font-serif text-lg text-obsidian-800">No bookings match the filter.</p>
-            <p className="text-xs text-obsidian-500">Try changing status filters or search term.</p>
+            <p className="font-serif text-lg text-ivory-200">No bookings match the filter.</p>
+            <p className="text-xs text-ivory-400">Try changing status filters or search term.</p>
           </div>
         ) : (
           <>
@@ -163,53 +169,53 @@ export default function AdminBookingsPage() {
               onScroll={handleScroll}
               className="overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gold-500/20"
             >
-              <table className="w-full text-left text-xs text-obsidian-700">
-                <thead className="bg-champagne-100/95 border-b border-champagne-200 text-[9px] uppercase font-bold tracking-wider text-obsidian-600 sticky top-0 z-10 backdrop-blur-md shadow-sm">
+              <table className="w-full text-left text-xs text-ivory-200">
+                <thead className="bg-[#14141E]/95 border-b border-gold-500/20 text-[9px] uppercase font-bold tracking-wider text-gold-400 sticky top-0 z-10 backdrop-blur-md shadow-sm">
                   <tr>
-                    <th className="py-3 px-3 pl-4">Ref #</th>
+                    <th className="py-3 px-3 pl-5">Ref #</th>
                     <th className="py-3 px-3">Customer</th>
                     <th className="py-3 px-3">Event & Venue</th>
                     <th className="py-3 px-3">Date</th>
                     <th className="py-3 px-3">Valuation</th>
                     <th className="py-3 px-3">Status</th>
-                    <th className="py-3 px-3 pr-4 text-right">Actions</th>
+                    <th className="py-3 px-3 pr-5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-champagne-200">
+                <tbody className="divide-y divide-white/5">
                   {infiniteBookings.map((b) => (
-                    <tr key={b.id} className="hover:bg-champagne-50/70 transition-colors">
-                      <td className="py-2.5 px-3 pl-4">
-                        <span className="font-mono font-bold text-gold-700 text-xs block">{b.bookingNumber}</span>
-                        <span className="text-[9px] text-obsidian-400">{new Date(b.createdAt).toLocaleDateString()}</span>
+                    <tr key={b.id} className="hover:bg-gold-500/5 transition-colors">
+                      <td className="py-3 px-3 pl-5">
+                        <span className="font-mono font-bold text-gold-400 text-xs block">{b.bookingNumber}</span>
+                        <span className="text-[9px] text-ivory-500">{new Date(b.createdAt).toLocaleDateString()}</span>
                       </td>
-                      <td className="py-2.5 px-3">
-                        <p className="font-semibold text-obsidian-950 text-xs truncate max-w-[140px]">{b.customerName}</p>
-                        <p className="text-[10px] text-obsidian-500 font-mono truncate max-w-[140px]">{b.customerPhone}</p>
+                      <td className="py-3 px-3">
+                        <p className="font-semibold text-ivory-50 text-xs truncate max-w-[140px]">{b.customerName}</p>
+                        <p className="text-[10px] text-ivory-400 font-mono truncate max-w-[140px]">{b.customerPhone}</p>
                       </td>
-                      <td className="py-2.5 px-3">
-                        <span className="inline-flex items-center px-1.5 py-0.2 text-[8px] rounded-full bg-gold-500/10 text-gold-800 font-bold uppercase mb-0.5">
+                      <td className="py-3 px-3">
+                        <span className="inline-flex items-center px-2 py-0.5 text-[8px] rounded-full bg-gold-950/60 text-gold-300 border border-gold-500/30 font-bold uppercase mb-0.5">
                           {b.eventType}
                         </span>
-                        <p className="text-[11px] text-obsidian-700 truncate max-w-[150px]">{b.venue}</p>
+                        <p className="text-[11px] text-ivory-300 truncate max-w-[150px]">{b.venue}</p>
                       </td>
-                      <td className="py-2.5 px-3 text-[10px] text-obsidian-700 font-medium">
+                      <td className="py-3 px-3 text-[10px] text-ivory-300 font-medium">
                         {new Date(b.eventDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                       </td>
-                      <td className="py-2.5 px-3 font-mono font-bold text-obsidian-950 text-xs">
+                      <td className="py-3 px-3 font-mono font-bold text-gold-300 text-xs">
                         PKR {b.totalAmount.toLocaleString()}
                       </td>
-                      <td className="py-2.5 px-3">
+                      <td className="py-3 px-3">
                         <select
                           value={b.status}
                           onChange={(e) => handleUpdateStatus(b.id, e.target.value)}
-                          className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border cursor-pointer focus:outline-none ${
+                          className={`text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border cursor-pointer focus:outline-none transition-colors ${
                             b.status === 'CONFIRMED' || b.status === 'COMPLETED'
-                              ? 'bg-sage-100 text-sage-800 border-sage-300'
+                              ? 'bg-emerald-950/70 text-emerald-300 border-emerald-500/40'
                               : b.status === 'PENDING'
-                              ? 'bg-amber-100 text-amber-800 border-amber-300'
+                              ? 'bg-amber-950/70 text-amber-300 border-amber-500/40'
                               : b.status === 'IN_PROGRESS'
-                              ? 'bg-gold-100 text-gold-900 border-gold-300'
-                              : 'bg-red-100 text-red-800 border-red-300'
+                              ? 'bg-purple-950/70 text-purple-300 border-purple-500/40'
+                              : 'bg-rose-950/70 text-rose-300 border-rose-500/40'
                           }`}
                         >
                           <option value="PENDING">PENDING</option>
@@ -219,10 +225,10 @@ export default function AdminBookingsPage() {
                           <option value="CANCELLED">CANCELLED</option>
                         </select>
                       </td>
-                      <td className="py-2.5 px-3 pr-4 text-right">
+                      <td className="py-3 px-3 pr-5 text-right">
                         <button
                           onClick={() => setSelectedBooking(b)}
-                          className="px-2.5 py-1 bg-obsidian-950 hover:bg-gold-600 text-ivory-50 hover:text-obsidian-950 font-semibold text-[11px] rounded-lg transition-all shadow-sm inline-flex items-center space-x-1"
+                          className="px-3 py-1 bg-[#1A1A26] hover:bg-gold-500 text-ivory-50 hover:text-obsidian-950 font-semibold text-[11px] rounded-lg border border-gold-500/30 transition-all shadow-sm inline-flex items-center space-x-1"
                         >
                           <Edit className="w-3 h-3 text-gold-400" />
                           <span>Manage</span>
@@ -247,8 +253,8 @@ export default function AdminBookingsPage() {
 
       {/* Edit / Manage Booking Modal */}
       {selectedBooking && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-obsidian-950/80 backdrop-blur-sm">
-          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full border border-champagne-300 p-6 sm:p-8 space-y-6">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-3 sm:p-4 md:p-6 bg-obsidian-950/85 backdrop-blur-md animate-fadeIn">
+          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full max-h-[92dvh] sm:max-h-[90dvh] flex flex-col border border-champagne-300 p-5 sm:p-8 space-y-5 overflow-y-auto overscroll-contain">
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] uppercase tracking-[0.2em] text-gold-700 font-bold">

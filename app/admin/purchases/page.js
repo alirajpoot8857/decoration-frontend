@@ -6,6 +6,7 @@ import { useToast } from '../../../src/context/ToastContext';
 import { useConfirmModal } from '../../../src/context/ConfirmModalContext';
 import LuxurySpinner from '../../../src/components/ui/LuxurySpinner';
 import AdminInfiniteTableFooter, { useInfiniteTable } from '../../../src/components/ui/AdminInfiniteTable';
+import useBodyScrollLock from '../../../src/hooks/useBodyScrollLock';
 import {
   Truck,
   Plus,
@@ -43,6 +44,8 @@ export default function AdminPurchasesPage() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  useBodyScrollLock(Boolean(selectedPurchase || createModalOpen));
 
   const [formData, setFormData] = useState({
     supplierName: '',
@@ -247,14 +250,14 @@ export default function AdminPurchasesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-[10px] uppercase tracking-[0.25em] font-semibold">
+          <div className="inline-flex items-center space-x-2 text-gold-400 text-[10px] uppercase tracking-[0.25em] font-semibold">
             <Truck className="w-3.5 h-3.5" />
             <span>Procurement, Inbound Logistics & Vendor Ledger</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-obsidian-950 font-light mt-1">
+          <h1 className="font-serif text-3xl sm:text-4xl text-ivory-50 font-light mt-1">
             Purchases & Supplier Ledger
           </h1>
-          <p className="text-xs text-obsidian-500 font-light mt-1">
+          <p className="text-xs text-ivory-400 font-light mt-1">
             Track wholesale décor procurement orders, vendor payables, and automatic inventory warehouse restocking.
           </p>
         </div>
@@ -263,10 +266,10 @@ export default function AdminPurchasesPage() {
           <button
             onClick={() => fetchPurchases(true)}
             disabled={refreshing}
-            className="p-2.5 bg-white border border-champagne-300 rounded-full text-obsidian-700 hover:bg-champagne-100 transition-colors shadow-sm"
+            className="p-2.5 bg-[#14141E] border border-gold-500/30 rounded-full text-ivory-300 hover:text-gold-300 hover:border-gold-500/50 transition-colors shadow-sm"
             title="Auto-refreshes every 10s. Click to refresh immediately."
           >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-gold-600' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-gold-400' : ''}`} />
           </button>
 
           <button
@@ -282,9 +285,9 @@ export default function AdminPurchasesPage() {
               setErrors({});
               setCreateModalOpen(true);
             }}
-            className="inline-flex items-center space-x-2 px-6 py-2.5 bg-obsidian-950 text-ivory-50 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-gold-600 hover:text-obsidian-950 transition-all duration-300 shadow-md active:scale-95"
+            className="inline-flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 rounded-full text-xs uppercase tracking-widest font-bold hover:brightness-110 transition-all duration-300 shadow-md active:scale-95"
           >
-            <Plus className="w-4 h-4 text-gold-400" />
+            <Plus className="w-4 h-4" />
             <span>New Procurement Order</span>
           </button>
         </div>
@@ -293,87 +296,87 @@ export default function AdminPurchasesPage() {
       {/* Dynamic Performance KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Spend */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-obsidian-500 text-[11px] font-semibold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] p-5 rounded-3xl border border-gold-500/20 shadow-xl flex flex-col justify-between">
+          <div className="flex justify-between items-center text-ivory-400 text-[11px] font-semibold uppercase tracking-wider">
             <span>Total Procurement</span>
-            <span className="px-2 py-0.5 rounded-full bg-champagne-200 text-obsidian-800 text-[10px] font-bold">All Time</span>
+            <span className="px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-300 border border-gold-500/30 text-[10px] font-bold">All Time</span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-obsidian-950 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-ivory-50 mt-2">
             PKR {totalProcurementSpend.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-[10px] text-obsidian-500 mt-1">
+          <p className="text-[10px] text-ivory-400 mt-1">
             Across {purchases.length} supplier purchase orders
           </p>
         </div>
 
         {/* Restocked Units */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-obsidian-500 text-[11px] font-semibold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] p-5 rounded-3xl border border-gold-500/20 shadow-xl flex flex-col justify-between">
+          <div className="flex justify-between items-center text-ivory-400 text-[11px] font-semibold uppercase tracking-wider">
             <span>Restocked Assets</span>
-            <span className="px-2 py-0.5 rounded-full bg-sage-100 text-sage-800 text-[10px] font-bold">Inbound</span>
+            <span className="px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold">Inbound</span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-sage-800 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-emerald-400 mt-2">
             {totalRestockedUnits.toLocaleString()} Units
           </p>
-          <p className="text-[10px] text-obsidian-500 mt-1">
+          <p className="text-[10px] text-ivory-400 mt-1">
             Added to warehouse inventory
           </p>
         </div>
 
         {/* Today's Procurement */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-obsidian-500 text-[11px] font-semibold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] p-5 rounded-3xl border border-gold-500/20 shadow-xl flex flex-col justify-between">
+          <div className="flex justify-between items-center text-ivory-400 text-[11px] font-semibold uppercase tracking-wider">
             <span>Today's Spend</span>
-            <span className="px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-800 text-[10px] font-bold">Today</span>
+            <span className="px-2 py-0.5 rounded-full bg-amber-950/60 text-amber-300 border border-amber-500/30 text-[10px] font-bold">Today</span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-gold-800 mt-2">
-            ${todaySpend.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-amber-300 mt-2">
+            PKR {todaySpend.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-[10px] text-obsidian-500 mt-1">
+          <p className="text-[10px] text-ivory-400 mt-1">
             {todayPurchases.length} purchase order(s) today
           </p>
         </div>
 
         {/* Active Suppliers */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-obsidian-500 text-[11px] font-semibold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] p-5 rounded-3xl border border-gold-500/20 shadow-xl flex flex-col justify-between">
+          <div className="flex justify-between items-center text-ivory-400 text-[11px] font-semibold uppercase tracking-wider">
             <span>Active Suppliers</span>
-            <span className="px-2 py-0.5 rounded-full bg-champagne-200 text-obsidian-800 text-[10px] font-bold">Vendors</span>
+            <span className="px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-300 border border-gold-500/30 text-[10px] font-bold">Vendors</span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-obsidian-900 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-ivory-50 mt-2">
             {new Set(purchases.map((p) => p.supplierName)).size} Vendors
           </p>
-          <p className="text-[10px] text-obsidian-500 mt-1">
+          <p className="text-[10px] text-ivory-400 mt-1">
             Verified wholesale manufacturers
           </p>
         </div>
       </div>
 
       {/* Toolbar: Search & Filters */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-champagne-300 shadow-sm">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-[#0D0D12] p-3 rounded-2xl border border-gold-500/20 shadow-xl">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-gold-400/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by PO #, supplier name, item..."
-            className="w-full pl-10 pr-4 py-2 rounded-full border border-champagne-300 bg-ivory-50 text-xs focus:outline-none focus:border-gold-500 shadow-inner"
+            className="w-full pl-10 pr-4 py-2 rounded-full border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none focus:border-gold-400 shadow-inner"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Payment Status Tabs */}
-          <div className="flex items-center space-x-1 bg-ivory-100 p-1 rounded-full border border-champagne-300 text-xs font-semibold">
+          <div className="flex items-center space-x-1 bg-[#14141E] p-1 rounded-full border border-gold-500/30 text-xs font-semibold">
             {['All', 'PAID', 'UNPAID'].map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
                 className={`px-3 py-1 rounded-full transition-all ${
                   statusFilter === st
-                    ? 'bg-gold-600 text-obsidian-950 font-bold shadow-sm'
-                    : 'text-obsidian-700 hover:text-obsidian-950'
+                    ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-sm'
+                    : 'text-ivory-300 hover:text-ivory-50'
                 }`}
               >
                 {st}
@@ -382,15 +385,15 @@ export default function AdminPurchasesPage() {
           </div>
 
           {/* Date Filter Tabs */}
-          <div className="flex items-center space-x-1 bg-ivory-100 p-1 rounded-full border border-champagne-300 text-xs font-semibold">
+          <div className="flex items-center space-x-1 bg-[#14141E] p-1 rounded-full border border-gold-500/30 text-xs font-semibold">
             {['All', 'Today', 'Yesterday', 'Last 7 Days'].map((d) => (
               <button
                 key={d}
                 onClick={() => setDateFilter(d)}
                 className={`px-3 py-1 rounded-full transition-all ${
                   dateFilter === d
-                    ? 'bg-obsidian-950 text-ivory-50 shadow-sm'
-                    : 'text-obsidian-700 hover:text-obsidian-950'
+                    ? 'bg-gold-500/20 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-ivory-300 hover:text-ivory-50'
                 }`}
               >
                 {d}
@@ -401,18 +404,18 @@ export default function AdminPurchasesPage() {
       </div>
 
       {/* Purchases Table */}
-      <div className="bg-white border border-champagne-300/80 rounded-3xl overflow-hidden shadow-sm">
+      <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl overflow-hidden shadow-xl text-ivory-100">
         {loading ? (
           <div className="py-24">
             <LuxurySpinner size="lg" text="Loading procurement & restock ledger..." />
           </div>
         ) : filteredPurchases.length === 0 ? (
           <div className="p-16 text-center space-y-3">
-            <div className="p-3 bg-champagne-100 text-gold-700 rounded-full w-12 h-12 mx-auto flex items-center justify-center">
+            <div className="p-3 bg-gold-500/10 border border-gold-500/30 text-gold-400 rounded-full w-12 h-12 mx-auto flex items-center justify-center">
               <Truck className="w-6 h-6" />
             </div>
-            <p className="font-serif text-xl text-obsidian-900">No procurement records found.</p>
-            <p className="text-xs text-obsidian-500 max-w-sm mx-auto">
+            <p className="font-serif text-xl text-ivory-50">No procurement records found.</p>
+            <p className="text-xs text-ivory-400 max-w-sm mx-auto">
               Create a new purchase order to record wholesale purchases and auto-increment stock levels.
             </p>
             <button
@@ -421,7 +424,7 @@ export default function AdminPurchasesPage() {
                 setDateFilter('All');
                 setSearchQuery('');
               }}
-              className="text-xs uppercase tracking-widest text-gold-700 font-bold underline hover:text-gold-900"
+              className="text-xs uppercase tracking-widest text-gold-400 font-bold underline hover:text-gold-300"
             >
               Reset Filters
             </button>
@@ -431,8 +434,8 @@ export default function AdminPurchasesPage() {
             onScroll={handleScroll}
             className="overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gold-500/20"
           >
-            <table className="w-full text-left text-xs text-obsidian-700">
-              <thead className="bg-champagne-100/95 border-b border-champagne-200 text-[10px] uppercase font-bold tracking-wider text-obsidian-600 sticky top-0 z-10 backdrop-blur-md shadow-sm">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#14141E] border-b border-gold-500/20 text-[10px] uppercase font-bold tracking-wider text-gold-400 sticky top-0 z-10 backdrop-blur-md shadow-sm">
                 <tr>
                   <th className="p-4 pl-6">PO Ref #</th>
                   <th className="p-4">Supplier / Vendor</th>
@@ -443,7 +446,7 @@ export default function AdminPurchasesPage() {
                   <th className="p-4 pr-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-champagne-200">
+              <tbody className="divide-y divide-white/5">
                 {infinitePurchases.map((p) => {
                   const isPaid = p.paymentStatus === 'PAID';
                   const totalUnits = p.items?.reduce((s, i) => s + (i.quantity || 0), 0) || 0;
@@ -452,22 +455,22 @@ export default function AdminPurchasesPage() {
                     <tr
                       key={p.id}
                       onClick={() => setSelectedPurchase(p)}
-                      className="hover:bg-champagne-50/70 transition-colors cursor-pointer group"
+                      className="hover:bg-white/[0.04] transition-colors cursor-pointer group"
                     >
-                      <td className="p-4 pl-6 font-mono font-bold text-gold-800 group-hover:text-gold-950">
+                      <td className="p-4 pl-6 font-mono font-bold text-gold-400 group-hover:text-gold-300">
                         #{p.purchaseNumber}
                       </td>
 
                       <td className="p-4">
-                        <p className="font-semibold text-obsidian-900 group-hover:text-gold-700 transition-colors">
+                        <p className="font-semibold text-ivory-50 group-hover:text-gold-300 transition-colors">
                           {p.supplierName}
                         </p>
-                        <p className="text-[10px] text-obsidian-400">
+                        <p className="text-[10px] text-ivory-400">
                           {p.supplierContact || 'Wholesale Supplier'}
                         </p>
                       </td>
 
-                      <td className="p-4 whitespace-nowrap text-obsidian-600">
+                      <td className="p-4 whitespace-nowrap text-ivory-300">
                         {new Date(p.purchaseDate || p.createdAt).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -476,15 +479,15 @@ export default function AdminPurchasesPage() {
                       </td>
 
                       <td className="p-4 max-w-xs">
-                        <p className="font-medium text-obsidian-900 truncate">
+                        <p className="font-medium text-ivory-100 truncate">
                           {p.items?.map((it) => `${it.itemName} (x${it.quantity})`).join(', ') || 'Inbound Supplies'}
                         </p>
-                        <span className="text-[10px] text-sage-800 font-semibold">
+                        <span className="text-[10px] text-emerald-400 font-semibold">
                           +{totalUnits} restocked units &bull; {p.items?.length || 0} line items
                         </span>
                       </td>
 
-                      <td className="p-4 font-serif text-sm font-bold text-obsidian-950 whitespace-nowrap">
+                      <td className="p-4 font-serif text-sm font-bold text-ivory-50 whitespace-nowrap">
                         PKR {p.total.toFixed(2)}
                       </td>
 
@@ -492,11 +495,11 @@ export default function AdminPurchasesPage() {
                         <span
                           className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border flex items-center space-x-1.5 w-fit ${
                             isPaid
-                              ? 'bg-sage-100 text-sage-800 border-sage-300'
-                              : 'bg-amber-100 text-amber-800 border-amber-300'
+                              ? 'bg-emerald-950/60 text-emerald-400 border-emerald-500/30'
+                              : 'bg-amber-950/60 text-amber-400 border-amber-500/30'
                           }`}
                         >
-                          <span className={`w-1.5 h-1.5 rounded-full ${isPaid ? 'bg-sage-600' : 'bg-amber-600'}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full ${isPaid ? 'bg-emerald-400' : 'bg-amber-400'}`} />
                           <span>{p.paymentStatus}</span>
                         </span>
                       </td>
@@ -505,7 +508,7 @@ export default function AdminPurchasesPage() {
                         <div className="flex items-center justify-end space-x-1.5">
                           <button
                             onClick={() => setSelectedPurchase(p)}
-                            className="p-1.5 rounded-lg hover:bg-champagne-200 text-obsidian-600 hover:text-obsidian-950 transition-colors"
+                            className="p-1.5 rounded-lg bg-[#14141E] hover:bg-gold-500/10 text-ivory-300 hover:text-gold-300 border border-gold-500/30 transition-all"
                             title="View Purchase Dossier"
                           >
                             <Eye className="w-4 h-4" />
@@ -513,7 +516,7 @@ export default function AdminPurchasesPage() {
 
                           <button
                             onClick={() => handleDeletePurchase(p)}
-                            className="p-1.5 rounded-lg hover:bg-red-100 text-red-600 transition-colors"
+                            className="p-1.5 rounded-lg bg-red-950/30 hover:bg-red-900/50 text-red-400 hover:text-red-200 border border-red-500/20 transition-all"
                             title="Delete Purchase Order"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -541,57 +544,57 @@ export default function AdminPurchasesPage() {
       {/* PURCHASE ORDER DOSSIER MODAL                                              */}
       {/* ========================================================================= */}
       {selectedPurchase && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-obsidian-950/80 backdrop-blur-sm">
-          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full border border-champagne-300 p-6 sm:p-8 space-y-6">
-            <div className="flex justify-between items-start border-b border-champagne-200 pb-4">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-3 sm:p-4 md:p-6 bg-obsidian-950/85 backdrop-blur-md animate-fadeIn">
+          <div className="relative bg-[#0D0D12] text-ivory-50 rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full max-h-[92dvh] sm:max-h-[90dvh] flex flex-col border border-gold-500/30 p-5 sm:p-8 space-y-5 overflow-y-auto overscroll-contain">
+            <div className="flex justify-between items-start border-b border-white/10 pb-4">
               <div>
-                <span className="text-[10px] uppercase tracking-[0.25em] text-gold-700 font-bold flex items-center space-x-1.5">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-gold-400 font-bold flex items-center space-x-1.5">
                   <span>PROCUREMENT DOSSIER</span>
                   <span>&bull;</span>
-                  <span className="font-mono">#{selectedPurchase.purchaseNumber}</span>
+                  <span className="font-mono text-gold-300">#{selectedPurchase.purchaseNumber}</span>
                 </span>
-                <h3 className="font-serif text-2xl text-obsidian-950 font-light mt-1">
+                <h3 className="font-serif text-2xl text-ivory-50 font-light mt-1">
                   {selectedPurchase.supplierName}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedPurchase(null)}
-                className="p-2 rounded-full hover:bg-champagne-200 transition-colors text-obsidian-500"
+                className="p-2 rounded-full hover:bg-white/10 transition-colors text-ivory-400 hover:text-ivory-50"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Supplier & Date Info */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-champagne-50 rounded-2xl border border-champagne-200 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-[#14141E] rounded-2xl border border-gold-500/20 text-xs">
               <div>
-                <span className="text-[10px] uppercase font-bold text-obsidian-500 block">Supplier Contact</span>
-                <p className="font-semibold text-obsidian-900 mt-0.5">{selectedPurchase.supplierContact || 'Direct Wholesaler'}</p>
+                <span className="text-[10px] uppercase font-bold text-ivory-400 block">Supplier Contact</span>
+                <p className="font-semibold text-ivory-50 mt-0.5">{selectedPurchase.supplierContact || 'Direct Wholesaler'}</p>
               </div>
               <div>
-                <span className="text-[10px] uppercase font-bold text-obsidian-500 block">Purchase Date</span>
-                <p className="font-semibold text-obsidian-900 mt-0.5">{new Date(selectedPurchase.purchaseDate || selectedPurchase.createdAt).toLocaleDateString()}</p>
+                <span className="text-[10px] uppercase font-bold text-ivory-400 block">Purchase Date</span>
+                <p className="font-semibold text-ivory-50 mt-0.5">{new Date(selectedPurchase.purchaseDate || selectedPurchase.createdAt).toLocaleDateString()}</p>
               </div>
               <div>
-                <span className="text-[10px] uppercase font-bold text-obsidian-500 block">Payment State</span>
-                <p className="font-semibold text-obsidian-900 mt-0.5">{selectedPurchase.paymentStatus}</p>
+                <span className="text-[10px] uppercase font-bold text-ivory-400 block">Payment State</span>
+                <p className="font-semibold text-gold-400 mt-0.5">{selectedPurchase.paymentStatus}</p>
               </div>
               {selectedPurchase.notes && (
-                <div className="col-span-2 sm:col-span-3 pt-2 border-t border-champagne-200">
-                  <span className="text-[10px] uppercase font-bold text-obsidian-500 block">Notes & Shipping Ref</span>
-                  <p className="font-semibold text-obsidian-900 mt-0.5">{selectedPurchase.notes}</p>
+                <div className="col-span-2 sm:col-span-3 pt-2 border-t border-white/10">
+                  <span className="text-[10px] uppercase font-bold text-ivory-400 block">Notes & Shipping Ref</span>
+                  <p className="font-semibold text-ivory-200 mt-0.5">{selectedPurchase.notes}</p>
                 </div>
               )}
             </div>
 
             {/* Itemized Inbound Table */}
             <div className="space-y-2">
-              <h4 className="text-xs uppercase font-bold tracking-wider text-obsidian-800">
+              <h4 className="text-xs uppercase font-bold tracking-wider text-gold-400">
                 Supplied Items Matrix (Inventory Restocked)
               </h4>
-              <div className="border border-champagne-200 rounded-2xl overflow-hidden">
+              <div className="border border-gold-500/20 rounded-2xl overflow-hidden bg-[#14141E]">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-champagne-100/70 text-[10px] uppercase font-bold text-obsidian-700">
+                  <thead className="bg-[#08080C] text-[10px] uppercase font-bold text-gold-400 border-b border-gold-500/20">
                     <tr>
                       <th className="p-3">Item Description</th>
                       <th className="p-3 text-center">Restocked Qty</th>
@@ -599,13 +602,13 @@ export default function AdminPurchasesPage() {
                       <th className="p-3 text-right">Total Cost</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-champagne-200">
+                  <tbody className="divide-y divide-white/5">
                     {selectedPurchase.items?.map((it, i) => (
                       <tr key={i}>
-                        <td className="p-3 font-medium text-obsidian-900">{it.itemName}</td>
-                        <td className="p-3 text-center font-bold text-sage-800">+{it.quantity}</td>
-                        <td className="p-3 text-right font-mono">PKR {(it.unitCost || 0).toFixed(2)}</td>
-                        <td className="p-3 text-right font-mono font-bold text-gold-800">
+                        <td className="p-3 font-medium text-ivory-50">{it.itemName}</td>
+                        <td className="p-3 text-center font-bold text-emerald-400">+{it.quantity}</td>
+                        <td className="p-3 text-right font-mono text-ivory-300">PKR {(it.unitCost || 0).toFixed(2)}</td>
+                        <td className="p-3 text-right font-mono font-bold text-gold-400">
                           PKR {(it.total || (it.unitCost || 0) * (it.quantity || 1)).toFixed(2)}
                         </td>
                       </tr>
@@ -616,31 +619,31 @@ export default function AdminPurchasesPage() {
             </div>
 
             {/* Financial Summary */}
-            <div className="p-4 bg-champagne-100/80 rounded-2xl space-y-1.5 text-xs">
-              <div className="flex justify-between text-obsidian-600">
+            <div className="p-4 bg-[#14141E] border border-gold-500/20 rounded-2xl space-y-1.5 text-xs">
+              <div className="flex justify-between text-ivory-300">
                 <span>Gross Inbound Subtotal:</span>
                 <span className="font-mono">PKR {(selectedPurchase.subtotal || selectedPurchase.total).toFixed(2)}</span>
               </div>
               {selectedPurchase.tax > 0 && (
-                <div className="flex justify-between text-obsidian-600">
+                <div className="flex justify-between text-ivory-300">
                   <span>Shipping & Tax:</span>
                   <span className="font-mono">+PKR {selectedPurchase.tax.toFixed(2)}</span>
                 </div>
               )}
-              <div className="flex justify-between text-sm font-bold text-obsidian-950 pt-2 border-t border-champagne-300">
+              <div className="flex justify-between text-sm font-bold text-ivory-50 pt-2 border-t border-white/10">
                 <span>Total PO Valuation:</span>
-                <span className="font-serif text-lg text-gold-800">PKR {selectedPurchase.total.toFixed(2)}</span>
+                <span className="font-serif text-lg text-gold-400">PKR {selectedPurchase.total.toFixed(2)}</span>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="flex items-center justify-between pt-3 border-t border-champagne-200">
+            <div className="flex items-center justify-between pt-3 border-t border-white/10">
               <div className="flex items-center space-x-2">
-                <span className="text-xs font-semibold text-obsidian-700">Payment Status:</span>
+                <span className="text-xs font-semibold text-ivory-300">Payment Status:</span>
                 <select
                   value={selectedPurchase.paymentStatus}
                   onChange={(e) => handleUpdateStatus(selectedPurchase.id, e.target.value)}
-                  className="text-xs p-2 rounded-xl border border-champagne-300 bg-white font-semibold"
+                  className="text-xs p-2 rounded-xl border border-gold-500/30 bg-[#14141E] text-ivory-50 font-semibold focus:outline-none focus:border-gold-400"
                 >
                   <option value="PAID">PAID</option>
                   <option value="UNPAID">UNPAID</option>
@@ -650,9 +653,9 @@ export default function AdminPurchasesPage() {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => window.print()}
-                  className="px-4 py-2 border border-champagne-300 text-obsidian-800 rounded-full text-xs font-bold flex items-center space-x-1.5 hover:bg-champagne-100"
+                  className="px-4 py-2 border border-gold-500/30 text-ivory-200 hover:text-gold-300 bg-[#14141E] hover:bg-gold-500/10 rounded-full text-xs font-bold flex items-center space-x-1.5 transition-all"
                 >
-                  <Printer className="w-3.5 h-3.5" />
+                  <Printer className="w-3.5 h-3.5 text-gold-400" />
                   <span>Print PO Receipt</span>
                 </button>
               </div>
@@ -665,20 +668,20 @@ export default function AdminPurchasesPage() {
       {/* NEW PROCUREMENT MODAL                                                     */}
       {/* ========================================================================= */}
       {createModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-obsidian-950/80 backdrop-blur-sm">
-          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full border border-champagne-300 p-6 sm:p-8 space-y-6">
-            <div className="flex justify-between items-start">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-3 sm:p-4 md:p-6 bg-obsidian-950/85 backdrop-blur-md animate-fadeIn">
+          <div className="relative bg-[#0D0D12] text-ivory-50 rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full max-h-[92dvh] sm:max-h-[90dvh] flex flex-col border border-gold-500/30 p-5 sm:p-8 space-y-5 overflow-y-auto overscroll-contain">
+            <div className="flex justify-between items-start border-b border-white/10 pb-4">
               <div>
-                <span className="text-[10px] uppercase tracking-[0.2em] text-gold-700 font-bold">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-gold-400 font-bold">
                   Procurement Order
                 </span>
-                <h3 className="font-serif text-2xl text-obsidian-950 font-light mt-1">
+                <h3 className="font-serif text-2xl text-ivory-50 font-light mt-1">
                   Record Inbound Purchase & Restock Inventory
                 </h3>
               </div>
               <button
                 onClick={() => setCreateModalOpen(false)}
-                className="p-2 rounded-full hover:bg-champagne-200 transition-colors text-obsidian-500"
+                className="p-2 rounded-full hover:bg-white/10 transition-colors text-ivory-400 hover:text-ivory-50"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -687,7 +690,7 @@ export default function AdminPurchasesPage() {
             <form onSubmit={handleCreatePurchase} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                  <label className="block text-[11px] uppercase tracking-wider text-ivory-300 font-semibold mb-1">
                     Supplier / Vendor Name *
                   </label>
                   <input
@@ -699,15 +702,15 @@ export default function AdminPurchasesPage() {
                       if (errors.supplierName) setErrors({ ...errors, supplierName: null });
                     }}
                     placeholder="e.g. Dutch Floral Import Co."
-                    className={`w-full text-xs p-2.5 rounded-xl border bg-white focus:outline-none focus:border-gold-500 transition-colors ${
-                      errors.supplierName ? 'border-red-400 ring-1 ring-red-300' : 'border-champagne-300'
+                    className={`w-full text-xs p-2.5 rounded-xl border bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 focus:outline-none focus:border-gold-400 transition-colors ${
+                      errors.supplierName ? 'border-red-400 ring-1 ring-red-400' : 'border-gold-500/30'
                     }`}
                   />
-                  {errors.supplierName && <p className="text-[10px] text-red-500 mt-1">{errors.supplierName}</p>}
+                  {errors.supplierName && <p className="text-[10px] text-red-400 mt-1">{errors.supplierName}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-obsidian-700 font-semibold mb-1">
+                  <label className="block text-[11px] uppercase tracking-wider text-ivory-300 font-semibold mb-1">
                     Supplier Contact (Email / Phone)
                   </label>
                   <input
@@ -715,24 +718,24 @@ export default function AdminPurchasesPage() {
                     value={formData.supplierContact}
                     onChange={(e) => setFormData({ ...formData, supplierContact: e.target.value })}
                     placeholder="orders@supplier.com"
-                    className="w-full text-xs p-2.5 rounded-xl border border-champagne-300 bg-white focus:outline-none focus:border-gold-500"
+                    className="w-full text-xs p-2.5 rounded-xl border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 focus:outline-none focus:border-gold-400"
                   />
                 </div>
               </div>
 
               {/* Line Items */}
-              <div className="space-y-2 pt-2 border-t border-champagne-200">
+              <div className="space-y-2 pt-2 border-t border-white/10">
                 <div className="flex justify-between items-center">
                   <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-obsidian-800">
+                    <label className="text-xs uppercase tracking-wider font-semibold text-gold-400">
                       Line Items (Auto-Increments Warehouse Stock) *
                     </label>
-                    {errors.items && <p className="text-[10px] text-red-500">{errors.items}</p>}
+                    {errors.items && <p className="text-[10px] text-red-400">{errors.items}</p>}
                   </div>
                   <button
                     type="button"
                     onClick={handleAddItemRow}
-                    className="text-xs text-gold-700 font-bold hover:underline"
+                    className="text-xs text-gold-400 hover:text-gold-300 font-bold hover:underline"
                   >
                     + Add Item Row
                   </button>
@@ -740,11 +743,11 @@ export default function AdminPurchasesPage() {
 
                 <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                   {formData.items.map((item, idx) => (
-                    <div key={idx} className="flex items-center space-x-2 bg-champagne-50 p-2.5 rounded-xl">
+                    <div key={idx} className="flex items-center space-x-2 bg-[#14141E] p-2.5 rounded-xl border border-white/5">
                       <select
                         value={item.inventoryId}
                         onChange={(e) => handleItemChange(idx, 'inventoryId', e.target.value)}
-                        className="flex-1 text-xs p-2 rounded-lg border border-champagne-300 bg-white"
+                        className="flex-1 text-xs p-2 rounded-lg border border-gold-500/30 bg-[#08080C] text-ivory-50 focus:border-gold-400 focus:outline-none"
                       >
                         <option value="">Link to Existing Inventory...</option>
                         {inventory.map((inv) => (
@@ -760,7 +763,7 @@ export default function AdminPurchasesPage() {
                         value={item.itemName}
                         onChange={(e) => handleItemChange(idx, 'itemName', e.target.value)}
                         placeholder="Item Description"
-                        className="flex-1 text-xs p-2 rounded-lg border border-champagne-300 bg-white"
+                        className="flex-1 text-xs p-2 rounded-lg border border-gold-500/30 bg-[#08080C] text-ivory-50 placeholder:text-ivory-600 focus:border-gold-400 focus:outline-none"
                       />
 
                       <input
@@ -770,7 +773,7 @@ export default function AdminPurchasesPage() {
                         value={item.quantity}
                         onChange={(e) => handleItemChange(idx, 'quantity', Number(e.target.value))}
                         placeholder="Qty"
-                        className="w-16 text-xs p-2 rounded-lg border border-champagne-300 bg-white text-center"
+                        className="w-16 text-xs p-2 rounded-lg border border-gold-500/30 bg-[#08080C] text-ivory-50 text-center focus:border-gold-400 focus:outline-none"
                       />
 
                       <input
@@ -781,14 +784,14 @@ export default function AdminPurchasesPage() {
                         value={item.unitCost}
                         onChange={(e) => handleItemChange(idx, 'unitCost', Number(e.target.value))}
                         placeholder="Cost $"
-                        className="w-20 text-xs p-2 rounded-lg border border-champagne-300 bg-white text-right"
+                        className="w-20 text-xs p-2 rounded-lg border border-gold-500/30 bg-[#08080C] text-ivory-50 text-right focus:border-gold-400 focus:outline-none"
                       />
 
                       {formData.items.length > 1 && (
                         <button
                           type="button"
                           onClick={() => handleRemoveItemRow(idx)}
-                          className="text-red-500 hover:text-red-700 p-1"
+                          className="text-red-400 hover:text-red-300 p-1"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -798,27 +801,29 @@ export default function AdminPurchasesPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/10">
                 <div>
-                  <label className="block text-[10px] uppercase tracking-wider text-obsidian-600 font-semibold mb-1">
-                    Shipping & Tax (PKR)
+                  <label className="block text-[11px] uppercase tracking-wider text-ivory-300 font-semibold mb-1">
+                    Shipping / Taxes (PKR)
                   </label>
                   <input
                     type="number"
+                    min={0}
+                    step="0.01"
                     value={formData.tax}
                     onChange={(e) => setFormData({ ...formData, tax: Number(e.target.value) })}
-                    className="w-full text-xs p-2 rounded-lg border border-champagne-300 bg-white"
+                    className="w-full text-xs p-2.5 rounded-xl border border-gold-500/30 bg-[#14141E] text-ivory-50 focus:outline-none focus:border-gold-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] uppercase tracking-wider text-obsidian-600 font-semibold mb-1">
+                  <label className="block text-[11px] uppercase tracking-wider text-ivory-300 font-semibold mb-1">
                     Payment Status
                   </label>
                   <select
                     value={formData.paymentStatus}
                     onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}
-                    className="w-full text-xs p-2 rounded-lg border border-champagne-300 bg-white"
+                    className="w-full text-xs p-2.5 rounded-xl border border-gold-500/30 bg-[#14141E] text-ivory-50 focus:outline-none focus:border-gold-400"
                   >
                     <option value="PAID">PAID</option>
                     <option value="UNPAID">UNPAID</option>
@@ -826,26 +831,41 @@ export default function AdminPurchasesPage() {
                 </div>
               </div>
 
-              {/* Total Calculation */}
-              <div className="p-3 bg-champagne-100 rounded-2xl flex justify-between items-center text-sm font-bold">
-                <span>Total PO Valuation:</span>
-                <span className="font-serif text-lg text-gold-800">PKR {calculateTotal().toFixed(2)}</span>
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-ivory-300 font-semibold mb-1">
+                  Procurement Notes / Tracking Details
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.notes}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  placeholder="Inbound freight tracking #, delivery docket reference..."
+                  className="w-full text-xs p-2.5 rounded-xl border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 focus:outline-none focus:border-gold-400"
+                />
               </div>
 
-              <div className="flex justify-end space-x-3 pt-3 border-t border-champagne-200">
+              {/* Total Calculation Display */}
+              <div className="p-4 bg-[#14141E] border border-gold-500/20 rounded-2xl flex justify-between items-center text-xs">
+                <span className="text-ivory-300 uppercase tracking-wider font-semibold">Total PO Valuation:</span>
+                <span className="font-serif text-xl font-bold text-gold-400">
+                  PKR {calculateTotal().toFixed(2)}
+                </span>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-4 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setCreateModalOpen(false)}
-                  className="px-4 py-2 rounded-full border border-champagne-300 text-xs uppercase tracking-wider text-obsidian-600 hover:bg-champagne-100"
+                  className="px-5 py-2.5 rounded-full border border-white/20 text-xs uppercase tracking-wider text-ivory-300 hover:bg-white/10 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-6 py-2.5 bg-obsidian-900 text-ivory-50 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-gold-600 hover:text-obsidian-950 transition-colors shadow-md"
+                  className="px-6 py-2.5 bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 rounded-full text-xs uppercase tracking-widest font-bold hover:brightness-110 transition-all shadow-md"
                 >
-                  {submitting ? 'Creating PO...' : 'Record Purchase & Restock'}
+                  {submitting ? 'Creating Order...' : 'Confirm & Restock'}
                 </button>
               </div>
             </form>

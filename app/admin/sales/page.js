@@ -6,6 +6,7 @@ import { useToast } from '../../../src/context/ToastContext';
 import { useConfirmModal } from '../../../src/context/ConfirmModalContext';
 import LuxurySpinner from '../../../src/components/ui/LuxurySpinner';
 import AdminInfiniteTableFooter, { useInfiniteTable } from '../../../src/components/ui/AdminInfiniteTable';
+import useBodyScrollLock from '../../../src/hooks/useBodyScrollLock';
 import {
   DollarSign,
   Plus,
@@ -50,6 +51,8 @@ export default function AdminSalesPage() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  useBodyScrollLock(Boolean(selectedOrder || createModalOpen));
 
   const [formData, setFormData] = useState({
     customerName: '',
@@ -284,15 +287,15 @@ export default function AdminSalesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-2 text-gold-700 text-[10px] uppercase tracking-[0.25em] font-semibold">
+          <div className="inline-flex items-center space-x-2 text-gold-400 text-[10px] uppercase tracking-[0.25em] font-semibold">
             <DollarSign className="w-3.5 h-3.5" />
             <span>Master Financial Ledger & Revenue Streams</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-obsidian-950 font-light mt-1">
+          <h1 className="font-serif text-3xl sm:text-4xl text-ivory-50 font-light mt-1">
             Sales & Revenue Ledger
           </h1>
-          <p className="text-xs text-obsidian-500 font-light mt-1">
-            Live consolidated revenue across <strong className="font-semibold text-obsidian-800">Direct POS Sales</strong>, <strong className="font-semibold text-obsidian-800">Rentals</strong>, and <strong className="font-semibold text-obsidian-800">Gallery Commissions</strong>.
+          <p className="text-xs text-ivory-400 font-light mt-1">
+            Live consolidated revenue across <strong className="font-semibold text-gold-300">Direct POS Sales</strong>, <strong className="font-semibold text-purple-300">Rentals</strong>, and <strong className="font-semibold text-gold-300">Gallery Commissions</strong>.
           </p>
         </div>
 
@@ -300,10 +303,10 @@ export default function AdminSalesPage() {
           <button
             onClick={() => fetchUnifiedSales(true)}
             disabled={refreshing}
-            className="p-2.5 bg-white border border-champagne-300 rounded-full text-obsidian-700 hover:bg-champagne-100 transition-colors shadow-sm"
+            className="p-2.5 bg-[#14141E] border border-gold-500/30 rounded-full text-gold-400 hover:bg-gold-500 hover:text-obsidian-950 transition-colors shadow-sm"
             title="Auto-refreshes every 10s. Click to refresh immediately."
           >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-gold-600' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-gold-400' : ''}`} />
           </button>
 
           <button
@@ -321,9 +324,9 @@ export default function AdminSalesPage() {
               setErrors({});
               setCreateModalOpen(true);
             }}
-            className="inline-flex items-center space-x-2 px-6 py-2.5 bg-obsidian-950 text-ivory-50 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-gold-600 hover:text-obsidian-950 transition-all duration-300 shadow-md active:scale-95"
+            className="inline-flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 rounded-full text-xs uppercase tracking-widest font-bold hover:brightness-110 transition-all duration-300 shadow-md active:scale-95"
           >
-            <Plus className="w-4 h-4 text-gold-400" />
+            <Plus className="w-4 h-4" />
             <span>Record Direct Sale</span>
           </button>
         </div>
@@ -332,65 +335,65 @@ export default function AdminSalesPage() {
       {/* Dynamic Performance KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Settled Revenue */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-obsidian-500 text-[11px] font-semibold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all flex flex-col justify-between group">
+          <div className="flex justify-between items-center text-emerald-400 text-[11px] font-semibold uppercase tracking-wider">
             <span>Settled Revenue</span>
-            <span className="px-2 py-0.5 rounded-full bg-sage-100 text-sage-800 text-[10px] font-bold">Collected</span>
+            <span className="px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">Collected</span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-obsidian-950 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-emerald-400 mt-2">
             PKR {totalSettledRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-[10px] text-obsidian-500 mt-1">
+          <p className="text-[10px] text-ivory-400 mt-1">
             Across {orders.filter((o) => o.paymentStatus === 'PAID').length} settled transactions
           </p>
         </div>
 
         {/* Pending Pipeline Valuation */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-obsidian-500 text-[11px] font-semibold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all flex flex-col justify-between group">
+          <div className="flex justify-between items-center text-amber-400 text-[11px] font-semibold uppercase tracking-wider">
             <span>Pending Pipeline</span>
-            <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">Unsettled</span>
+            <span className="px-2 py-0.5 rounded-full bg-amber-950/60 text-amber-300 border border-amber-500/30 text-[10px] font-bold">Unsettled</span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-amber-700 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-amber-300 mt-2">
             PKR {totalPendingValuation.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-[10px] text-obsidian-500 mt-1">
+          <p className="text-[10px] text-ivory-400 mt-1">
             {orders.filter((o) => o.paymentStatus === 'PENDING').length} active pending order(s)
           </p>
         </div>
 
         {/* Today's Sales */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-obsidian-500 text-[11px] font-semibold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all flex flex-col justify-between group">
+          <div className="flex justify-between items-center text-gold-400 text-[11px] font-semibold uppercase tracking-wider">
             <span>Today's Takings</span>
-            <span className="px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-800 text-[10px] font-bold">Today</span>
+            <span className="px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-300 border border-gold-500/20 text-[10px] font-bold">Today</span>
           </div>
-          <p className="font-serif text-2xl sm:text-3xl font-bold text-gold-800 mt-2">
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-gold-300 mt-2">
             PKR {todayRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-[10px] text-obsidian-500 mt-1">
+          <p className="text-[10px] text-ivory-400 mt-1">
             {orders.filter((o) => new Date(o.date) >= startOfToday).length} order(s) registered today
           </p>
         </div>
 
         {/* Total Order Stream Counts */}
-        <div className="bg-white p-5 rounded-3xl border border-champagne-300 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-obsidian-500 text-[11px] font-semibold uppercase tracking-wider">
+        <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl p-5 shadow-xl hover:border-gold-500/40 transition-all flex flex-col justify-between group">
+          <div className="flex justify-between items-center text-ivory-400 text-[11px] font-semibold uppercase tracking-wider">
             <span>Stream Breakdown</span>
-            <span className="px-2 py-0.5 rounded-full bg-champagne-200 text-obsidian-800 text-[10px] font-bold">All Streams</span>
+            <span className="px-2 py-0.5 rounded-full bg-[#181826] text-gold-300 border border-gold-500/20 text-[10px] font-bold">All Streams</span>
           </div>
           <div className="flex items-center space-x-2 mt-2">
-            <span className="text-xs font-bold px-2 py-0.5 bg-blue-100 text-blue-800 rounded-lg">
+            <span className="text-xs font-bold px-2 py-0.5 bg-blue-950/60 text-blue-300 border border-blue-500/30 rounded-lg">
               {summary?.salesCount || 0} POS
             </span>
-            <span className="text-xs font-bold px-2 py-0.5 bg-purple-100 text-purple-800 rounded-lg">
+            <span className="text-xs font-bold px-2 py-0.5 bg-purple-950/60 text-purple-300 border border-purple-500/30 rounded-lg">
               {summary?.rentalsCount || 0} Rentals
             </span>
-            <span className="text-xs font-bold px-2 py-0.5 bg-gold-100 text-gold-900 rounded-lg">
+            <span className="text-xs font-bold px-2 py-0.5 bg-gold-950/60 text-gold-300 border border-gold-500/30 rounded-lg">
               {summary?.bookingsCount || 0} Gallery
             </span>
           </div>
-          <p className="text-[10px] text-obsidian-500 mt-1">
+          <p className="text-[10px] text-ivory-500 mt-1">
             Total {orders.length} orders in ledger
           </p>
         </div>
@@ -411,12 +414,12 @@ export default function AdminSalesPage() {
               onClick={() => setTypeFilter(tab.id)}
               className={`flex-shrink-0 px-4 py-2 rounded-full text-xs uppercase tracking-wider font-semibold transition-all flex items-center space-x-2 ${
                 typeFilter === tab.id
-                  ? 'bg-obsidian-950 text-ivory-50 shadow-md font-bold'
-                  : 'bg-white text-obsidian-700 border border-champagne-300 hover:bg-champagne-100'
+                  ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 shadow-md font-bold'
+                  : 'bg-[#14141E] text-ivory-300 border border-gold-500/20 hover:border-gold-400 hover:text-ivory-50'
               }`}
             >
               <span>{tab.label}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${typeFilter === tab.id ? 'bg-gold-500 text-obsidian-950 font-bold' : 'bg-champagne-200 text-obsidian-600'}`}>
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${typeFilter === tab.id ? 'bg-obsidian-950 text-gold-300 font-bold' : 'bg-[#1E1E2C] text-ivory-400'}`}>
                 {tab.count}
               </span>
             </button>
@@ -424,30 +427,30 @@ export default function AdminSalesPage() {
         </div>
 
         {/* Search, Status & Date Toolbar */}
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-champagne-300 shadow-sm">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-[#0D0D12] p-3 rounded-2xl border border-gold-500/20 shadow-sm">
           {/* Search Box */}
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-obsidian-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-gold-400/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by order #, customer name, phone, item..."
-              className="w-full pl-10 pr-4 py-2 rounded-full border border-champagne-300 bg-ivory-50 text-xs focus:outline-none focus:border-gold-500 shadow-inner"
+              className="w-full pl-10 pr-4 py-2 rounded-full border border-gold-500/30 bg-[#14141E] text-ivory-50 placeholder:text-ivory-600 text-xs focus:outline-none focus:border-gold-400 shadow-inner"
             />
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             {/* Payment Status Filter */}
-            <div className="flex items-center space-x-1 bg-ivory-100 p-1 rounded-full border border-champagne-300 text-xs font-semibold">
+            <div className="flex items-center space-x-1 bg-[#14141E] p-1 rounded-full border border-gold-500/30 text-xs font-semibold">
               {['All', 'PAID', 'PENDING', 'CANCELLED'].map((st) => (
                 <button
                   key={st}
                   onClick={() => setStatusFilter(st)}
                   className={`px-3 py-1 rounded-full transition-all ${
                     statusFilter === st
-                      ? 'bg-gold-600 text-obsidian-950 font-bold shadow-sm'
-                      : 'text-obsidian-700 hover:text-obsidian-950'
+                      ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-sm'
+                      : 'text-ivory-300 hover:text-gold-300'
                   }`}
                 >
                   {st}
@@ -456,15 +459,15 @@ export default function AdminSalesPage() {
             </div>
 
             {/* Date Range Tabs */}
-            <div className="flex items-center space-x-1 bg-ivory-100 p-1 rounded-full border border-champagne-300 text-xs font-semibold">
+            <div className="flex items-center space-x-1 bg-[#14141E] p-1 rounded-full border border-gold-500/30 text-xs font-semibold">
               {['All', 'Today', 'Yesterday', 'Last 7 Days'].map((d) => (
                 <button
                   key={d}
                   onClick={() => setDateFilter(d)}
                   className={`px-3 py-1 rounded-full transition-all ${
                     dateFilter === d
-                      ? 'bg-obsidian-950 text-ivory-50 shadow-sm'
-                      : 'text-obsidian-700 hover:text-obsidian-950'
+                      ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-sm'
+                      : 'text-ivory-300 hover:text-gold-300'
                   }`}
                 >
                   {d}
@@ -476,18 +479,18 @@ export default function AdminSalesPage() {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white border border-champagne-300/80 rounded-3xl overflow-hidden shadow-sm">
+      <div className="bg-[#0D0D12] border border-gold-500/20 rounded-3xl overflow-hidden shadow-xl">
         {loading ? (
           <div className="py-24">
             <LuxurySpinner size="lg" text="Loading sales ledger & live orders..." />
           </div>
         ) : displayedOrders.length === 0 ? (
           <div className="p-16 text-center space-y-3">
-            <div className="p-3 bg-champagne-100 text-gold-700 rounded-full w-12 h-12 mx-auto flex items-center justify-center">
+            <div className="p-3 bg-gold-500/10 text-gold-400 rounded-full w-12 h-12 mx-auto flex items-center justify-center border border-gold-500/20">
               <ShoppingBag className="w-6 h-6" />
             </div>
-            <p className="font-serif text-xl text-obsidian-900">No orders found matching this filter.</p>
-            <p className="text-xs text-obsidian-500 max-w-sm mx-auto">
+            <p className="font-serif text-xl text-ivory-100">No orders found matching this filter.</p>
+            <p className="text-xs text-ivory-400 max-w-sm mx-auto">
               Newly placed rental requests, direct POS sales, and gallery orders will automatically appear here.
             </p>
             <button
@@ -497,7 +500,7 @@ export default function AdminSalesPage() {
                 setDateFilter('All');
                 setSearchQuery('');
               }}
-              className="text-xs uppercase tracking-widest text-gold-700 font-bold underline hover:text-gold-900"
+              className="text-xs uppercase tracking-widest text-gold-400 font-bold underline hover:text-gold-300"
             >
               Reset Filters
             </button>
@@ -507,8 +510,8 @@ export default function AdminSalesPage() {
             onScroll={handleScroll}
             className="overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gold-500/20"
           >
-            <table className="w-full text-left text-xs text-obsidian-700">
-              <thead className="bg-champagne-100/95 border-b border-champagne-200 text-[10px] uppercase font-bold tracking-wider text-obsidian-600 sticky top-0 z-10 backdrop-blur-md shadow-sm">
+            <table className="w-full text-left text-xs text-ivory-200">
+              <thead className="bg-[#14141E]/95 border-b border-gold-500/20 text-[10px] uppercase font-bold tracking-wider text-gold-400 sticky top-0 z-10 backdrop-blur-md shadow-sm">
                 <tr>
                   <th className="p-4 pl-6">Order Ref #</th>
                   <th className="p-4">Stream</th>
@@ -520,7 +523,7 @@ export default function AdminSalesPage() {
                   <th className="p-4 pr-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-champagne-200">
+              <tbody className="divide-y divide-white/5">
                 {infiniteOrders.map((ord) => {
                   const isPaid = ord.paymentStatus === 'PAID';
                   const isCancelled = ord.paymentStatus === 'CANCELLED' || ord.status === 'CANCELLED';
@@ -529,9 +532,9 @@ export default function AdminSalesPage() {
                     <tr
                       key={`${ord.orderType}-${ord.id}`}
                       onClick={() => setSelectedOrder(ord)}
-                      className="hover:bg-champagne-50/70 transition-colors cursor-pointer group"
+                      className="hover:bg-gold-500/5 transition-colors cursor-pointer group"
                     >
-                      <td className="p-4 pl-6 font-mono font-bold text-gold-800 group-hover:text-gold-950">
+                      <td className="p-4 pl-6 font-mono font-bold text-gold-400 group-hover:text-gold-300">
                         #{ord.referenceNumber}
                       </td>
 
@@ -539,10 +542,10 @@ export default function AdminSalesPage() {
                         <span
                           className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
                             ord.orderType === 'SALE'
-                              ? 'bg-blue-50 text-blue-800 border-blue-200'
+                              ? 'bg-blue-950/60 text-blue-300 border-blue-500/30'
                               : ord.orderType === 'RENTAL'
-                              ? 'bg-purple-50 text-purple-800 border-purple-200'
-                              : 'bg-gold-50 text-gold-900 border-gold-300'
+                              ? 'bg-purple-950/60 text-purple-300 border-purple-500/30'
+                              : 'bg-gold-950/60 text-gold-300 border-gold-500/30'
                           }`}
                         >
                           {ord.orderType === 'SALE' ? 'POS Sale' : ord.orderType === 'RENTAL' ? 'Rental' : 'Gallery'}
@@ -550,15 +553,15 @@ export default function AdminSalesPage() {
                       </td>
 
                       <td className="p-4">
-                        <p className="font-semibold text-obsidian-900 group-hover:text-gold-700 transition-colors">
+                        <p className="font-semibold text-ivory-50 group-hover:text-gold-300 transition-colors">
                           {ord.customerName}
                         </p>
-                        <p className="text-[10px] text-obsidian-400 font-mono">
+                        <p className="text-[10px] text-ivory-400 font-mono">
                           {ord.customerPhone} &bull; {ord.customerEmail}
                         </p>
                       </td>
 
-                      <td className="p-4 whitespace-nowrap text-obsidian-600">
+                      <td className="p-4 whitespace-nowrap text-ivory-300">
                         {new Date(ord.date).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -567,15 +570,15 @@ export default function AdminSalesPage() {
                       </td>
 
                       <td className="p-4 max-w-xs">
-                        <p className="font-medium text-obsidian-900 truncate">
+                        <p className="font-medium text-ivory-100 truncate">
                           {ord.itemsDescription}
                         </p>
-                        <span className="text-[10px] text-obsidian-500">
+                        <span className="text-[10px] text-ivory-500">
                           {ord.itemsCount} line item{ord.itemsCount !== 1 ? 's' : ''} {ord.location ? `• ${ord.location}` : ''}
                         </span>
                       </td>
 
-                      <td className="p-4 font-serif text-sm font-bold text-obsidian-950 whitespace-nowrap">
+                      <td className="p-4 font-serif text-sm font-bold text-gold-300 whitespace-nowrap">
                         PKR {ord.total.toFixed(2)}
                       </td>
 
@@ -583,13 +586,13 @@ export default function AdminSalesPage() {
                         <span
                           className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border flex items-center space-x-1.5 w-fit ${
                             isPaid
-                              ? 'bg-sage-100 text-sage-800 border-sage-300'
+                              ? 'bg-emerald-950/70 text-emerald-300 border-emerald-500/40'
                               : isCancelled
-                              ? 'bg-red-100 text-red-800 border-red-300'
-                              : 'bg-amber-100 text-amber-800 border-amber-300'
+                              ? 'bg-rose-950/70 text-rose-300 border-rose-500/40'
+                              : 'bg-amber-950/70 text-amber-300 border-amber-500/40'
                           }`}
                         >
-                          <span className={`w-1.5 h-1.5 rounded-full ${isPaid ? 'bg-sage-600' : isCancelled ? 'bg-red-600' : 'bg-amber-600'}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full ${isPaid ? 'bg-emerald-400' : isCancelled ? 'bg-rose-400' : 'bg-amber-400'}`} />
                           <span>{ord.paymentStatus || ord.status}</span>
                         </span>
                       </td>
@@ -598,7 +601,7 @@ export default function AdminSalesPage() {
                         <div className="flex items-center justify-end space-x-1.5">
                           <button
                             onClick={() => setSelectedOrder(ord)}
-                            className="p-1.5 rounded-lg hover:bg-champagne-200 text-obsidian-600 hover:text-obsidian-950 transition-colors"
+                            className="p-1.5 rounded-lg bg-[#1A1A26] border border-gold-500/30 text-gold-400 hover:bg-gold-500 hover:text-obsidian-950 transition-colors"
                             title="View Complete Order Dossier"
                           >
                             <Eye className="w-4 h-4" />
@@ -608,7 +611,7 @@ export default function AdminSalesPage() {
                             href={`https://wa.me/92${(ord.customerPhone || '').replace(/^0|\D/g, '')}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg hover:bg-emerald-100 text-emerald-700 transition-colors"
+                            className="p-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-obsidian-950 transition-colors"
                             title="Contact Customer on WhatsApp"
                           >
                             <MessageCircle className="w-4 h-4" />
@@ -617,8 +620,8 @@ export default function AdminSalesPage() {
                           {ord.orderType === 'SALE' && (
                             <button
                               onClick={() => handleDeleteOrder(ord)}
-                              className="p-1.5 rounded-lg hover:bg-red-100 text-red-600 transition-colors"
-                              title="Delete Sale"
+                              className="p-1.5 rounded-lg bg-rose-950/60 border border-rose-500/30 text-rose-400 hover:bg-rose-500 hover:text-white transition-colors"
+                              title="Delete POS Sale Record"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -646,8 +649,8 @@ export default function AdminSalesPage() {
       {/* COMPLETE ORDER DOSSIER MODAL                                              */}
       {/* ========================================================================= */}
       {selectedOrder && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-obsidian-950/80 backdrop-blur-sm">
-          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full border border-champagne-300 p-6 sm:p-8 space-y-6">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-3 sm:p-4 md:p-6 bg-obsidian-950/85 backdrop-blur-md animate-fadeIn">
+          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full max-h-[92dvh] sm:max-h-[90dvh] flex flex-col border border-champagne-300 p-5 sm:p-8 space-y-5 overflow-y-auto overscroll-contain">
             <div className="flex justify-between items-start border-b border-champagne-200 pb-4">
               <div>
                 <span className="text-[10px] uppercase tracking-[0.25em] text-gold-700 font-bold flex items-center space-x-1.5">
@@ -793,8 +796,8 @@ export default function AdminSalesPage() {
       {/* RECORD NEW SALE MODAL                                                     */}
       {/* ========================================================================= */}
       {createModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-obsidian-950/80 backdrop-blur-sm">
-          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full border border-champagne-300 p-6 sm:p-8 space-y-6">
+        <div className="fixed inset-0 z-[99999] overflow-hidden flex items-center justify-center p-3 sm:p-4 md:p-6 bg-obsidian-950/85 backdrop-blur-md animate-fadeIn">
+          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl max-w-2xl w-full max-h-[92dvh] sm:max-h-[90dvh] flex flex-col border border-champagne-300 p-5 sm:p-8 space-y-5 overflow-y-auto overscroll-contain">
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] uppercase tracking-[0.2em] text-gold-700 font-bold">

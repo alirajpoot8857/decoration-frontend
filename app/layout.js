@@ -1,5 +1,5 @@
 import './globals.css';
-import { Cormorant_Garamond, Outfit } from 'next/font/google';
+import { Playfair_Display, Plus_Jakarta_Sans, Cormorant_Garamond, Outfit } from 'next/font/google';
 import { ToastProvider } from '../src/context/ToastContext';
 import { AuthProvider } from '../src/context/AuthContext';
 import { ThemeProvider } from '../src/context/ThemeContext';
@@ -7,6 +7,21 @@ import { DiscountProvider } from '../src/context/DiscountContext';
 import { RentalCartProvider } from '../src/context/RentalCartContext';
 import { ConfirmModalProvider } from '../src/context/ConfirmModalContext';
 import AppWrapper from '../src/components/layout/AppWrapper';
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  style: ['normal', 'italic'],
+  variable: '--font-playfair',
+  display: 'swap',
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  variable: '--font-jakarta',
+  display: 'swap',
+});
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -46,13 +61,25 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${outfit.variable} scroll-smooth`}>
+    <html
+      lang="en"
+      className={`${playfair.variable} ${plusJakarta.variable} ${cormorant.variable} ${outfit.variable} scroll-smooth`}
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
+                  var mode = localStorage.getItem('lumiere_theme_mode') || 'dark';
+                  if (mode === 'light') {
+                    document.documentElement.classList.remove('dark', 'theme-mode-dark');
+                    document.documentElement.classList.add('light', 'theme-mode-light');
+                  } else {
+                    document.documentElement.classList.remove('light', 'theme-mode-light');
+                    document.documentElement.classList.add('dark', 'theme-mode-dark');
+                  }
+
                   var theme = localStorage.getItem('lumiere_color_theme') || 'royalGold';
                   document.documentElement.classList.add('theme-' + theme);
                   var dataStr = localStorage.getItem('lumiere_theme_data');
@@ -79,7 +106,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className="bg-ivory-100 text-obsidian-900 min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-obsidian-950">
+      <body className="bg-[#070709] text-ivory-50 min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-obsidian-950">
         <ToastProvider>
           <AuthProvider>
             <ThemeProvider>

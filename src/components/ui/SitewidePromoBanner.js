@@ -21,26 +21,26 @@ export default function SitewidePromoBanner() {
   return (
     <div
       style={{
-        backgroundColor: 'rgba(20, 17, 13, 0.68)',
+        backgroundColor: 'rgba(20, 17, 13, 0.78)',
         backdropFilter: 'blur(24px) saturate(180%)',
         WebkitBackdropFilter: 'blur(24px) saturate(180%)',
       }}
-      className="sticky top-0 left-0 right-0 z-40 border-b border-gold-500/30 text-ivory-50 text-xs py-1.5 sm:py-2 px-2.5 sm:px-4 shadow-[0_4px_25px_rgba(0,0,0,0.35)] transition-all duration-300"
+      className="sticky top-0 left-0 right-0 z-40 border-b border-gold-500/35 text-white text-xs py-1.5 sm:py-2 px-2.5 sm:px-4 shadow-[0_4px_25px_rgba(0,0,0,0.4)] transition-all duration-300 dark-preserve"
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
-        <div className="flex-1 flex items-center justify-center space-x-1.5 sm:space-x-2.5 text-center min-w-0">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3 dark-preserve">
+        <div className="flex-1 flex items-center justify-center space-x-1.5 sm:space-x-2.5 text-center min-w-0 dark-preserve">
           {/* Discount Pill Badge */}
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-gold-500/20 text-gold-300 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] border border-gold-500/40 shadow-sm shrink-0">
-            <Sparkles className="w-2.5 h-2.5 mr-1 text-gold-400 shrink-0" />
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-gold-500/25 text-[#FDE68A] font-bold uppercase tracking-wider text-[9px] sm:text-[10px] border border-gold-500/50 shadow-sm shrink-0">
+            <Sparkles className="w-2.5 h-2.5 mr-1 text-[#FBBF24] shrink-0" />
             <span>{effectiveDiscount}% OFF</span>
           </span>
 
           {/* Banner Promo Message - Responsive Length */}
-          <span className="text-champagne-100 font-light truncate text-[10.5px] sm:text-xs">
+          <span className="text-[#FDFBF7] font-normal truncate text-[10.5px] sm:text-xs">
             <span className="md:hidden">
-              Season Special: Use code <strong className="text-gold-300 font-mono font-semibold">{promoCode}</strong>
+              Season Special: Use code <strong className="text-[#FDE68A] font-mono font-bold">{promoCode}</strong>
             </span>
-            <span className="hidden md:inline">
+            <span className="hidden md:inline text-[#FAF8F5]">
               {bannerText || `Special Offer: Enjoy ${effectiveDiscount}% OFF across our entire catalog!`}
             </span>
           </span>
@@ -66,10 +66,10 @@ export default function SitewidePromoBanner() {
         {/* Dismiss Button */}
         <button
           onClick={() => setIsBannerDismissed(true)}
-          className="text-ivory-200/60 hover:text-gold-300 hover:bg-white/10 transition-colors p-1 rounded-full shrink-0"
+          className="text-ivory-200/80 hover:text-gold-300 hover:bg-white/10 transition-colors p-1 rounded-full shrink-0"
           aria-label="Dismiss banner"
         >
-          <X className="w-3.5 h-3.5" />
+          <X className="w-3.5 h-3.5 text-white/80" />
         </button>
       </div>
     </div>
