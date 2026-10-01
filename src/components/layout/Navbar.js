@@ -52,20 +52,27 @@ export default function Navbar({ onOpenConsultation }) {
   const isAdminRoute = pathname?.startsWith('/admin');
   if (isAdminRoute) return null;
 
+  const formattedSiteName = typeof siteName === 'string' && siteName.length > 0
+    ? siteName.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()).replace(/&/g, '&')
+    : 'Lumière Décor';
+
   return (
-    <header className={`fixed left-0 right-0 z-50 px-2 sm:px-6 lg:px-8 pointer-events-none transition-all duration-300 dark-preserve ${
-      hasActiveBanner ? 'top-10 sm:top-12' : 'top-2 sm:top-4'
-    }`}>
+    <header
+      role="banner"
+      className={`fixed left-0 right-0 z-50 px-2 sm:px-6 lg:px-8 pointer-events-none transition-all duration-300 dark-preserve ${
+        hasActiveBanner ? 'top-10 sm:top-12' : 'top-2 sm:top-4'
+      }`}
+    >
       <div className="max-w-[1400px] mx-auto pointer-events-auto dark-preserve">
         {/* Floating Luxury Island Pill - Smoked Translucent Frosted Glass with Gold Border (Matches Promo Bar) */}
         <div
           style={{
             backdropFilter: 'blur(24px) saturate(180%)',
             WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            backgroundColor: 'rgba(20, 17, 13, 0.78)',
+            backgroundColor: 'rgba(20, 17, 13, 0.88)',
             boxShadow: '0 12px 36px -8px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.12)',
           }}
-          className={`rounded-full border border-gold-500/40 flex items-center justify-between gap-1.5 sm:gap-2.5 lg:gap-3 pl-3.5 sm:pl-4.5 lg:pl-5 pr-2.5 sm:pr-3.5 lg:pr-4 py-1.5 sm:py-2 transition-all duration-300 dark-preserve ${
+          className={`rounded-full border border-gold-500/40 flex items-center justify-between gap-1 sm:gap-2 xl:gap-3 pl-3.5 sm:pl-4 xl:pl-5 pr-1.5 sm:pr-2 xl:pr-2.5 py-1.5 sm:py-2 transition-all duration-300 dark-preserve ${
             scrolled ? 'ring-1 ring-gold-400/30 shadow-[0_16px_45px_-10px_rgba(0,0,0,0.7),0_0_20px_rgba(212,175,55,0.25)] border-gold-400/45' : 'hover:border-gold-500/50'
           }`}
         >
@@ -75,12 +82,12 @@ export default function Navbar({ onOpenConsultation }) {
             className="group flex flex-col items-start focus:outline-none transition-transform duration-300 hover:scale-[1.01] shrink-0 min-w-0 mr-1 sm:mr-2 dark-preserve"
           >
             <span
-              className="font-serif text-sm sm:text-base lg:text-lg xl:text-xl font-light uppercase tracking-[0.14em] sm:tracking-[0.16em] xl:tracking-[0.18em] text-[#FFFDF9] group-hover:text-gold-300 transition-colors whitespace-nowrap drop-shadow-sm"
+              className="font-serif text-sm sm:text-base lg:text-base xl:text-lg 2xl:text-xl font-light tracking-wide text-ivory-50 group-hover:text-gold-300 transition-colors whitespace-nowrap drop-shadow-sm"
             >
-              {siteName}
+              {formattedSiteName}
             </span>
             <span
-              className="hidden md:block text-[6.5px] lg:text-[7px] uppercase tracking-[0.18em] font-sans -mt-0.5 font-semibold text-[#E5D0BA] truncate max-w-[160px] lg:max-w-none"
+              className="hidden 2xl:block text-xs uppercase tracking-wider font-sans mt-0.5 font-medium text-champagne-300 truncate max-w-xs"
             >
               {tagline}
             </span>
@@ -88,7 +95,8 @@ export default function Navbar({ onOpenConsultation }) {
 
           {/* Desktop Navigation Links - Haute Inner Pill Array */}
           <nav
-            className="hidden lg:flex items-center space-x-0.5 xl:space-x-1 p-1 rounded-full border shrink-0 transition-colors bg-white/[0.08] border-white/15 dark-preserve"
+            className="hidden lg:flex items-center space-x-0.5 p-0.5 xl:p-1 rounded-full border shrink transition-colors bg-white/[0.08] border-white/15 dark-preserve"
+            aria-label="Main Navigation"
           >
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
@@ -96,10 +104,11 @@ export default function Navbar({ onOpenConsultation }) {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`px-2 lg:px-2 xl:px-3 py-1 rounded-full text-[10px] lg:text-[10.5px] xl:text-[11.5px] uppercase tracking-[0.06em] xl:tracking-[0.1em] font-medium transition-all shrink-0 whitespace-nowrap ${
+                  aria-current={isActive ? 'page' : undefined}
+                  className={`px-2 xl:px-2.5 py-1 rounded-full text-[11px] xl:text-xs uppercase tracking-wider transition-all shrink-0 whitespace-nowrap ${
                     isActive
-                      ? 'bg-gradient-to-r from-gold-600 to-champagne-500 text-obsidian-950 font-bold shadow-sm'
-                      : 'text-[#F3EFEB] hover:text-[#FBBF24] hover:bg-white/15 font-semibold'
+                      ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-sm ring-1 ring-gold-300'
+                      : 'text-champagne-200 hover:text-gold-300 hover:bg-white/15 font-medium'
                   }`}
                 >
                   {link.name}
@@ -109,7 +118,7 @@ export default function Navbar({ onOpenConsultation }) {
           </nav>
 
           {/* Right Action Icons & Buttons - Fits Perfectly Inside the Pill Curve Without Overflow */}
-          <div className="flex items-center shrink-0 space-x-1 sm:space-x-2 dark-preserve">
+          <div className="flex items-center shrink-0 space-x-1 sm:space-x-1.5 xl:space-x-2 dark-preserve">
             {/* ☀️ / 🌙 Light & Dark Theme Toggle Button */}
             <button
               onClick={toggleMode}
@@ -144,11 +153,11 @@ export default function Navbar({ onOpenConsultation }) {
               <div className="relative dark-preserve">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center space-x-1 sm:space-x-1.5 text-xs uppercase tracking-wider p-1.5 sm:py-1.5 sm:px-3 rounded-full border border-gold-500/40 bg-gold-500/20 text-[#FFFDF9] hover:bg-gold-500/30 hover:border-gold-400 transition-all duration-300 hover:scale-105 active:scale-95"
+                  className="flex items-center space-x-1 sm:space-x-1.5 text-xs uppercase tracking-wider py-1 px-2.5 sm:px-3 rounded-full border border-gold-500/40 bg-gold-500/20 text-[#FFFDF9] hover:bg-gold-500/30 hover:border-gold-400 transition-all duration-300 hover:scale-105 active:scale-95"
                   title={user.name}
                 >
-                  <UserIcon className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#FBBF24] shrink-0" />
-                  <span className="hidden sm:inline max-w-[70px] xl:max-w-[90px] truncate font-semibold text-[#FFFDF9]">
+                  <UserIcon className="w-3.5 h-3.5 text-[#FBBF24] shrink-0" />
+                  <span className="hidden sm:inline max-w-[60px] xl:max-w-[75px] truncate font-semibold text-[#FFFDF9]">
                     {user.name.split(' ')[0]}
                   </span>
                 </button>
@@ -206,7 +215,7 @@ export default function Navbar({ onOpenConsultation }) {
             ) : (
               <Link
                 href="/login"
-                className="hidden sm:inline-flex text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-white/25 bg-white/10 text-[#FFFDF9] hover:bg-white/20 hover:text-gold-300 transition-all duration-300 hover:scale-105 active:scale-95"
+                className="hidden sm:inline-flex text-xs uppercase tracking-wider px-3 py-1 rounded-full border border-white/25 bg-white/10 text-[#FFFDF9] hover:bg-white/20 hover:text-gold-300 transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 Sign In
               </Link>
@@ -215,18 +224,18 @@ export default function Navbar({ onOpenConsultation }) {
             {/* Book Consultation CTA - Perfectly Fitted Inside Pill Curvature Without Overflow */}
             <button
               onClick={onOpenConsultation}
-              className="hidden xl:inline-flex items-center justify-center text-[11px] xl:text-xs uppercase tracking-[0.1em] font-bold px-3.5 xl:px-4 py-1.5 xl:py-2 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-champagne-500 text-obsidian-950 shadow-md hover:shadow-glow-gold hover:scale-105 active:scale-95 transition-all duration-300 shrink-0 whitespace-nowrap"
+              className="hidden 2xl:inline-flex items-center justify-center text-xs uppercase tracking-wider font-bold px-3.5 py-1.5 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-champagne-500 text-obsidian-950 shadow-md hover:shadow-glow-gold hover:scale-105 active:scale-95 transition-all duration-300 shrink-0 whitespace-nowrap"
             >
               <Sparkles className="w-3.5 h-3.5 mr-1.5 text-obsidian-950 shrink-0" />
               <span>Book Consultation</span>
             </button>
             <button
               onClick={onOpenConsultation}
-              className="hidden lg:inline-flex xl:hidden items-center justify-center text-[10.5px] uppercase tracking-wider font-bold px-2.5 py-1.5 rounded-full bg-gradient-to-r from-gold-600 to-champagne-500 text-obsidian-950 shadow-md hover:scale-105 active:scale-95 transition-all duration-300 shrink-0 whitespace-nowrap"
+              className="hidden lg:inline-flex 2xl:hidden items-center justify-center text-xs uppercase tracking-wider font-bold px-3 py-1.5 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-champagne-500 text-obsidian-950 shadow-md hover:scale-105 active:scale-95 transition-all duration-300 shrink-0 whitespace-nowrap"
               title="Book Event Consultation"
             >
-              <Sparkles className="w-3 h-3 mr-1 text-obsidian-950 shrink-0" />
-              <span>Book</span>
+              <Sparkles className="w-3.5 h-3.5 mr-1 text-obsidian-950 shrink-0" />
+              <span>Consultation</span>
             </button>
 
             {/* Mobile Hamburger Toggle */}

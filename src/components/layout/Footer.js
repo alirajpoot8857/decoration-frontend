@@ -24,6 +24,10 @@ export default function Footer() {
     }
   };
 
+  const formattedSiteName = typeof siteName === 'string' && siteName.length > 0
+    ? siteName.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()).replace(/&/g, '&')
+    : 'Lumière Décor';
+
   return (
     <footer className={`${isDarkMode ? 'bg-obsidian-950 text-ivory-100' : 'bg-[#FAF7F2] text-[#141210]'} border-t border-gold-500/25 pt-16 sm:pt-20 pb-12 relative overflow-hidden select-none transition-colors duration-300`}>
       {/* Ambient background glow */}
@@ -34,10 +38,10 @@ export default function Footer() {
           {/* Brand & Mission Column */}
           <div className="lg:col-span-4 space-y-5">
             <Link href="/" className="inline-block group max-w-full">
-              <span className={`font-serif tracking-[0.14em] sm:tracking-[0.18em] text-xl sm:text-2xl font-light uppercase ${isDarkMode ? 'text-ivory-50 group-hover:text-gold-300' : 'text-[#141210] group-hover:text-gold-700'} transition-colors whitespace-nowrap block`}>
-                {siteName}
+              <span className={`font-serif tracking-[0.14em] sm:tracking-[0.18em] text-xl sm:text-2xl font-light ${isDarkMode ? 'text-ivory-50 group-hover:text-gold-300' : 'text-[#141210] group-hover:text-gold-700'} transition-colors whitespace-nowrap block`}>
+                {formattedSiteName}
               </span>
-              <span className={`block text-[8px] sm:text-[9px] uppercase tracking-[0.18em] sm:tracking-[0.24em] font-sans ${isDarkMode ? 'text-champagne-400' : 'text-gold-800'} font-semibold mt-0.5 truncate max-w-xs sm:max-w-sm`}>
+              <span className={`block text-xs uppercase tracking-wider font-sans ${isDarkMode ? 'text-champagne-400' : 'text-gold-800'} font-medium mt-1`}>
                 {tagline}
               </span>
             </Link>
@@ -47,39 +51,39 @@ export default function Footer() {
             </p>
 
             <div className="pt-1">
-              <div className="inline-flex items-center space-x-2 text-[11px] font-serif tracking-widest text-gold-400 border border-gold-500/35 px-3.5 py-1.5 rounded-full bg-gold-500/10">
+              <div className="inline-flex items-center space-x-2 text-xs font-serif tracking-widest text-gold-400 border border-gold-500/35 px-3.5 py-1.5 rounded-full bg-gold-500/10">
                 <Sparkles className="w-3.5 h-3.5 text-gold-400" />
                 <span className={isDarkMode ? 'text-gold-300' : 'text-gold-800 font-semibold'}>Crafting Masterpieces Since 2018</span>
               </div>
             </div>
 
-            {/* VIP Newsletter Subscription Box */}
+            {/* VIP Newsletter Subscription Box with Perfectly Aligned Input & Button */}
             <div className="pt-3 space-y-2">
-              <p className={`text-[11px] uppercase tracking-[0.2em] font-bold ${isDarkMode ? 'text-gold-400' : 'text-gold-800'}`}>
+              <p className={`text-xs uppercase tracking-wider font-bold ${isDarkMode ? 'text-gold-400' : 'text-gold-800'}`}>
                 Join the Haute Scénographie Circle
               </p>
               {subscribed ? (
-                <div className="flex items-center space-x-2 p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs animate-fadeInUp">
+                <div className="flex items-center space-x-2 p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs animate-fadeInUp">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>Thank you for joining our private lookbook list!</span>
                 </div>
               ) : (
-                <form onSubmit={handleSubscribe} className="flex items-center space-x-2">
+                <form onSubmit={handleSubscribe} className="flex items-center w-full max-w-sm h-11 rounded-xl border border-gold-500/40 bg-obsidian-950/80 overflow-hidden focus-within:ring-2 focus-within:ring-gold-400/50 shadow-md">
                   <input
                     type="email"
                     required
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     placeholder="Enter your email address..."
-                    className={`w-full text-xs px-3.5 py-2.5 rounded-xl border border-gold-500/30 ${
+                    className={`h-full flex-1 px-3.5 text-xs ${
                       isDarkMode
-                        ? 'bg-[#121218] text-ivory-50 placeholder:text-ivory-600'
-                        : 'bg-white text-[#141210] placeholder:text-stone-400 shadow-sm'
-                    } focus:outline-none focus:border-gold-400 focus:ring-1 focus:ring-gold-500/30`}
+                        ? 'bg-transparent text-ivory-50 placeholder:text-stone-500'
+                        : 'bg-white text-[#141210] placeholder:text-stone-400'
+                    } focus:outline-none border-none`}
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold text-xs uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all shrink-0 shadow-md flex items-center space-x-1"
+                    className="h-full px-4 bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold text-xs uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all shrink-0 flex items-center space-x-1.5"
                   >
                     <span>Join</span>
                     <Send className="w-3 h-3" />
@@ -91,9 +95,9 @@ export default function Footer() {
 
           {/* Quick Navigation Links */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className={`text-xs uppercase tracking-[0.25em] ${isDarkMode ? 'text-gold-400' : 'text-gold-800'} font-bold`}>
+            <h3 className={`text-sm font-semibold tracking-wider ${isDarkMode ? 'text-gold-400' : 'text-gold-800'}`}>
               Atelier Pages
-            </h4>
+            </h3>
             <ul className="space-y-2 text-xs sm:text-sm">
               {[
                 { name: 'Home Atelier', href: '/' },
@@ -119,9 +123,9 @@ export default function Footer() {
 
           {/* Services Portfolio */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className={`text-xs uppercase tracking-[0.25em] ${isDarkMode ? 'text-gold-400' : 'text-gold-800'} font-bold`}>
+            <h3 className={`text-sm font-semibold tracking-wider ${isDarkMode ? 'text-gold-400' : 'text-gold-800'}`}>
               Signature Disciplines
-            </h4>
+            </h3>
             <ul className={`space-y-2 text-xs sm:text-sm ${isDarkMode ? 'text-champagne-300/85' : 'text-[#2D251C] font-medium'}`}>
               <li className="hover:text-gold-400 transition-colors">
                 <Link href="/services">Royal Wedding Stage Architecture</Link>
@@ -146,9 +150,9 @@ export default function Footer() {
 
           {/* Pakistan Flagship Showrooms & Contact */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className={`text-xs uppercase tracking-[0.25em] ${isDarkMode ? 'text-gold-400' : 'text-gold-800'} font-bold`}>
+            <h3 className={`text-sm font-semibold tracking-wider ${isDarkMode ? 'text-gold-400' : 'text-gold-800'}`}>
               Pakistan Showrooms 🇵🇰
-            </h4>
+            </h3>
             <div className={`space-y-3 text-xs sm:text-sm ${isDarkMode ? 'text-champagne-300/85' : 'text-[#3D352A]'}`}>
               <div className="flex items-start space-x-2.5">
                 <MapPin className="w-4 h-4 text-gold-400 shrink-0 mt-0.5" />

@@ -101,8 +101,8 @@ const HERO_SLIDES = [
     image: 'https://flowerbouquet.pk/cdn/shop/files/weddingstage.jpg?v=1716522682&width=533',
     badge: 'Premier Lahore Wedding & Stage Décor',
     category: 'Haute Scénographie & Floral Stages',
-    title: 'CUSTOMIZED WEDDING',
-    titleHighlight: 'STAGE DÉCOR.',
+    title: 'Customized Wedding',
+    titleHighlight: 'Stage Décor.',
     quote: '“Transforming Lahore venues into regal wedding palaces with grand floral arches and cinematic lighting.”',
     primaryBtn: { text: 'Explore Gallery', href: '/gallery' },
     secondaryBtn: { text: 'Book Stage Consultation', isModal: true },
@@ -112,8 +112,8 @@ const HERO_SLIDES = [
     image: 'https://flowerbouquet.pk/cdn/shop/files/Grand_Mehndi_Celebration_with_Vibrant_Stage_and_Floor_Decor.jpg?v=1737028367&width=533',
     badge: 'Grand Mehndi & Mayun Setups',
     category: 'Vibrant Floral Swings & Floor Art',
-    title: 'GRAND MEHNDI',
-    titleHighlight: 'CELEBRATIONS.',
+    title: 'Grand Mehndi',
+    titleHighlight: 'Celebrations.',
     quote: '“Vibrant stages, ornate floor rangoli designs, cozy yellow & red seating, and festive ambiance in Lahore.”',
     primaryBtn: { text: 'View Packages', href: '/packages' },
     secondaryBtn: { text: 'Reserve Mehndi Setup', isModal: true },
@@ -123,8 +123,8 @@ const HERO_SLIDES = [
     image: 'https://flowerbouquet.pk/cdn/shop/files/walima_decoration.png?v=1726123619&width=533',
     badge: 'Affordable Walima Luxury',
     category: 'Crystal Chandeliers & Glass Runway',
-    title: 'AFFORDABLE WALIMA',
-    titleHighlight: 'LUXURY IN LAHORE.',
+    title: 'Affordable Walima',
+    titleHighlight: 'Luxury in Lahore.',
     quote: '“Grand ballroom metamorphosis with suspended crystal chandeliers, mirrored catwalk, and fresh imported blooms.”',
     primaryBtn: { text: 'Explore Services', href: '/services' },
     secondaryBtn: { text: 'Plan Your Walima', isModal: true },
@@ -134,8 +134,8 @@ const HERO_SLIDES = [
     image: 'https://flowerbouquet.pk/cdn/shop/files/Majestic_Mehndi_Swing_Setup_with_Elegant_Drapes.jpg?v=1737027276&width=533',
     badge: 'Hourly & Daily Event Rentals',
     category: 'Floral Swings, Arches & Backdrops',
-    title: 'TRADITIONAL SWINGS',
-    titleHighlight: '& THEMED CORNERS.',
+    title: 'Traditional Swings',
+    titleHighlight: '& Themed Corners.',
     quote: '“Traditional hand-carved wooden swings, marigold backdrops, and umbrella-themed decor for your festive events.”',
     primaryBtn: { text: 'Browse Rental Catalog', href: '/rental' },
     secondaryBtn: { text: 'Check Stock & Rates', href: '/rental' },
@@ -503,12 +503,12 @@ export default function HomePage() {
           <div key={currentSlide} className="max-w-3xl space-y-5 sm:space-y-6 text-left animate-fadeInUp">
             {/* Live Season Availability & Floating Badge */}
             <div className="flex flex-wrap items-center gap-2.5">
-              <div className="badge-festivity animate-float-slow luxury-badge-glow">
-                <Sparkles className="w-3.5 h-3.5 text-gold-400 animate-spin-slow" />
+              <div className="badge-festivity text-sm font-medium px-4 py-1.5 animate-float-slow luxury-badge-glow">
+                <Sparkles className="w-4 h-4 text-gold-400 animate-spin-slow" />
                 <span>{activeSlideData.badge}</span>
               </div>
 
-              <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 text-[10px] font-semibold tracking-wider uppercase backdrop-blur-md shadow-sm">
+              <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-medium tracking-wide backdrop-blur-md shadow-sm">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <span>Wedding Season Commissions Open</span>
               </div>
@@ -516,7 +516,7 @@ export default function HomePage() {
 
             {/* Brand Title & Headline */}
             <div className="space-y-2.5">
-              <span className="block text-[11px] sm:text-xs uppercase tracking-[0.35em] font-sans text-gold-400 font-semibold">
+              <span className="block text-xs uppercase tracking-[0.35em] font-sans text-gold-400 font-semibold">
                 {activeSlideData.category}
               </span>
               <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-ivory-50 tracking-tight leading-[1.12]">
@@ -647,36 +647,42 @@ export default function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#070709]/80 via-transparent to-transparent" />
 
-                {/* Interactive Before vs After Toggle Chip */}
-                <div className="absolute top-4 right-4 z-20 bg-obsidian-950/90 backdrop-blur-md p-1 rounded-full border border-gold-500/40 flex items-center space-x-1 shadow-lg">
+                {/* Interactive Before vs After Toggle Chip with Accessible Tablist Semantics */}
+                <div role="tablist" aria-label="Venue Transformation View" className="absolute top-4 right-4 z-20 bg-obsidian-950/95 backdrop-blur-md p-1 rounded-full border border-gold-500/50 flex items-center space-x-1 shadow-xl">
                   <button
                     type="button"
+                    role="tab"
+                    aria-selected={transformationView === 'before'}
                     onClick={() => setTransformationView('before')}
-                    className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase transition-all ${
+                    className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all ${
                       transformationView === 'before'
-                        ? 'bg-gold-500 text-obsidian-950 shadow-sm'
-                        : 'text-champagne-300 hover:text-ivory-50'
+                        ? 'bg-gold-500 text-obsidian-950 shadow-md'
+                        : 'text-champagne-300 hover:text-ivory-50 hover:bg-white/10'
                     }`}
                   >
-                    Raw Venue
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>Raw Venue</span>
                   </button>
                   <button
                     type="button"
+                    role="tab"
+                    aria-selected={transformationView === 'after'}
                     onClick={() => setTransformationView('after')}
-                    className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase transition-all ${
+                    className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all ${
                       transformationView === 'after'
-                        ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 shadow-sm'
-                        : 'text-champagne-300 hover:text-ivory-50'
+                        ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 shadow-md font-bold'
+                        : 'text-champagne-300 hover:text-ivory-50 hover:bg-white/10'
                     }`}
                   >
-                    ✨ Lumière Masterpiece
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Lumière Masterpiece</span>
                   </button>
                 </div>
               </div>
 
               {/* Floating Decorative Highlight Card */}
               <div className="absolute -bottom-5 sm:-bottom-6 right-2 sm:right-6 festivity-card-dark p-4 sm:p-6 rounded-2xl max-w-[260px] sm:max-w-xs space-y-1.5 animate-float-gently">
-                <p className="text-[9px] sm:text-[10px] font-sans uppercase tracking-[0.2em] text-gold-400 font-bold">
+                <p className="text-xs font-sans tracking-wide text-gold-400 font-semibold">
                   Bespoke Scénographie
                 </p>
                 <p className="font-serif text-base sm:text-lg text-ivory-50 leading-snug">
@@ -755,9 +761,10 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {services.map((service, idx) => (
-              <div
+              <Link
                 key={service.id || service.title}
-                className={`festivity-card-dark festivity-hover-card glow-card-hover overflow-hidden flex flex-col justify-between group scroll-reveal delay-${
+                href="/services"
+                className={`festivity-card-dark festivity-hover-card glow-card-hover overflow-hidden flex flex-col justify-between group cursor-pointer block scroll-reveal delay-${
                   (idx + 1) * 100
                 }`}
               >
@@ -771,7 +778,7 @@ export default function HomePage() {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E12] via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity duration-300" />
-                  <span className="absolute top-4 left-4 bg-obsidian-950/80 backdrop-blur-md text-gold-400 text-[10px] uppercase tracking-widest font-semibold px-3 py-1 rounded-full border border-gold-500/30">
+                  <span className="absolute top-4 left-4 bg-obsidian-950/80 backdrop-blur-md text-gold-400 text-xs uppercase tracking-widest font-semibold px-3 py-1 rounded-full border border-gold-500/30">
                     0{idx + 1}
                   </span>
                 </div>
@@ -787,20 +794,23 @@ export default function HomePage() {
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-gold-500/20 flex items-center justify-between">
-                    <span className="text-[11px] text-gold-400/90 font-mono font-semibold">
-                      From PKR {service.priceStartingAt?.toLocaleString() || '25,000'}
-                    </span>
-                    <Link
-                      href="/services"
-                      className="inline-flex items-center text-xs uppercase tracking-[0.18em] font-semibold text-gold-400 group-hover:text-gold-300 transition-colors"
-                    >
+                  <div className="pt-4 border-t border-gold-500/20 flex items-end justify-between gap-2">
+                    <div className="min-w-0">
+                      <span className="block text-[10px] uppercase tracking-wider text-champagne-400 font-medium leading-none mb-1 whitespace-nowrap">
+                        Starting from
+                      </span>
+                      <span className="text-xs sm:text-sm text-gold-400 font-mono font-bold whitespace-nowrap">
+                        PKR {service.priceStartingAt?.toLocaleString() || '25,000'}
+                      </span>
+                    </div>
+
+                    <span className="inline-flex items-center space-x-1.5 text-xs uppercase tracking-wider font-bold text-gold-400 group-hover:text-gold-300 border-b border-gold-500/60 group-hover:border-gold-300 pb-0.5 transition-all duration-300 whitespace-nowrap shrink-0">
                       <span>Explore</span>
-                      <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1.5" />
-                    </Link>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-gold-400 group-hover:text-gold-300" />
+                    </span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -829,25 +839,25 @@ export default function HomePage() {
             {[
               {
                 step: '01',
-                title: 'CONSULTATION',
+                title: 'Consultation',
                 subtitle: 'Share your vision with us.',
                 description: 'We sit down over champagne to uncover your color palette, architectural aesthetic, and desires.',
               },
               {
                 step: '02',
-                title: 'CONCEPT & 3D DESIGN',
+                title: 'Concept & 3D Design',
                 subtitle: 'We draft your bespoke concept.',
                 description: 'Our scenographers draft moodboards, 3D spatial models, and floral palette schemes tailored to your venue.',
               },
               {
                 step: '03',
-                title: 'PRODUCTION & SETUP',
+                title: 'Production & Setup',
                 subtitle: 'Our crew transforms your venue.',
                 description: 'A master floral and lighting crew handles precision structural rigging, staging, and styling on event day.',
               },
               {
                 step: '04',
-                title: 'CELEBRATE & IMMERSE',
+                title: 'Celebrate & Immerse',
                 subtitle: 'You enjoy every single moment.',
                 description: 'Bask in timeless photographs with loved ones, knowing our coordination and teardown team manages every detail.',
               },
@@ -866,7 +876,7 @@ export default function HomePage() {
                   <h3 className="font-serif text-lg sm:text-xl text-ivory-50 font-medium mb-1 group-hover:text-gold-400 transition-colors">
                     {p.title}
                   </h3>
-                  <p className="text-xs font-semibold text-gold-400 uppercase tracking-wider mb-2.5">
+                  <p className="text-xs font-semibold text-gold-400 tracking-wide mb-2.5">
                     {p.subtitle}
                   </p>
                   <p className="text-xs text-champagne-200/80 leading-relaxed font-light">
@@ -928,11 +938,11 @@ export default function HomePage() {
                   <div>
                     <div className="space-y-2 mb-6">
                       <span
-                        className={`text-[11px] uppercase tracking-[0.2em] font-semibold ${
+                        className={`text-xs uppercase tracking-wider font-semibold ${
                           isRec ? 'text-gold-400' : 'text-gold-500'
                         }`}
                       >
-                        {pkg.tier} COLLECTION
+                        {pkg.tier} Collection
                       </span>
                       <h3 className="font-serif text-2xl sm:text-3xl font-light text-ivory-50">
                         {pkg.name}
@@ -956,7 +966,7 @@ export default function HomePage() {
                               / complete setup
                             </span>
                           </div>
-                          <span className="inline-block text-[10px] font-bold text-gold-400 uppercase tracking-wider">
+                          <span className="inline-block text-xs font-bold text-gold-400 uppercase tracking-wider">
                             🎉 Includes {effectiveDiscount}% Seasonal Discount
                           </span>
                         </div>
@@ -973,14 +983,15 @@ export default function HomePage() {
                     </div>
 
                     <div className="space-y-3 mb-8">
-                      <p className="text-xs uppercase tracking-widest font-semibold text-gold-400">
-                        What’s Included:
+                      <p className="text-xs uppercase tracking-wider font-semibold text-gold-400 flex items-center space-x-1.5">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Included Highlights:</span>
                       </p>
                       <ul className="space-y-2 text-xs font-light">
-                        {features.map((feat, i) => (
-                          <li key={i} className="flex items-start space-x-2.5">
+                        {features.slice(0, 4).map((feat, i) => (
+                          <li key={i} className="flex items-start space-x-2 p-1.5 rounded-lg bg-white/[0.02] border border-white/5">
                             <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5 text-gold-400" />
-                            <span className="text-champagne-100">
+                            <span className="text-champagne-100 font-normal leading-tight">
                               {feat}
                             </span>
                           </li>
@@ -1005,13 +1016,13 @@ export default function HomePage() {
           </div>
 
           {packages.length > 3 && (
-            <div className="text-center mt-12">
+            <div className="text-center mt-6 sm:mt-8">
               <Link
                 href="/packages"
-                className="inline-flex items-center space-x-2 px-8 py-3.5 rounded-full border border-gold-500/40 bg-gold-500/10 text-gold-400 text-xs uppercase tracking-[0.2em] font-semibold hover:bg-gold-500 hover:text-obsidian-950 transition-all duration-300 shadow-md hover:shadow-glow-gold hover:scale-105"
+                className="btn-festivity-outline px-8 py-3 text-xs uppercase tracking-wider font-semibold hover:border-gold-400"
               >
                 <span>View All {packages.length} Décor Collections</span>
-                <Sparkles className="w-4 h-4" />
+                <Sparkles className="w-4 h-4 ml-2" />
               </Link>
             </div>
           )}
@@ -1068,7 +1079,7 @@ export default function HomePage() {
               <div className="stat-serif-number text-gold-400 font-light">
                 <AnimatedCounter end={98} suffix="%" />
               </div>
-              <p className={`text-[11px] sm:text-xs uppercase tracking-[0.25em] ${isDarkMode ? 'text-champagne-300' : 'text-[#3D352A]'} font-semibold`}>
+              <p className={`text-xs uppercase tracking-wider ${isDarkMode ? 'text-champagne-300' : 'text-[#3D352A]'} font-semibold`}>
                 Delighted Hosts
               </p>
             </div>
@@ -1076,7 +1087,7 @@ export default function HomePage() {
               <div className="stat-serif-number text-gold-400 font-light">
                 <AnimatedCounter end={65} suffix="+" />
               </div>
-              <p className={`text-[11px] sm:text-xs uppercase tracking-[0.25em] ${isDarkMode ? 'text-champagne-300' : 'text-[#3D352A]'} font-semibold`}>
+              <p className={`text-xs uppercase tracking-wider ${isDarkMode ? 'text-champagne-300' : 'text-[#3D352A]'} font-semibold`}>
                 Grand Galas Produced
               </p>
             </div>
@@ -1084,7 +1095,7 @@ export default function HomePage() {
               <div className="stat-serif-number text-gold-400 font-light">
                 <AnimatedCounter end={10} suffix="+" />
               </div>
-              <p className={`text-[11px] sm:text-xs uppercase tracking-[0.25em] ${isDarkMode ? 'text-champagne-300' : 'text-[#3D352A]'} font-semibold`}>
+              <p className={`text-xs uppercase tracking-wider ${isDarkMode ? 'text-champagne-300' : 'text-[#3D352A]'} font-semibold`}>
                 Years of Haute Artistry
               </p>
             </div>
@@ -1092,7 +1103,7 @@ export default function HomePage() {
               <div className="stat-serif-number text-gold-400 font-light">
                 <AnimatedCounter end={15} />
               </div>
-              <p className={`text-[11px] sm:text-xs uppercase tracking-[0.25em] ${isDarkMode ? 'text-champagne-300' : 'text-[#3D352A]'} font-semibold`}>
+              <p className={`text-xs uppercase tracking-wider ${isDarkMode ? 'text-champagne-300' : 'text-[#3D352A]'} font-semibold`}>
                 Design Accolades
               </p>
             </div>
@@ -1105,7 +1116,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       <section className="py-16 sm:py-24 lg:py-32 bg-[#0B0B0F] border-t border-gold-500/20 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 space-y-4 sm:space-y-0 scroll-reveal">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12 scroll-reveal">
             <div className="space-y-2 sm:space-y-3">
               <span className="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold">
                 Visual Lookbook
@@ -1114,31 +1125,31 @@ export default function HomePage() {
                 Events & Signature Parties
               </h2>
             </div>
-            <Link
-              href="/gallery"
-              className="inline-flex items-center space-x-2 text-xs uppercase tracking-[0.2em] font-bold text-gold-400 hover:text-gold-300 transition-colors group"
-            >
-              <span>View Full Lookbook (150+ Images)</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1.5" />
-            </Link>
-          </div>
-
-          {/* Interactive Category Filter Tabs */}
-          <div className="flex items-center space-x-2 overflow-x-auto pb-4 mb-6 scrollbar-none scroll-reveal">
-            {LOOKBOOK_CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedGalleryCategory(cat)}
-                className={`px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all shrink-0 ${
-                  selectedGalleryCategory === cat
-                    ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-glow-pill scale-105'
-                    : 'bg-white/[0.05] text-champagne-300 hover:text-gold-300 hover:bg-white/10 border border-gold-500/20'
-                }`}
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
+                {LOOKBOOK_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setSelectedGalleryCategory(cat)}
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all shrink-0 ${
+                      selectedGalleryCategory === cat
+                        ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-obsidian-950 font-bold shadow-glow-pill scale-105'
+                        : 'bg-white/[0.05] text-champagne-300 hover:text-gold-300 hover:bg-white/10 border border-gold-500/20'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+              <Link
+                href="/gallery"
+                className="btn-festivity-pill px-4 py-2 text-xs uppercase tracking-wider font-bold shrink-0"
               >
-                {cat}
-              </button>
-            ))}
+                <span>View Full Lookbook (150+)</span>
+                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
@@ -1158,12 +1169,12 @@ export default function HomePage() {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#070709]/95 via-[#070709]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 sm:p-6 text-ivory-50">
-                  <span className="text-[10px] uppercase tracking-widest text-gold-400 font-semibold mb-1">
+                  <span className="text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
                     {img.category}
                   </span>
-                  <h4 className="font-serif text-base sm:text-lg font-light text-ivory-50 group-hover:text-gold-300 transition-colors">
+                  <h3 className="font-serif text-base sm:text-lg font-light text-ivory-50 group-hover:text-gold-300 transition-colors whitespace-normal leading-snug">
                     {img.title}
-                  </h4>
+                  </h3>
                   <p className="text-xs text-champagne-200/80 line-clamp-2 mt-1 font-light">
                     {img.description}
                   </p>
@@ -1255,8 +1266,8 @@ export default function HomePage() {
                                 <span className="ml-1.5 text-xs font-bold text-gold-400">5.0 / 5.0</span>
                               </div>
 
-                              <div className="badge-festivity text-[10px] py-0.5">
-                                <ShieldCheck className="w-3 h-3 text-gold-400" />
+                              <div className="badge-festivity text-xs py-0.5">
+                                <ShieldCheck className="w-3.5 h-3.5 text-gold-400" />
                                 <span>Verified Client</span>
                               </div>
                             </div>
@@ -1280,16 +1291,16 @@ export default function HomePage() {
                                 </div>
                               )}
                               <div>
-                                <h5 className="font-serif text-xs sm:text-sm font-semibold text-ivory-50">
+                                <h3 className="font-serif text-sm sm:text-base font-semibold text-ivory-50">
                                   {t.clientName}
-                                </h5>
-                                <p className="text-[11px] text-gold-400 font-medium">{t.clientRole}</p>
-                                <p className="text-[10px] text-champagne-300/70">{t.eventType}</p>
+                                </h3>
+                                <p className="text-xs text-gold-400 font-medium">{t.clientRole}</p>
+                                <p className="text-xs text-champagne-300/80">{t.eventType}</p>
                               </div>
                             </div>
 
-                            <div className="text-right text-[10px] text-champagne-400/60 flex items-center space-x-1">
-                              <Clock className="w-3 h-3 text-gold-400" />
+                            <div className="text-right text-xs text-champagne-400/70 flex items-center space-x-1">
+                              <Clock className="w-3.5 h-3.5 text-gold-400" />
                               <span>{formattedDate}</span>
                             </div>
                           </div>
