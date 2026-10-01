@@ -1015,17 +1015,40 @@ export default function HomePage() {
             })}
           </div>
 
-          {packages.length > 3 && (
-            <div className="text-center mt-6 sm:mt-8">
+          {/* Action Callout & Direct Navigation to /packages */}
+          <div className="mt-12 sm:mt-16 pt-10 border-t border-gold-500/20 text-center flex flex-col items-center justify-center space-y-4 sm:space-y-5 scroll-reveal">
+            <div className="inline-flex items-center space-x-2 text-gold-400 text-[11px] sm:text-xs uppercase tracking-[0.3em] font-semibold bg-gold-500/10 px-4 py-1.5 rounded-full border border-gold-500/30 shadow-sm">
+              <Crown className="w-3.5 h-3.5 text-gold-400" />
+              <span>Explore All Investment Plans & Themes</span>
+            </div>
+
+            <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl font-light text-ivory-50 max-w-xl">
+              Looking for Full Décor Catalogs, Baraat Stages & Custom Themes?
+            </h3>
+
+            <p className="text-xs sm:text-sm text-champagne-200/80 max-w-lg font-light leading-relaxed">
+              Browse our complete package catalog with multi-tier pricing, custom floral backdrops, mehndi swings, and VIP stage setups.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-5 pt-2 w-full max-w-md sm:max-w-none">
               <Link
                 href="/packages"
-                className="btn-festivity-outline px-8 py-3 text-xs uppercase tracking-wider font-semibold hover:border-gold-400"
+                className="w-full sm:w-auto btn-festivity-pill px-8 sm:px-10 py-4 text-xs sm:text-sm uppercase tracking-[0.22em] font-bold text-obsidian-950 flex items-center justify-center space-x-3 shadow-glow-gold hover:scale-[1.03] active:scale-95 transition-all duration-300 group"
               >
-                <span>View All {packages.length} Décor Collections</span>
-                <Sparkles className="w-4 h-4 ml-2" />
+                <Sparkles className="w-4 h-4 text-obsidian-950 group-hover:rotate-12 transition-transform" />
+                <span>Explore All Packages & Pricing</span>
+                <ArrowRight className="w-4 h-4 text-obsidian-950 group-hover:translate-x-1.5 transition-transform" />
               </Link>
+
+              <button
+                type="button"
+                onClick={() => openBookingModal(null)}
+                className="w-full sm:w-auto btn-festivity-outline px-8 sm:px-10 py-4 text-xs sm:text-sm uppercase tracking-[0.22em] font-semibold text-ivory-50 hover:text-gold-300 hover:border-gold-400 flex items-center justify-center space-x-2.5 transition-all duration-300 hover:scale-[1.02] active:scale-95"
+              >
+                <span>Request Custom Quote</span>
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </section>
 

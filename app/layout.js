@@ -38,6 +38,7 @@ const outfit = Outfit({
 });
 
 export const metadata = {
+  metadataBase: new URL('https://decordesigns.online'),
   title: 'LUMIÈRE DECOR — Haute Scénographie & Luxury Event Decoration',
   description:
     'Bespoke luxury stage design, haute botanical floral installations, and dramatic wedding scenography. We turn moments into masterpieces.',
@@ -48,7 +49,25 @@ export const metadata = {
     'beverly hills wedding stylist',
     'event rental luxury',
     'lumiere decor',
+    'decor designs',
+    'decordesigns.online',
+    'pakistan wedding decoration',
+    'lahore wedding stage',
+    'islamabad wedding decor',
+    'karachi luxury decor',
   ],
+  alternates: {
+    canonical: 'https://decordesigns.online',
+  },
+  openGraph: {
+    title: 'LUMIÈRE DECOR — Haute Scénographie & Luxury Event Decoration',
+    description:
+      'Bespoke luxury stage design, haute botanical floral installations, and dramatic wedding scenography.',
+    url: 'https://decordesigns.online',
+    siteName: 'LUMIÈRE DECOR',
+    locale: 'en_US',
+    type: 'website',
+  },
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
